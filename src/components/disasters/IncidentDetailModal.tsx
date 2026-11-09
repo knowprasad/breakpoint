@@ -3,17 +3,38 @@
 import React, { useEffect, useState } from 'react';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
+import { HackerTubeVideo } from '@/types/hackertube';
 import { SeverityBadge, RootCausePill, CategoryPill, ResourceTypeBadge } from '@/components/common/Badge';
 import { getRelatedResourcesForIncident } from '@/lib/db';
-import { X, ExternalLink, MessageSquare, Clock, BookOpen, AlertTriangle, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
+import { getCuratedTalksForIncident } from '@/data/incidentVideos';
+import {
+  X,
+  ExternalLink,
+  MessageSquare,
+  Clock,
+  BookOpen,
+  AlertTriangle,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowRight,
+  Play,
+  Flame,
+  Star
+} from 'lucide-react';
 
 interface IncidentDetailModalProps {
   incident: DisasterIncident | null;
   onClose: () => void;
   onSelectResource?: (resource: LibraryResource) => void;
+  onSelectVideo?: (video: HackerTubeVideo) => void;
 }
 
-export function IncidentDetailModal({ incident, onClose, onSelectResource }: IncidentDetailModalProps) {
+export function IncidentDetailModal({
+  incident,
+  onClose,
+  onSelectResource,
+  onSelectVideo
+}: IncidentDetailModalProps) {
   const [activeTab, setActiveTab] = useState<'mechanism' | 'timeline' | 'mitigation'>('mechanism');
 
   useEffect(() => {
@@ -27,6 +48,7 @@ export function IncidentDetailModal({ incident, onClose, onSelectResource }: Inc
   if (!incident) return null;
 
   const relatedResources = getRelatedResourcesForIncident(incident.id);
+  const relatedVideos = getCuratedTalksForIncident(incident.id);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -206,7 +228,70 @@ export function IncidentDetailModal({ incident, onClose, onSelectResource }: Inc
             </div>
           )}
 
-          {/* Bidirectional Linking: Canonical Studies to Prevent This */}
+          {/* Bidirectional Linking 1: HackerTube Canonical Talks Explaining Solutions */}
+          {relatedVideos.length > 0 && (
+            <div className="pt-4 border-t border-[#1c212c] space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-mono font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-red-400" />
+                  HackerTube Talks Explaining Solutions
+                </h4>
+                <span className="text-[11px] font-mono text-zinc-500">
+                  HackerTube Knowledge Graph
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {relatedVideos.map((vid) => (
+                  <div
+                    key={vid.vid}
+                    onClick={() => {
+                      if (onSelectVideo) {
+                        onClose();
+                        onSelectVideo(vid);
+                      }
+                    }}
+                    className="p-3.5 rounded-lg bg-[#11141c] hover:bg-[#161b25] border border-[#1f2533] hover:border-red-500/40 transition-all cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="relative aspect-video rounded overflow-hidden bg-black/60">
+                        <img
+                          src={vid.thumbnail_url}
+                          alt=""
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-1">
+                          <span className="font-semibold text-zinc-300 truncate max-w-[150px]">
+                            {vid.channel}
+                          </span>
+                          <span className="text-amber-400 font-bold">★ {vid.score.toFixed(1)}</span>
+                        </div>
+                        <h5 className="text-xs font-bold text-zinc-200 group-hover:text-red-400 transition-colors leading-snug line-clamp-2">
+                          {vid.title}
+                        </h5>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 mt-2 border-t border-[#1b202c] flex items-center justify-between text-[11px] font-mono text-red-400">
+                      <span>Watch Mitigating Talk</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bidirectional Linking 2: Canonical Studies to Prevent This */}
           <div className="pt-4 border-t border-[#1c212c] space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">

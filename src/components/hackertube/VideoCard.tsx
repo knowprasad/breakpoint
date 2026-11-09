@@ -1,16 +1,62 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HackerTubeVideo } from '@/types/hackertube';
-import { Play, Flame, Quote, Sparkles, MessageSquare, Star, ArrowUpRight } from 'lucide-react';
+import {
+  Play,
+  Flame,
+  MessageSquare,
+  Star,
+  Heart,
+  Bookmark,
+  FolderPlus
+} from 'lucide-react';
+import {
+  isVideoLiked,
+  toggleLikedVideo,
+  isVideoInWatchLater,
+  toggleWatchLater
+} from '@/lib/userStore';
 
 interface VideoCardProps {
   video: HackerTubeVideo;
   onSelect: (video: HackerTubeVideo) => void;
+  onOpenPlaylistModal?: (video: HackerTubeVideo) => void;
 }
 
-export function VideoCard({ video, onSelect }: VideoCardProps) {
+export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardProps) {
   const [imgSrc, setImgSrc] = useState(video.thumbnail_url);
+  const [liked, setLiked] = useState(() => isVideoLiked(video.vid));
+  const [savedLater, setSavedLater] = useState(() => isVideoInWatchLater(video.vid));
+
+  useEffect(() => {
+    const handleStoreChange = () => {
+      setLiked(isVideoLiked(video.vid));
+      setSavedLater(isVideoInWatchLater(video.vid));
+    };
+
+    window.addEventListener('breakpoint-store-changed', handleStoreChange);
+    return () => window.removeEventListener('breakpoint-store-changed', handleStoreChange);
+  }, [video.vid]);
+
+  const handleToggleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newStatus = toggleLikedVideo(video);
+    setLiked(newStatus);
+  };
+
+  const handleToggleWatchLater = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newStatus = toggleWatchLater(video);
+    setSavedLater(newStatus);
+  };
+
+  const handleOpenPlaylist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onOpenPlaylistModal) {
+      onOpenPlaylistModal(video);
+    }
+  };
 
   return (
     <div
@@ -31,16 +77,56 @@ export function VideoCard({ video, onSelect }: VideoCardProps) {
           {/* Gradient Scrim */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e14] via-transparent to-transparent opacity-80" />
 
-          {/* Play Button Overlay */}
+          {/* Hover Play Button Overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
             <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-950 transform group-hover:scale-110 transition-transform">
               <Play className="w-5 h-5 fill-current ml-0.5" />
             </div>
           </div>
 
-          {/* Channel Badge Overlay */}
+          {/* Quick Action Floating Controls (Top Right) */}
+          <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            {/* Like Button */}
+            <button
+              onClick={handleToggleLike}
+              title={liked ? 'Unlike' : 'Like Talk'}
+              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all ${
+                liked
+                  ? 'bg-red-950/80 border-red-500/60 text-red-400 hover:bg-red-900/90'
+                  : 'bg-black/60 border-white/10 text-zinc-300 hover:text-red-400 hover:border-red-500/40'
+              }`}
+            >
+              <Heart className={`w-3.5 h-3.5 ${liked ? 'fill-current' : ''}`} />
+            </button>
+
+            {/* Watch Later Button */}
+            <button
+              onClick={handleToggleWatchLater}
+              title={savedLater ? 'Remove from Watch Later' : 'Watch Later'}
+              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all ${
+                savedLater
+                  ? 'bg-amber-950/80 border-amber-500/60 text-amber-400 hover:bg-amber-900/90'
+                  : 'bg-black/60 border-white/10 text-zinc-300 hover:text-amber-400 hover:border-amber-500/40'
+              }`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${savedLater ? 'fill-current' : ''}`} />
+            </button>
+
+            {/* Add to Playlist Button */}
+            {onOpenPlaylistModal && (
+              <button
+                onClick={handleOpenPlaylist}
+                title="Add to Playlist"
+                className="p-1.5 rounded-lg backdrop-blur-md bg-black/60 border border-white/10 text-zinc-300 hover:text-white hover:border-zinc-500 transition-all"
+              >
+                <FolderPlus className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          {/* Channel Badge Overlay (Bottom) */}
           <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-zinc-200 border border-white/10 font-semibold truncate max-w-[180px]">
+            <span className="px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-zinc-200 border border-white/10 font-semibold truncate max-w-[170px]">
               {video.channel}
             </span>
 
@@ -81,7 +167,7 @@ export function VideoCard({ video, onSelect }: VideoCardProps) {
           {/* Hacker News Pull Quote */}
           {video.quote && (
             <div className="p-2.5 rounded-lg bg-[#07080b] border border-[#161a24] text-[11px] italic text-zinc-300 line-clamp-2">
-              "{video.quote.text}"
+              &ldquo;{video.quote.text}&rdquo;
             </div>
           )}
         </div>

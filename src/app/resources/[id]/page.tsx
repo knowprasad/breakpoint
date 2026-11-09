@@ -88,10 +88,10 @@ export default async function ResourcePage({ params }: { params: Promise<{ id: s
             </p>
 
             {resource.pull_quote && (
-              <div className="p-4 rounded-lg bg-[#090b0f] border-l-2 border-emerald-400 flex items-start gap-3 text-xs italic text-zinc-300">
+              <div className="p-4 rounded-xl bg-[#090b0f] border border-emerald-500/30 flex items-start gap-3 text-xs italic text-zinc-300">
                 <Quote className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="text-sm leading-relaxed">"{resource.pull_quote.text}"</p>
+                  <p className="text-sm leading-relaxed">&ldquo;{resource.pull_quote.text}&rdquo;</p>
                   <span className="text-xs font-mono text-zinc-500 not-italic block">
                     — {resource.pull_quote.source} ({resource.pull_quote.year})
                   </span>

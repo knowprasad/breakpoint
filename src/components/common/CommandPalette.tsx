@@ -30,32 +30,33 @@ export function CommandPalette({
 
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setVideoResults([]);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
   useEffect(() => {
-    if (!query.trim()) {
-      setVideoResults([]);
-      return;
-    }
+    if (!query.trim()) return;
 
+    let cancelled = false;
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(`/api/videos?q=${encodeURIComponent(query)}&limit=5`);
-        if (res.ok) {
+        if (res.ok && !cancelled) {
           const data = await res.json();
           setVideoResults(data.videos || []);
         }
-      } catch (e) {
+      } catch {
         // ignore
       }
     }, 150);
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [query]);
 
   useEffect(() => {

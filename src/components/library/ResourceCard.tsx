@@ -61,7 +61,7 @@ export function ResourceCard({ resource, onSelect }: ResourceCardProps) {
         {/* Pull Quote */}
         {resource.pull_quote && (
           <div className="p-2.5 rounded-lg bg-[#07090c] border border-[#171c26] text-xs italic text-zinc-300 leading-relaxed mb-4">
-            <p className="line-clamp-2">"{resource.pull_quote.text}"</p>
+            <p className="line-clamp-2">&ldquo;{resource.pull_quote.text}&rdquo;</p>
             <span className="text-[10px] font-mono text-zinc-500 not-italic block mt-1">
               — {resource.pull_quote.source} ({resource.pull_quote.year})
             </span>

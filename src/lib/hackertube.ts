@@ -184,3 +184,11 @@ export function getHackerTubeTopAreas() {
 
   return Array.from(areasMap.values()).sort((a, b) => b.count - a.count);
 }
+
+export function getRelatedVideosForIncident(incidentId: string, limit = 4): HackerTubeVideo[] {
+  const videos = getHackerTubeRepository();
+  return videos
+    .filter((v) => v.related_incident_ids && v.related_incident_ids.includes(incidentId))
+    .slice(0, limit);
+}
+
