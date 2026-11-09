@@ -88,20 +88,22 @@ export function FilterBar({ filters, onFilterChange, onReset, totalMatches }: Fi
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 text-xs font-mono">
         {/* Search Bar */}
         <div className="lg:col-span-5 relative flex items-center">
-          <Search className="absolute left-3 w-3.5 h-3.5 text-zinc-400 pointer-events-none" />
+          <Search className="absolute left-3 w-3.5 h-3.5 text-[#768390] pointer-events-none" />
           <input
             type="text"
             value={filters.query || ''}
             onChange={(e) => onFilterChange({ ...filters, query: e.target.value })}
             placeholder="Filter by keyword, error, company, mechanism..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#0e1116] border border-[#202530] focus:border-zinc-500 text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
+            className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#1c2128] border border-[#373e47] focus:border-[#539bf5] text-[#adbac7] placeholder:text-[#768390] text-base sm:text-xs focus:outline-none"
           />
           {filters.query && (
             <button
               onClick={() => onFilterChange({ ...filters, query: '' })}
-              className="absolute right-2.5 text-zinc-500 hover:text-zinc-300"
+              className="absolute right-2.5 p-1 text-[#768390] hover:text-[#adbac7]"
+              title="Clear query"
+              aria-label="Clear query"
             >
-              <X className="w-3 h-3" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
@@ -111,7 +113,7 @@ export function FilterBar({ filters, onFilterChange, onReset, totalMatches }: Fi
           <select
             value={filters.category || 'all'}
             onChange={(e) => onFilterChange({ ...filters, category: e.target.value })}
-            className="w-full py-2 px-3 rounded-lg bg-[#0e1116] border border-[#202530] text-zinc-300 focus:outline-none focus:border-zinc-500 capitalize"
+            className="w-full py-2 px-3 rounded-lg bg-[#1c2128] border border-[#373e47] text-[#adbac7] focus:outline-none focus:border-[#539bf5] text-base sm:text-xs capitalize"
           >
             <option value="all">All Topics & Domains</option>
             {categories.map((c) => (
@@ -127,7 +129,7 @@ export function FilterBar({ filters, onFilterChange, onReset, totalMatches }: Fi
           <select
             value={filters.rootCause || 'all'}
             onChange={(e) => onFilterChange({ ...filters, rootCause: e.target.value })}
-            className="w-full py-2 px-3 rounded-lg bg-[#0e1116] border border-[#202530] text-zinc-300 focus:outline-none focus:border-zinc-500"
+            className="w-full py-2 px-3 rounded-lg bg-[#1c2128] border border-[#373e47] text-[#adbac7] focus:outline-none focus:border-[#539bf5] text-base sm:text-xs"
           >
             <option value="all">All Root Causes</option>
             {rootCauses.map((rc) => (
@@ -148,7 +150,7 @@ export function FilterBar({ filters, onFilterChange, onReset, totalMatches }: Fi
                 sortBy: e.target.value as FilterOptions['sortBy']
               })
             }
-            className="w-full py-2 px-3 rounded-lg bg-[#0e1116] border border-[#202530] text-zinc-300 focus:outline-none focus:border-zinc-500"
+            className="w-full py-2 px-3 rounded-lg bg-[#1c2128] border border-[#373e47] text-[#adbac7] focus:outline-none focus:border-[#539bf5] text-base sm:text-xs"
           >
             <option value="relevance">Sort: Relevance</option>
             <option value="year-desc">Sort: Year (Newest)</option>

@@ -14,7 +14,8 @@ import {
   Sparkles,
   RotateCcw,
   SlidersHorizontal,
-  GraduationCap
+  GraduationCap,
+  ChevronDown
 } from 'lucide-react';
 
 export interface LibraryExplorerProps {
@@ -179,8 +180,8 @@ export function LibraryExplorer({
       {/* Search & Filter Control Center */}
       <div className="p-4 sm:p-5 rounded-2xl bg-[#22272e] border border-[#373e47] shadow-sm space-y-4">
         {/* Top: Instant Search Input */}
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#768390]">
+        <div className="relative flex items-center">
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none text-[#768390]">
             <Search className="w-4 h-4 text-[#57ab5a]" />
           </div>
 
@@ -189,11 +190,11 @@ export function LibraryExplorer({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search textbooks and papers by title, author, description, tags, or year (e.g. DDIA, Kleppmann, 1974, consensus)..."
-            className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-[#1c2128] border border-[#373e47] focus:border-[#539bf5] text-sm font-mono text-[#adbac7] placeholder-[#768390] outline-none transition-all shadow-inner"
+            placeholder="Search textbooks and papers (e.g. DDIA, Raft)..."
+            className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-[#1c2128] border border-[#373e47] focus:border-[#539bf5] text-base sm:text-sm font-mono text-[#adbac7] placeholder-[#768390] outline-none transition-all shadow-inner"
           />
 
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {searchQuery ? (
               <button
                 onClick={() => {
@@ -201,7 +202,7 @@ export function LibraryExplorer({
                   searchInputRef.current?.focus();
                 }}
                 type="button"
-                className="p-1 rounded-md text-[#768390] hover:text-[#adbac7] bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] transition-colors"
+                className="p-1.5 rounded-lg text-[#768390] hover:text-[#adbac7] bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] transition-colors"
                 title="Clear search"
                 aria-label="Clear search"
               >
@@ -296,11 +297,11 @@ export function LibraryExplorer({
             </div>
 
             {/* Mobile Level Dropdown */}
-            <div className="sm:hidden w-full">
+            <div className="sm:hidden w-full relative">
               <select
                 value={levelFilter}
                 onChange={(e) => setLevelFilter(e.target.value as LevelFilter)}
-                className="w-full px-3 py-1.5 rounded-lg bg-[#11141c] border border-[#202737] text-xs font-mono text-zinc-200 outline-none"
+                className="w-full pl-3 pr-8 py-2 rounded-xl bg-[#1c2128] border border-[#373e47] text-base sm:text-xs font-mono text-[#adbac7] outline-none focus:border-[#539bf5] appearance-none"
               >
                 {levelOptions.map((opt) => (
                   <option key={opt.id} value={opt.id}>
@@ -308,6 +309,9 @@ export function LibraryExplorer({
                   </option>
                 ))}
               </select>
+              <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-[#768390]">
+                <ChevronDown className="w-3.5 h-3.5" />
+              </div>
             </div>
           </div>
 
@@ -316,9 +320,9 @@ export function LibraryExplorer({
             <button
               onClick={resetFilters}
               type="button"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/60 text-zinc-300 hover:text-white transition-all text-xs font-mono self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#1c2128] hover:bg-[#282e37] border border-[#373e47] text-[#adbac7] hover:text-white transition-all text-xs font-mono self-start sm:self-auto"
             >
-              <RotateCcw className="w-3 h-3 text-amber-400" />
+              <RotateCcw className="w-3 h-3 text-[#c69026]" />
               <span>Reset Filters</span>
             </button>
           )}
@@ -338,16 +342,16 @@ export function LibraryExplorer({
         </div>
       ) : (
         /* Clean Empty State */
-        <div className="p-12 text-center rounded-2xl bg-[#0c0e14] border border-[#1e2332] shadow-xl space-y-4">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#141822] border border-[#242e42] text-zinc-500 flex items-center justify-center">
-            <BookOpen className="w-7 h-7 text-emerald-500/70" />
+        <div className="p-8 sm:p-12 text-center rounded-2xl bg-[#22272e] border border-[#373e47] shadow-xl space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#1c2128] border border-[#373e47] text-[#768390] flex items-center justify-center">
+            <BookOpen className="w-7 h-7 text-[#57ab5a]" />
           </div>
 
           <div className="max-w-md mx-auto space-y-1">
-            <h3 className="text-base sm:text-lg font-bold text-white font-mono">
+            <h3 className="text-base sm:text-lg font-bold text-[#adbac7] font-mono">
               No Canonical Resources Match
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+            <p className="text-xs sm:text-sm text-[#768390] font-sans">
               No seminal textbooks, papers, or courses matched your active search query and filter criteria.
             </p>
           </div>
@@ -355,18 +359,18 @@ export function LibraryExplorer({
           {/* Filter summary tags */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs font-mono">
             {searchQuery && (
-              <span className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-300">
-                Query: <span className="text-emerald-400 font-bold">&ldquo;{searchQuery}&rdquo;</span>
+              <span className="px-2.5 py-1 rounded-md bg-[#1c2128] border border-[#373e47] text-[#adbac7]">
+                Query: <span className="text-[#57ab5a] font-bold">&ldquo;{searchQuery}&rdquo;</span>
               </span>
             )}
             {formatFilter !== 'all' && (
-              <span className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-300">
-                Format: <span className="text-cyan-400 font-bold">{formatFilter}</span>
+              <span className="px-2.5 py-1 rounded-md bg-[#1c2128] border border-[#373e47] text-[#adbac7]">
+                Format: <span className="text-[#539bf5] font-bold">{formatFilter}</span>
               </span>
             )}
             {levelFilter !== 'all' && (
-              <span className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-300">
-                Level: <span className="text-amber-400 font-bold">{levelFilter}</span>
+              <span className="px-2.5 py-1 rounded-md bg-[#1c2128] border border-[#373e47] text-[#adbac7]">
+                Level: <span className="text-[#c69026] font-bold">{levelFilter}</span>
               </span>
             )}
           </div>
@@ -375,7 +379,7 @@ export function LibraryExplorer({
             <button
               onClick={resetFilters}
               type="button"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold transition-all shadow-md shadow-emerald-950/50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#238636] hover:bg-[#2ea043] text-white font-mono text-xs font-bold transition-all shadow-md shadow-black/30"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset All Filters</span>

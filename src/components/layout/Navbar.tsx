@@ -79,17 +79,19 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Global Search Bar (Prominent in Navbar, like YouTube/HackerTube) */}
-          <div className="flex-1 max-w-md hidden md:block">
+          {/* Global Search Bar - Responsive on all screen sizes */}
+          <div className="flex-1 max-w-xs sm:max-w-md mx-2 sm:mx-4 min-w-0">
             <button
               onClick={handleSearchClick}
-              className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-[#22272e] hover:bg-[#282e37] text-[#768390] hover:text-[#adbac7] border border-[#373e47] hover:border-[#444c56] text-xs font-mono transition-all"
+              className="w-full flex items-center justify-between px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-[#22272e] hover:bg-[#282e37] text-[#768390] hover:text-[#adbac7] border border-[#373e47] hover:border-[#444c56] text-xs font-mono transition-all cursor-pointer shadow-sm group"
+              title="Quick Search (Press / or ⌘K)"
             >
-              <div className="flex items-center gap-2">
-                <Search className="w-3.5 h-3.5 text-[#768390]" />
-                <span>Search 6,454 talks, outages & books...</span>
+              <div className="flex items-center gap-2 truncate">
+                <Search className="w-3.5 h-3.5 text-[#768390] group-hover:text-[#539bf5] transition-colors shrink-0" />
+                <span className="truncate sm:hidden text-[11px]">Search 6.4k talks...</span>
+                <span className="truncate hidden sm:inline">Search 6,454 talks, outages & books...</span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="hidden sm:flex items-center gap-1 shrink-0 ml-2">
                 <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#1c2128] text-[#768390] border border-[#373e47]">
                   /
                 </kbd>
@@ -101,15 +103,7 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
           </div>
 
           {/* Right Action Cluster */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono">
-            {/* Mobile Search Button */}
-            <button
-              onClick={handleSearchClick}
-              className="p-2 rounded-lg bg-[#22272e] border border-[#373e47] text-[#768390] md:hidden hover:text-[#adbac7]"
-              title="Search (/ or Cmd+K)"
-            >
-              <Search className="w-4 h-4" />
-            </button>
+          <div className="flex items-center gap-1.5 sm:gap-3 text-xs font-mono shrink-0">
 
             {/* Disaster Autopsies Link */}
             <Link

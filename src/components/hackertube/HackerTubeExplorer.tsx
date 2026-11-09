@@ -49,13 +49,13 @@ interface HackerTubeExplorerProps {
 type TabMode = 'all' | 'liked' | 'history' | 'watchLater' | 'playlists';
 
 const TOP_AREAS = [
-  { id: 'all', name: 'All 6,454 Talks' },
-  { id: 'Systems, Networks & Security', name: 'Systems & Security (956)' },
-  { id: 'Software Engineering & Languages', name: 'Software Craft (1,604)' },
-  { id: 'AI, Machine Learning & Data', name: 'AI & Data (718)' },
-  { id: 'Computing History & Culture', name: 'History & Culture (1,295)' },
-  { id: 'Hardware & Electronics', name: 'Hardware & Chips (769)' },
-  { id: 'Mathematics & Theoretical CS', name: 'Theoretical CS (479)' }
+  { id: 'all', name: 'All 6,454 Talks', shortName: 'All (6.4k)' },
+  { id: 'Systems, Networks & Security', name: 'Systems & Security (956)', shortName: 'Systems' },
+  { id: 'Software Engineering & Languages', name: 'Software Craft (1,604)', shortName: 'Craft' },
+  { id: 'AI, Machine Learning & Data', name: 'AI & Data (718)', shortName: 'AI & Data' },
+  { id: 'Computing History & Culture', name: 'History & Culture (1,295)', shortName: 'History' },
+  { id: 'Hardware & Electronics', name: 'Hardware & Chips (769)', shortName: 'Hardware' },
+  { id: 'Mathematics & Theoretical CS', name: 'Theoretical CS (479)', shortName: 'Theory' }
 ];
 
 export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerProps) {
@@ -437,64 +437,87 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
           {/* Search & Area Chips Toolbar */}
           <div className="space-y-3">
             {/* Search Bar + Sort */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#768390]" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#768390] pointer-events-none" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search 6,454 conference talks (e.g. Rich Hickey, Raft, B-Trees, eBPF, Rust)..."
-                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono"
+                  placeholder="Search 6,454 talks (Raft, eBPF, Rich Hickey)..."
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-base sm:text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono shadow-inner transition-colors"
                 />
-                {query && (
+                {query ? (
                   <button
                     onClick={() => setQuery('')}
-                    className="absolute right-3 top-3 text-[#768390] hover:text-[#adbac7] transition-colors cursor-pointer"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-[#768390] hover:text-[#adbac7] hover:bg-[#2d333b] transition-colors cursor-pointer"
                     title="Clear search"
+                    aria-label="Clear search"
                   >
                     <X className="w-4 h-4" />
                   </button>
+                ) : (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 pointer-events-none">
+                    <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#1c2128] text-[#768390] border border-[#373e47] font-mono">
+                      /
+                    </kbd>
+                  </div>
                 )}
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'score' | 'mentions' | 'recommenders')}
-                  className="py-2.5 px-3 rounded-xl bg-[#22272e] border border-[#373e47] text-xs font-mono text-[#adbac7] focus:outline-none"
-                >
-                  <option value="score">Sort: Highest HN Score</option>
-                  <option value="mentions">Sort: Most HN Mentions</option>
-                  <option value="recommenders">Sort: Most Recommenders</option>
-                </select>
+              {/* Responsive Filters: 2-column grid on small screens, flex row on tablet+ */}
+              <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 shrink-0">
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'score' | 'mentions' | 'recommenders')}
+                    className="w-full sm:w-auto appearance-none py-2.5 pl-3 pr-8 rounded-xl bg-[#22272e] border border-[#373e47] hover:border-[#444c56] focus:border-[#539bf5] text-xs font-mono text-[#adbac7] focus:outline-none transition-colors cursor-pointer truncate"
+                  >
+                    <option value="score">Sort: HN Score</option>
+                    <option value="mentions">Sort: Mentions</option>
+                    <option value="recommenders">Sort: Curators</option>
+                  </select>
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#768390]">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
 
-                <select
-                  value={level}
-                  onChange={(e) => setLevel(e.target.value)}
-                  className="py-2.5 px-3 rounded-xl bg-[#22272e] border border-[#373e47] text-xs font-mono text-[#adbac7] focus:outline-none"
-                >
-                  <option value="all">All Difficulty Levels</option>
-                  <option value="intro">Introductory</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    className="w-full sm:w-auto appearance-none py-2.5 pl-3 pr-8 rounded-xl bg-[#22272e] border border-[#373e47] hover:border-[#444c56] focus:border-[#539bf5] text-xs font-mono text-[#adbac7] focus:outline-none transition-colors cursor-pointer truncate"
+                  >
+                    <option value="all">Level: All</option>
+                    <option value="intro">Level: Intro</option>
+                    <option value="intermediate">Level: Intermediate</option>
+                    <option value="advanced">Level: Advanced</option>
+                  </select>
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#768390]">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Area Filter Chips */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-mono no-scrollbar">
+            {/* Area Filter Chips - Smooth Touch Swipe on Mobile */}
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 pt-0.5 text-xs font-mono no-scrollbar -mx-1 px-1">
               {TOP_AREAS.map((area) => (
                 <button
                   key={area.id}
                   onClick={() => setSelectedArea(area.id)}
-                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer text-xs ${
                     selectedArea === area.id
                       ? 'bg-[#2d333b] border border-[#444c56] text-[#adbac7] font-semibold shadow-sm'
                       : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
                   }`}
                 >
-                  {area.name}
+                  <span className="sm:hidden">{area.shortName}</span>
+                  <span className="hidden sm:inline">{area.name}</span>
                 </button>
               ))}
             </div>
@@ -519,7 +542,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
               ))}
             </div>
           ) : !loading ? (
-            <div className="p-12 rounded-xl bg-[#0e1117] border border-[#1f2533] text-center space-y-2 font-mono">
+            <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-2 font-mono">
               <p className="text-zinc-400 text-sm">No videos found matching your query.</p>
               <button
                 onClick={() => {
@@ -561,18 +584,27 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
       {/* Liked Talks View */}
       {activeTab === 'liked' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-zinc-400 border-b border-[#181d26] pb-3">
-            <span>You have <strong>{userStore.liked.length}</strong> liked talks saved locally</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-[#768390] border-b border-[#373e47]/60 pb-3">
+            <span>You have <strong className="text-[#adbac7]">{userStore.liked.length}</strong> liked talks saved locally</span>
             {userStore.liked.length > 0 && (
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-zinc-500" />
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#768390] pointer-events-none" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Filter liked talks..."
-                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0e1117] border border-[#202735] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#f47067] font-mono shadow-inner"
                 />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-[#768390] hover:text-[#adbac7]"
+                    title="Clear filter"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -584,10 +616,10 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
               ))}
             </div>
           ) : (
-            <div className="p-12 rounded-xl bg-[#0e1117] border border-[#1f2533] text-center space-y-2 font-mono">
-              <Heart className="w-8 h-8 text-zinc-600 mx-auto" />
-              <p className="text-zinc-300 font-bold">No liked talks yet</p>
-              <p className="text-zinc-500 text-xs">
+            <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-2 font-mono">
+              <Heart className="w-8 h-8 text-[#768390] mx-auto" />
+              <p className="text-[#adbac7] font-bold">No liked talks yet</p>
+              <p className="text-[#768390] text-xs">
                 Click the heart icon on any talk in the catalog to build your favorites list.
               </p>
             </div>
@@ -598,19 +630,28 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
       {/* Watch History View */}
       {activeTab === 'history' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-zinc-400 border-b border-[#181d26] pb-3">
-            <span>Watch History ({userStore.history.length} talks watched)</span>
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-[#768390] border-b border-[#373e47]/60 pb-3">
+            <span>Watch History (<strong className="text-[#adbac7]">{userStore.history.length}</strong> talks watched)</span>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
               {userStore.history.length > 0 && (
-                <div className="relative w-full sm:w-64">
-                  <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-zinc-500" />
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#768390] pointer-events-none" />
                   <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Filter history..."
-                    className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0e1117] border border-[#202735] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500"
+                    className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#539bf5] font-mono shadow-inner"
                   />
+                  {query && (
+                    <button
+                      onClick={() => setQuery('')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-[#768390] hover:text-[#adbac7]"
+                      title="Clear filter"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               )}
               {userStore.history.length > 0 && (
@@ -621,7 +662,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                       setUserStore(loadUserStore());
                     }
                   }}
-                  className="text-red-400 hover:text-red-300 flex items-center gap-1 cursor-pointer shrink-0"
+                  className="text-[#f47067] hover:text-[#f47067]/80 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#22272e] border border-[#373e47] hover:border-[#f47067]/40 cursor-pointer shrink-0 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Clear History</span>
@@ -634,7 +675,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredHistory.map((item) => (
                 <div key={item.video.vid} className="flex flex-col space-y-1">
-                  <span className="text-[10px] font-mono text-zinc-500">
+                  <span className="text-[10px] font-mono text-[#768390]">
                     Watched: {new Date(item.watchedAt).toLocaleDateString()} {new Date(item.watchedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <VideoCard video={item.video} />
@@ -642,10 +683,10 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
               ))}
             </div>
           ) : (
-            <div className="p-12 rounded-xl bg-[#0e1117] border border-[#1f2533] text-center space-y-2 font-mono">
-              <Clock className="w-8 h-8 text-zinc-600 mx-auto" />
-              <p className="text-zinc-300 font-bold">Your watch history is clean</p>
-              <p className="text-zinc-500 text-xs">
+            <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-2 font-mono">
+              <Clock className="w-8 h-8 text-[#768390] mx-auto" />
+              <p className="text-[#adbac7] font-bold">Your watch history is clean</p>
+              <p className="text-[#768390] text-xs">
                 Any video you open on the watch page is saved here so you never lose track.
               </p>
             </div>
@@ -656,18 +697,27 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
       {/* Watch Later View */}
       {activeTab === 'watchLater' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-zinc-400 border-b border-[#181d26] pb-3">
-            <span>Watch Later Queue ({userStore.watchLater.length} talks queued)</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-[#768390] border-b border-[#373e47]/60 pb-3">
+            <span>Watch Later Queue (<strong className="text-[#adbac7]">{userStore.watchLater.length}</strong> talks queued)</span>
             {userStore.watchLater.length > 0 && (
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-zinc-500" />
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#768390] pointer-events-none" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Filter watch later..."
-                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0e1117] border border-[#202735] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#c69026] font-mono shadow-inner"
                 />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-[#768390] hover:text-[#adbac7]"
+                    title="Clear filter"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -679,10 +729,10 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
               ))}
             </div>
           ) : (
-            <div className="p-12 rounded-xl bg-[#0e1117] border border-[#1f2533] text-center space-y-2 font-mono">
-              <Bookmark className="w-8 h-8 text-zinc-600 mx-auto" />
-              <p className="text-zinc-300 font-bold">No talks in your queue</p>
-              <p className="text-zinc-500 text-xs">
+            <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-2 font-mono">
+              <Bookmark className="w-8 h-8 text-[#768390] mx-auto" />
+              <p className="text-[#adbac7] font-bold">No talks in your queue</p>
+              <p className="text-[#768390] text-xs">
                 Save talks for weekend study sessions with the bookmark icon.
               </p>
             </div>
@@ -959,7 +1009,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                   ))}
                 </div>
               ) : (
-                <div className="p-12 rounded-xl bg-[#0e1117] border border-[#1f2533] text-center space-y-3 font-mono">
+                <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-3 font-mono">
                   <FolderKanban className="w-10 h-10 text-zinc-600 mx-auto" />
                   <p className="text-zinc-200 font-bold text-sm">This playlist is currently empty</p>
                   <p className="text-zinc-400 text-xs max-w-md mx-auto leading-relaxed">
@@ -1003,7 +1053,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Filter playlists..."
-                    className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0e1117] border border-[#202735] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 font-mono"
+                    className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#57ab5a] font-mono shadow-inner"
                   />
                   {query && (
                     <button
@@ -1291,14 +1341,14 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                           value={createTitle}
                           onChange={(e) => setCreateTitle(e.target.value)}
                           placeholder="Playlist title (e.g. Raft Consensus)..."
-                          className="w-full px-3 py-2 rounded-lg bg-[#0e1117] border border-[#202735] text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 text-xs"
+                          className="w-full px-3 py-2 rounded-lg bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#57ab5a] font-mono shadow-inner"
                         />
                         <input
                           type="text"
                           value={createDesc}
                           onChange={(e) => setCreateDesc(e.target.value)}
                           placeholder="Description (optional)..."
-                          className="w-full px-3 py-2 rounded-lg bg-[#0e1117] border border-[#202735] text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 text-xs"
+                          className="w-full px-3 py-2 rounded-lg bg-[#22272e] border border-[#373e47] text-base sm:text-xs text-[#adbac7] placeholder:text-[#768390] focus:outline-none focus:border-[#57ab5a] font-mono shadow-inner"
                         />
                       </div>
                     </div>
