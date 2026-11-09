@@ -4,6 +4,7 @@ import React from 'react';
 import { DisasterIncident } from '@/types/incident';
 import { SeverityBadge, RootCausePill } from '@/components/common/Badge';
 import { getRelatedResourcesForIncident } from '@/lib/db';
+import { CopyPrChecklistButton } from '@/components/disasters/CopyPrChecklistButton';
 import { Clock, ShieldAlert, BookOpen, ArrowRight, Flame, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface IncidentCardProps {
@@ -86,13 +87,16 @@ export function IncidentCard({ incident, onSelect }: IncidentCardProps) {
         </div>
       </div>
 
-      {/* Footer: Root Cause Tag & Prevention Linkage */}
+      {/* Footer: Root Cause Tag, PR Checklist & Autopsy Link */}
       <div className="pt-3 border-t border-[#181d26] space-y-2.5">
-        <div className="flex items-center justify-between text-xs font-mono">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
           <RootCausePill tag={incident.root_cause_tag} />
-          <span className="text-zinc-500 group-hover:text-red-400 flex items-center gap-1 transition-colors font-bold">
-            Examine Autopsy <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </span>
+          <div className="flex items-center gap-2">
+            <CopyPrChecklistButton incident={incident} variant="compact" />
+            <span className="text-zinc-500 group-hover:text-red-400 flex items-center gap-1 transition-colors font-bold shrink-0">
+              Autopsy <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </div>
         </div>
 
         {/* Linked Canonical Studies */}

@@ -8,6 +8,7 @@ import { HackerTubeVideo } from '@/types/hackertube';
 import { SeverityBadge, RootCausePill, CategoryPill, ResourceTypeBadge } from '@/components/common/Badge';
 import { getRelatedResourcesForIncident } from '@/lib/db';
 import { getCuratedTalksForIncident } from '@/data/incidentVideos';
+import { CopyPrChecklistButton } from '@/components/disasters/CopyPrChecklistButton';
 import {
   X,
   ExternalLink,
@@ -93,13 +94,16 @@ export function IncidentDetailModal({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            title="Close (Esc)"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <CopyPrChecklistButton incident={incident} variant="compact" />
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              title="Close (Esc)"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Body */}
@@ -213,10 +217,13 @@ export function IncidentDetailModal({
                 <p className="text-zinc-200 leading-relaxed">{incident.mitigation_rule}</p>
               </div>
 
-              <div className="space-y-2">
-                <h5 className="text-xs font-mono font-semibold text-zinc-400 uppercase tracking-wider">
-                  Checklist for PR Reviews & Architectural Design
-                </h5>
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <h5 className="text-xs font-mono font-semibold text-zinc-400 uppercase tracking-wider">
+                    Checklist for PR Reviews & Architectural Design
+                  </h5>
+                  <CopyPrChecklistButton incident={incident} variant="full" />
+                </div>
                 <ul className="space-y-2 text-xs sm:text-sm text-zinc-300">
                   {incident.checklist_rules.map((rule, idx) => (
                     <li key={idx} className="flex items-start gap-2.5 p-2 rounded bg-[#10141d] border border-[#1b202c]">

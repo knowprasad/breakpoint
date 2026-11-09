@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Ticker } from '@/components/layout/Ticker';
 import { Footer } from '@/components/layout/Footer';
 import { SeverityBadge, RootCausePill, CategoryPill, ResourceTypeBadge } from '@/components/common/Badge';
+import { CopyPrChecklistButton } from '@/components/disasters/CopyPrChecklistButton';
 import { ExternalLink, MessageSquare, Clock, BookOpen, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft, Play, Flame } from 'lucide-react';
 
 export async function generateStaticParams() {
@@ -146,10 +147,13 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
 
         {/* Mitigation & Defensive Checklist */}
         <div className="space-y-3">
-          <h3 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Mitigation Formula & PR Review Checklist</span>
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h3 className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Mitigation Formula & PR Review Checklist</span>
+            </h3>
+            <CopyPrChecklistButton incident={incident} variant="full" />
+          </div>
           <div className="p-5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-4">
             <div>
               <span className="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider block mb-1">

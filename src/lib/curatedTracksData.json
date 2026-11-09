@@ -1,0 +1,511 @@
+{
+  "4fFDFbi3toc": {
+    "vid": "4fFDFbi3toc",
+    "url": "https://www.youtube.com/watch?v=4fFDFbi3toc",
+    "title": "\"Testing Distributed Systems w/ Deterministic Simulation\" by Will Wilson",
+    "channel": "Strange Loop Conference",
+    "summary": "Will Wilson of FoundationDB explains how the team tested their distributed database using deterministic simulation. By running the whole system in a simulator with injected faults and reproducible seeds, they could find rare concurrency and network bugs.",
+    "why_hn": "HN treats it as the canonical talk on simulation testing and a mind-blowing example of how far rigorous testing can go.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "distributed systems testing",
+    "tags": [
+      "deterministic simulation",
+      "foundationdb",
+      "fault injection",
+      "concurrency bugs",
+      "strange loop"
+    ],
+    "categories": [
+      {
+        "id": "distributed-systems",
+        "name": "Distributed systems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "testing-debugging-tools",
+        "name": "Testing, debugging & developer tools",
+        "area": "software",
+        "area_name": "Software Engineering & Languages"
+      },
+      {
+        "id": "databases-storage",
+        "name": "Databases & storage",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      }
+    ],
+    "quote": {
+      "text": "this is one of the most amazing talks on distributed systems",
+      "hn_comment_id": 18563988,
+      "year": "2018"
+    },
+    "hn": {
+      "mentions": 20,
+      "recommenders": 12,
+      "rec_months": 11,
+      "strong_recs": 5,
+      "stances": {
+        "rec": 7,
+        "strong_rec": 5,
+        "reference": 8
+      },
+      "first_year": 2014,
+      "last_year": 2024
+    },
+    "score": 13.5,
+    "thumbnail_url": "https://i.ytimg.com/vi/4fFDFbi3toc/hq2.jpg"
+  },
+  "yCcWpzY8dIA": {
+    "vid": "yCcWpzY8dIA",
+    "url": "https://www.youtube.com/watch?v=yCcWpzY8dIA",
+    "title": "Conflict Resolution for Eventual Consistency • Martin Kleppmann • GOTO 2016",
+    "channel": "GOTO Conferences",
+    "summary": "Martin Kleppmann's GOTO Berlin 2016 talk on how collaborative editors, offline apps, and multi-datacenter databases handle concurrent updates. It covers conflict resolution approaches including operational transformation and CRDTs, with a worked look at text CRDTs.",
+    "why_hn": "Treated as the go-to approachable yet deep primer on CRDTs and collaborative editing, recommended repeatedly in threads on Automerge, local-first software and OT versus CRDT.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "CRDTs and eventual consistency",
+    "tags": [
+      "crdt",
+      "collaborative editing",
+      "operational transformation",
+      "automerge",
+      "distributed systems"
+    ],
+    "categories": [
+      {
+        "id": "distributed-systems",
+        "name": "Distributed systems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "databases-storage",
+        "name": "Databases & storage",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      }
+    ],
+    "quote": {
+      "text": "Rest of the talk is also highly recommended for anyone interested in an approachable primer on CRDTs.",
+      "hn_comment_id": 19889078,
+      "year": "2019"
+    },
+    "hn": {
+      "mentions": 13,
+      "recommenders": 3,
+      "rec_months": 7,
+      "strong_recs": 5,
+      "stances": {
+        "strong_rec": 5,
+        "reference": 2,
+        "rec": 6
+      },
+      "first_year": 2017,
+      "last_year": 2020
+    },
+    "score": 9,
+    "thumbnail_url": "https://i.ytimg.com/vi/yCcWpzY8dIA/hq2.jpg"
+  },
+  "m64SWl9bfvk": {
+    "vid": "m64SWl9bfvk",
+    "url": "https://www.youtube.com/watch?v=m64SWl9bfvk",
+    "title": "\"Stop Rate Limiting! Capacity Management Done Right\" by Jon Moore",
+    "channel": "Strange Loop Conference",
+    "summary": "Jon Moore's Strange Loop 2017 talk argues that rate limiting is the wrong tool for protecting services from noisy clients. He proposes concurrency-based capacity management and quotas instead.",
+    "why_hn": "HN engineers recommend it for its core insight that limiting concurrency naturally yields request-rate limits, and for its link to queueing theory.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "capacity management",
+    "tags": [
+      "rate limiting",
+      "concurrency limits",
+      "queueing theory",
+      "microservices",
+      "strange loop"
+    ],
+    "categories": [
+      {
+        "id": "distributed-systems",
+        "name": "Distributed systems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "cloud-devops-sre",
+        "name": "Cloud, DevOps & reliability",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "software-architecture-design",
+        "name": "Software architecture & design",
+        "area": "software",
+        "area_name": "Software Engineering & Languages"
+      }
+    ],
+    "quote": {
+      "text": "The basic premise is not do do req/s limiting but rather concurrency limiting which results in req/s limiting by itself.",
+      "hn_comment_id": 15963632,
+      "year": "2017"
+    },
+    "hn": {
+      "mentions": 4,
+      "recommenders": 4,
+      "rec_months": 4,
+      "strong_recs": 0,
+      "stances": {
+        "rec": 4
+      },
+      "first_year": 2017,
+      "last_year": 2024
+    },
+    "score": 4,
+    "thumbnail_url": "https://i.ytimg.com/vi/m64SWl9bfvk/hq2.jpg"
+  },
+  "EY6q5dv_B-o": {
+    "vid": "EY6q5dv_B-o",
+    "url": "https://www.youtube.com/watch?v=EY6q5dv_B-o",
+    "title": "VCF East: Ken Thompson interviewed by Brian Kernighan",
+    "channel": "Vintage Computer Federation",
+    "summary": "Brian Kernighan interviews Unix co-creator Ken Thompson at VCF East 2019. Thompson recounts how he was hired at Bell Labs, writing the Unix kernel in about three weeks, the origins of B and TMG, pipes, and other anecdotes.",
+    "why_hn": "HN commenters recommend it for Thompson's funny, first-hand Unix history stories, some of which even Kernighan had not heard.",
+    "content_type": "interview",
+    "level": "general",
+    "shelf_life": "evergreen",
+    "primary_topic": "unix history",
+    "tags": [
+      "ken thompson",
+      "brian kernighan",
+      "unix",
+      "bell labs",
+      "computing history",
+      "tmg"
+    ],
+    "categories": [
+      {
+        "id": "history-of-computing",
+        "name": "History of computing",
+        "area": "computing-history-culture",
+        "area_name": "Computing History & Culture"
+      },
+      {
+        "id": "tech-figures-interviews",
+        "name": "Tech pioneers & interviews",
+        "area": "computing-history-culture",
+        "area_name": "Computing History & Culture"
+      },
+      {
+        "id": "operating-systems",
+        "name": "Operating systems & kernels",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      }
+    ],
+    "quote": {
+      "text": "Also I found these fascinating",
+      "hn_comment_id": 21589163,
+      "year": "2019"
+    },
+    "hn": {
+      "mentions": 18,
+      "recommenders": 11,
+      "rec_months": 10,
+      "strong_recs": 3,
+      "stances": {
+        "rec": 8,
+        "reference": 7,
+        "strong_rec": 3
+      },
+      "first_year": 2019,
+      "last_year": 2025
+    },
+    "score": 11.5,
+    "thumbnail_url": "https://i.ytimg.com/vi/EY6q5dv_B-o/hq2.jpg"
+  },
+  "-zRN7XLCRhc": {
+    "vid": "-zRN7XLCRhc",
+    "url": "https://www.youtube.com/watch?v=-zRN7XLCRhc",
+    "title": "LISA11 - Fork Yeah! The Rise and Development of illumos",
+    "channel": "USENIX",
+    "summary": "Bryan Cantrill's LISA11 talk on how illumos arose after Oracle closed OpenSolaris. It covers the history of Sun, ZFS, DTrace and Zones, and the diaspora of kernel engineers, with a famous rant about Oracle and Larry Ellison.",
+    "why_hn": "HN points to it as the definitive, entertaining account of Sun's fate under Oracle, and quotes its Ellison lawnmower advice whenever Oracle behaves badly.",
+    "content_type": "talk",
+    "level": "general",
+    "shelf_life": "evergreen",
+    "primary_topic": "illumos and oracle history",
+    "tags": [
+      "illumos",
+      "opensolaris",
+      "oracle",
+      "sun microsystems",
+      "bryan cantrill",
+      "open source"
+    ],
+    "categories": [
+      {
+        "id": "operating-systems",
+        "name": "Operating systems & kernels",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "linux-open-source-os",
+        "name": "Linux & open-source ecosystems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "tech-company-stories",
+        "name": "Tech company stories & documentaries",
+        "area": "computing-history-culture",
+        "area_name": "Computing History & Culture"
+      }
+    ],
+    "quote": {
+      "text": "If you're interested how it came to be check out this epic talk by Bryan Cantrill",
+      "hn_comment_id": 13082671,
+      "year": "2016"
+    },
+    "hn": {
+      "mentions": 20,
+      "recommenders": 9,
+      "rec_months": 9,
+      "strong_recs": 4,
+      "stances": {
+        "reference": 9,
+        "rec": 5,
+        "strong_rec": 4,
+        "joke": 2
+      },
+      "first_year": 2012,
+      "last_year": 2026
+    },
+    "score": 11,
+    "thumbnail_url": "https://i.ytimg.com/vi/-zRN7XLCRhc/hq2.jpg"
+  },
+  "o_AIw9bGogo": {
+    "vid": "o_AIw9bGogo",
+    "url": "https://www.youtube.com/watch?v=o_AIw9bGogo",
+    "title": "The Tragedy of systemd",
+    "channel": "linux.conf.au",
+    "summary": "FreeBSD developer Benno Rice traces the history of init and bootstrap systems at linux.conf.au 2019 to explain why systemd was seen as necessary and why it provokes such strong reactions. He also discusses why change is scary.",
+    "why_hn": "The most-recommended balanced take on systemd, from a BSD perspective, handed to anyone caught up in the systemd debate.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "systemd",
+    "tags": [
+      "systemd",
+      "init systems",
+      "freebsd",
+      "unix history",
+      "linux"
+    ],
+    "categories": [
+      {
+        "id": "linux-open-source-os",
+        "name": "Linux & open-source ecosystems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "operating-systems",
+        "name": "Operating systems & kernels",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      }
+    ],
+    "quote": {
+      "text": "is an interesting talk on this topic from the view of someone (Benno Rice) in BSD land. Highly recommended.",
+      "hn_comment_id": 41175576,
+      "year": "2024"
+    },
+    "hn": {
+      "mentions": 20,
+      "recommenders": 16,
+      "rec_months": 14,
+      "strong_recs": 5,
+      "stances": {
+        "rec": 11,
+        "reference": 4,
+        "strong_rec": 5
+      },
+      "first_year": 2019,
+      "last_year": 2025
+    },
+    "score": 16,
+    "thumbnail_url": "https://i.ytimg.com/vi/o_AIw9bGogo/hq2.jpg"
+  },
+  "fU9hR3kiOK0": {
+    "vid": "fU9hR3kiOK0",
+    "url": "https://www.youtube.com/watch?v=fU9hR3kiOK0",
+    "title": "\"Turning the database inside out with Apache Samza\" by Martin Kleppmann",
+    "channel": "Strange Loop Conference",
+    "summary": "Martin Kleppmann argues that databases are global shared mutable state and proposes treating them as an ever-growing log of immutable facts. Derived data such as caches, indexes and views is then built by stream processors like Apache Samza. The talk draws on Kafka and LinkedIn's experience with commit logs.",
+    "why_hn": "Commenters repeatedly cite it as the talk that reframed how they think about caching, derived data and event sourcing.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "stream processing and event logs",
+    "tags": [
+      "apache samza",
+      "kafka",
+      "event sourcing",
+      "immutable data",
+      "commit log",
+      "derived data"
+    ],
+    "categories": [
+      {
+        "id": "databases-storage",
+        "name": "Databases & storage",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "distributed-systems",
+        "name": "Distributed systems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      }
+    ],
+    "quote": {
+      "text": "This talk on Apache Samza completely changed how I think about caching and derived data in general",
+      "hn_comment_id": 45084830,
+      "year": "2025"
+    },
+    "hn": {
+      "mentions": 15,
+      "recommenders": 9,
+      "rec_months": 9,
+      "strong_recs": 5,
+      "stances": {
+        "rec": 6,
+        "strong_rec": 5,
+        "reference": 4
+      },
+      "first_year": 2015,
+      "last_year": 2025
+    },
+    "score": 11,
+    "thumbnail_url": "https://i.ytimg.com/vi/fU9hR3kiOK0/hq2.jpg"
+  },
+  "NVl9_6J1G60": {
+    "vid": "NVl9_6J1G60",
+    "url": "https://www.youtube.com/watch?v=NVl9_6J1G60",
+    "title": "Breakout Session Presented by Dan Robinson of Heap at PGConf Silicon Valley 2015",
+    "channel": "Citus Data",
+    "summary": "Dan Robinson, then CTO of Heap, explains how Heap runs its product analytics backend on PostgreSQL and CitusDB. It covers conversion funnels, retention and cohort queries across tens of billions of events and 50 TB of data, plus Postgres and Kafka together and the indexing strategy.",
+    "why_hn": "HN commenters point to it as a first-hand overview of Heap's Postgres/Citus architecture and its distinctive indexing approach.",
+    "content_type": "talk",
+    "level": "advanced",
+    "shelf_life": "dated",
+    "primary_topic": "postgres analytics architecture",
+    "tags": [
+      "postgresql",
+      "citus",
+      "event analytics",
+      "indexing",
+      "kafka",
+      "sharding"
+    ],
+    "categories": [
+      {
+        "id": "databases-storage",
+        "name": "Databases & storage",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "distributed-systems",
+        "name": "Distributed systems",
+        "area": "systems-security",
+        "area_name": "Systems, Networks & Security"
+      },
+      {
+        "id": "data-science-statistics",
+        "name": "Data science & statistics",
+        "area": "ai-data",
+        "area_name": "AI, Machine Learning & Data"
+      }
+    ],
+    "quote": {
+      "text": "Dan from Heap Analytics has a great talk about how they use Postgres and Citus.",
+      "hn_comment_id": 12396191,
+      "year": "2016"
+    },
+    "hn": {
+      "mentions": 8,
+      "recommenders": 4,
+      "rec_months": 5,
+      "strong_recs": 1,
+      "stances": {
+        "strong_rec": 1,
+        "rec": 4,
+        "reference": 3
+      },
+      "first_year": 2016,
+      "last_year": 2020
+    },
+    "score": 5.5,
+    "thumbnail_url": "https://i.ytimg.com/vi/NVl9_6J1G60/hq2.jpg"
+  },
+  "xNzoerDljjo": {
+    "vid": "xNzoerDljjo",
+    "url": "https://www.youtube.com/watch?v=xNzoerDljjo",
+    "title": "Saša Jurić - Parsing from first principles - WebCamp Zagreb 2019",
+    "channel": "WebCamp Zagreb",
+    "summary": "Sasa Juric explains how to parse a language from first principles without regexes, live-coding a simple parser combinator library in Elixir. It was given at WebCamp Zagreb 2019.",
+    "why_hn": "HN commenters recommend it as a clear, dense hour on parsers and parser combinators that holds the audience.",
+    "content_type": "talk",
+    "level": "intermediate",
+    "shelf_life": "evergreen",
+    "primary_topic": "parser combinators",
+    "tags": [
+      "parsing",
+      "elixir",
+      "parser combinators",
+      "live coding",
+      "functional programming"
+    ],
+    "categories": [
+      {
+        "id": "compilers-interpreters",
+        "name": "Compilers, interpreters & program analysis",
+        "area": "software",
+        "area_name": "Software Engineering & Languages"
+      },
+      {
+        "id": "functional-programming",
+        "name": "Functional programming",
+        "area": "software",
+        "area_name": "Software Engineering & Languages"
+      }
+    ],
+    "quote": {
+      "text": "Saša Jurić is fantastic at condensing lots of information in a 1 hour talk without losing the audience",
+      "hn_comment_id": 21862856,
+      "year": "2019"
+    },
+    "hn": {
+      "mentions": 3,
+      "recommenders": 3,
+      "rec_months": 3,
+      "strong_recs": 1,
+      "stances": {
+        "strong_rec": 1,
+        "rec": 2
+      },
+      "first_year": 2019,
+      "last_year": 2021
+    },
+    "score": 3.5,
+    "thumbnail_url": "https://i.ytimg.com/vi/xNzoerDljjo/hq2.jpg"
+  }
+}

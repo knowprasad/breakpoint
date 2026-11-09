@@ -16,20 +16,20 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full bg-[#07080b]/95 backdrop-blur-md border-b border-[#1b202c]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
-        {/* Brand: HackerTube by Breakpoint */}
+        {/* Brand: breakpoint */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-transform group-hover:scale-105 shadow-md shadow-red-950/40">
-            <Play className="w-4 h-4 fill-current ml-0.5" />
+          <div className="w-8 h-8 rounded-lg bg-red-950/80 border border-red-500/50 text-red-400 flex items-center justify-center transition-all group-hover:scale-105 group-hover:border-red-400 group-hover:bg-red-900/90 shadow-md shadow-red-950/60 font-mono font-bold text-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-400/40 animate-pulse" />
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5 font-mono font-bold text-base tracking-tight text-white group-hover:text-red-400 transition-colors">
-              <span>HackerTube</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 font-normal">
-                by breakpoint
+            <div className="flex items-center gap-2 font-mono font-bold text-base tracking-tight text-white group-hover:text-red-400 transition-colors">
+              <span>breakpoint</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800/90 text-zinc-400 font-normal border border-zinc-700/60">
+                v1.0
               </span>
             </div>
             <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline tracking-tight">
-              6,454 conference talks curated from 20 years of Hacker News
+              Production Disaster Encyclopedia & Engineering Canon
             </span>
           </div>
         </Link>

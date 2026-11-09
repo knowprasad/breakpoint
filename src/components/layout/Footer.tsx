@@ -30,6 +30,11 @@ export function Footer() {
             <h4 className="text-zinc-200 font-semibold uppercase tracking-wider text-[11px]">The Platform</h4>
             <ul className="space-y-1.5 text-zinc-400">
               <li>
+                <Link href="/#hackertube" className="hover:text-zinc-200 transition-colors">
+                  Conference Canon (6,454)
+                </Link>
+              </li>
+              <li>
                 <Link href="/#disasters" className="hover:text-zinc-200 transition-colors">
                   Disaster Encyclopedia
                 </Link>

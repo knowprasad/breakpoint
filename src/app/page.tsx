@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Ticker } from '@/components/layout/Ticker';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -16,8 +16,18 @@ import { FailureSimulator } from '@/components/simulator/FailureSimulator';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
 import { getAllIncidents, getAllResources } from '@/lib/db';
-import { Flame, BookOpen, Video, Grid, Terminal } from 'lucide-react';
+import { Flame, BookOpen, Video, Grid, Terminal, Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+
+const DISASTER_STACKS = [
+  { id: 'all', label: 'All Stacks' },
+  { id: 'databases-storage', label: 'Databases & Storage' },
+  { id: 'operating-systems-kernel', label: 'Kernel & OS' },
+  { id: 'distributed-systems', label: 'Consensus & Raft' },
+  { id: 'traffic-loadbalancing', label: 'Traffic & Caching' },
+  { id: 'networking-bgp', label: 'BGP & Networking' },
+  { id: 'deployment-ci-cd', label: 'CI/CD & Fleet' },
+];
 
 export default function HomePage() {
   const router = useRouter();
@@ -27,8 +37,31 @@ export default function HomePage() {
   const [activeResource, setActiveResource] = useState<LibraryResource | null>(null);
   const [searchPaletteOpen, setSearchPaletteOpen] = useState(false);
 
+  // Faceted Technology Stack & Search Filters for Disaster Encyclopedia
+  const [disasterSearch, setDisasterSearch] = useState('');
+  const [disasterStack, setDisasterStack] = useState<string>('all');
+
   const incidents = getAllIncidents();
   const resources = getAllResources();
+
+  const filteredIncidents = useMemo(() => {
+    return incidents.filter((incident) => {
+      const matchesCategory =
+        disasterStack === 'all' || incident.category === disasterStack;
+      if (!matchesCategory) return false;
+
+      if (!disasterSearch.trim()) return true;
+      const q = disasterSearch.toLowerCase();
+      return (
+        incident.title.toLowerCase().includes(q) ||
+        incident.company.toLowerCase().includes(q) ||
+        incident.service_affected.toLowerCase().includes(q) ||
+        incident.trigger.toLowerCase().includes(q) ||
+        incident.mechanism_explanation.toLowerCase().includes(q) ||
+        incident.root_cause_tag.toLowerCase().includes(q)
+      );
+    });
+  }, [incidents, disasterStack, disasterSearch]);
 
   // Sync active tab with URL hash for instant external linking (#disasters, #library, etc.)
   useEffect(() => {
@@ -70,12 +103,12 @@ export default function HomePage() {
               onClick={() => switchTab('hackertube')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'hackertube'
-                  ? 'bg-red-600 text-white shadow-sm shadow-red-950/50'
+                  ? 'bg-zinc-800 text-white border border-zinc-600 shadow-sm'
                   : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
               }`}
             >
-              <Video className="w-3.5 h-3.5" />
-              <span>HackerTube Talks (6,454)</span>
+              <Video className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Conference Canon (6,454)</span>
             </button>
 
             <button
@@ -99,7 +132,7 @@ export default function HomePage() {
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Timeless Library (18)</span>
+              <span>Timeless Library (31)</span>
             </button>
 
             <button
@@ -155,19 +188,84 @@ export default function HomePage() {
               </div>
 
               <span className="px-3 py-1 rounded-lg bg-red-950/60 border border-red-500/30 text-red-300 font-mono text-xs font-bold">
-                15 Verified Autopsies
+                {filteredIncidents.length} of {incidents.length} Autopsies
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {incidents.map((incident) => (
-                <IncidentCard
-                  key={incident.id}
-                  incident={incident}
-                  onSelect={setActiveIncident}
+            {/* Faceted Technology Stack Filter + Search */}
+            <div className="space-y-3">
+              <div className="relative">
+                <Search className="absolute left-3.5 top-3 w-4 h-4 text-zinc-500" />
+                <input
+                  type="text"
+                  value={disasterSearch}
+                  onChange={(e) => setDisasterSearch(e.target.value)}
+                  placeholder="Filter by keyword, tech, company, or failure mode (e.g. Postgres, CrowdStrike, BGP, Canary)..."
+                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#0e1117] border border-[#202735] focus:border-red-500 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
                 />
-              ))}
+                {disasterSearch && (
+                  <button
+                    onClick={() => setDisasterSearch('')}
+                    className="absolute right-3 top-3 text-zinc-500 hover:text-white transition-colors"
+                    title="Clear filter"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Stack Filter Chips */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-mono no-scrollbar">
+                {DISASTER_STACKS.map((stack) => {
+                  const count =
+                    stack.id === 'all'
+                      ? incidents.length
+                      : incidents.filter((i) => i.category === stack.id).length;
+                  return (
+                    <button
+                      key={stack.id}
+                      onClick={() => setDisasterStack(stack.id)}
+                      className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                        disasterStack === stack.id
+                          ? 'bg-red-950/70 border border-red-500/50 text-red-200 font-bold shadow-sm'
+                          : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-zinc-200 hover:bg-[#141822]'
+                      }`}
+                    >
+                      <span>{stack.label}</span>
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/40 text-zinc-400">
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Incident Cards Grid */}
+            {filteredIncidents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredIncidents.map((incident) => (
+                  <IncidentCard
+                    key={incident.id}
+                    incident={incident}
+                    onSelect={setActiveIncident}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-12 text-center rounded-xl bg-[#0d0f14] border border-[#1b202c] space-y-3 font-mono">
+                <p className="text-zinc-400 text-sm">No disaster autopsies match your current filter.</p>
+                <button
+                  onClick={() => {
+                    setDisasterSearch('');
+                    setDisasterStack('all');
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-red-950/50 border border-red-500/40 text-red-300 text-xs font-bold hover:bg-red-900/60 transition-colors"
+                >
+                  Reset Stack Filters
+                </button>
+              </div>
+            )}
           </div>
         )}
 

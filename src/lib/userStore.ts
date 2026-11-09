@@ -1,4 +1,5 @@
 import { HackerTubeVideo } from '@/types/hackertube';
+import { PRESEEDED_TRACKS } from '@/data/curatedTracks';
 
 export interface HistoryItem {
   video: HackerTubeVideo;
@@ -31,24 +32,7 @@ function getDefaultState(): UserStoreState {
     history: [],
     liked: [],
     watchLater: [],
-    playlists: [
-      {
-        id: 'pl-foundations',
-        name: 'Systems & Distributed Foundations',
-        description: 'Iconic talks on consensus, storage engines, and concurrency.',
-        createdAt: '2025-01-01T00:00:00.000Z',
-        updatedAt: '2025-01-01T00:00:00.000Z',
-        videos: []
-      },
-      {
-        id: 'pl-interview-prep',
-        name: 'System Design Interview Prep',
-        description: 'Talks explaining the failure modes tested in senior engineering rounds.',
-        createdAt: '2025-01-01T00:00:00.000Z',
-        updatedAt: '2025-01-01T00:00:00.000Z',
-        videos: []
-      }
-    ]
+    playlists: PRESEEDED_TRACKS
   };
 }
 
@@ -59,7 +43,17 @@ export function loadUserStore(): UserStoreState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getDefaultState();
-    return JSON.parse(raw);
+    const parsed: UserStoreState = JSON.parse(raw);
+    // If playlists are empty or have 0 videos across all playlists, seed the canonical tracks
+    if (!parsed.playlists || parsed.playlists.length === 0 || parsed.playlists.every((p) => !p.videos || p.videos.length === 0)) {
+      parsed.playlists = PRESEEDED_TRACKS;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+      } catch (e) {
+        // ignore storage error
+      }
+    }
+    return parsed;
   } catch (e) {
     return getDefaultState();
   }

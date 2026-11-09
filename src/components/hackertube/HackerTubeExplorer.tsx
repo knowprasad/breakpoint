@@ -32,7 +32,9 @@ import {
   FileCode,
   FileText,
   Play,
-  Upload
+  Upload,
+  Compass,
+  X
 } from 'lucide-react';
 
 interface HackerTubeExplorerProps {
@@ -235,7 +237,7 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                 : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
             }`}
           >
-            <Flame className="w-3.5 h-3.5 text-red-400" />
+            <Compass className="w-3.5 h-3.5 text-red-400" />
             <span>All Talks (6,454)</span>
           </button>
 
@@ -300,7 +302,7 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
             className="px-2.5 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 hover:text-white transition-colors flex items-center gap-1.5 font-bold"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>Play All on YouTube</span>
+            <span>Play All</span>
           </button>
 
           <label
@@ -317,23 +319,23 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
             />
           </label>
 
-          <button
-            onClick={handleExportMarkdown}
-            title="Export your curriculum to Markdown format"
-            className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5"
-          >
-            <FileText className="w-3.5 h-3.5 text-amber-400" />
-            <span>.md</span>
-          </button>
-
-          <button
-            onClick={handleExportJSON}
-            title="Export full user store state as JSON"
-            className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5"
-          >
-            <FileCode className="w-3.5 h-3.5 text-cyan-400" />
-            <span>.json</span>
-          </button>
+          <div className="flex items-center rounded-lg bg-[#10131a] border border-[#202735] p-0.5 text-zinc-400">
+            <span className="px-1.5 text-[10px] uppercase font-bold text-zinc-500">Export</span>
+            <button
+              onClick={handleExportMarkdown}
+              title="Export curriculum to Markdown (.md)"
+              className="px-2 py-1 rounded text-[11px] hover:text-white hover:bg-[#181e2b] transition-colors"
+            >
+              .md
+            </button>
+            <button
+              onClick={handleExportJSON}
+              title="Export full store to JSON (.json)"
+              className="px-2 py-1 rounded text-[11px] hover:text-white hover:bg-[#181e2b] transition-colors text-cyan-400"
+            >
+              .json
+            </button>
+          </div>
         </div>
       </div>
 
@@ -351,8 +353,17 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search 6,454 conference talks (e.g. Rich Hickey, Raft, B-Trees, eBPF, Rust)..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0e1117] border border-[#202735] focus:border-red-500 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
+                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#0e1117] border border-[#202735] focus:border-red-500 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
                 />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute right-3 top-3 text-zinc-500 hover:text-white transition-colors"
+                    title="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
