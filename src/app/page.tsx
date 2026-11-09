@@ -8,16 +8,22 @@ import { IncidentCard } from '@/components/disasters/IncidentCard';
 import { IncidentDetailModal } from '@/components/disasters/IncidentDetailModal';
 import { ResourceCard } from '@/components/library/ResourceCard';
 import { ResourceDetailModal } from '@/components/library/ResourceDetailModal';
+import { HackerTubeExplorer } from '@/components/hackertube/HackerTubeExplorer';
 import { FilterBar } from '@/components/search/FilterBar';
 import { CommandPalette } from '@/components/common/CommandPalette';
 import { DigestSignup } from '@/components/digest/DigestSignup';
+import { FailureMatrix } from '@/components/matrix/FailureMatrix';
+import { FailureSimulator } from '@/components/simulator/FailureSimulator';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
+import { HackerTubeVideo } from '@/types/hackertube';
+import { VideoTheaterModal } from '@/components/hackertube/VideoTheaterModal';
 import { searchAndFilter, FilterOptions, getRepositoryStats } from '@/lib/db';
-import { Flame, BookOpen, Layers, ShieldAlert, ArrowRight, Zap, Sparkles, Terminal } from 'lucide-react';
+import { Flame, BookOpen, Layers, ShieldAlert, ArrowRight, Video, Grid, Terminal, Sparkles, Star } from 'lucide-react';
 import Link from 'next/link';
 
 export default function HomePage() {
+  const [activeTab, setActiveTab] = useState<'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator'>('hackertube');
   const [filters, setFilters] = useState<FilterOptions>({
     query: '',
     pillar: 'all',
@@ -29,6 +35,7 @@ export default function HomePage() {
 
   const [activeIncident, setActiveIncident] = useState<DisasterIncident | null>(null);
   const [activeResource, setActiveResource] = useState<LibraryResource | null>(null);
+  const [activeVideo, setActiveVideo] = useState<HackerTubeVideo | null>(null);
   const [searchPaletteOpen, setSearchPaletteOpen] = useState(false);
 
   const stats = getRepositoryStats();
@@ -46,138 +53,165 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#08090b] text-zinc-100 font-sans">
+    <div className="min-h-screen flex flex-col bg-[#07080b] text-white font-sans">
       {/* 1. Production Ticker */}
       <Ticker />
 
       {/* 2. Primary Navigation */}
-      <Navbar
-        onOpenSearch={() => setSearchPaletteOpen(true)}
-      />
+      <Navbar onOpenSearch={() => setSearchPaletteOpen(true)} />
 
-      {/* 3. Hero Section (Strictly constrained per design-taste-frontend: fits in viewport, subtext <= 20 words, max 4 elements) */}
+      {/* 3. Hero Section with Technical Backdrop */}
       <section className="relative w-full pt-10 pb-12 sm:pt-14 sm:pb-16 border-b border-[#181d26] overflow-hidden">
-        {/* Subtle geometric ambient backdrop glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-red-600/5 blur-[120px] pointer-events-none rounded-full" />
+        {/* Subtle grid texture */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#151922_1px,transparent_1px),linear-gradient(to_bottom,#151922_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] bg-red-600/5 blur-[120px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
-          {/* Eyebrow (Hero count = 1. Max 1 per 3 sections enforced) */}
+          {/* Eyebrow */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-500/30 text-red-400 font-mono text-xs font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-            <span>THE PRODUCTION DISASTER ENCYCLOPEDIA</span>
+            <span>THE PRODUCTION DISASTER ENCYCLOPEDIA & HACKERTUBE CANON</span>
           </div>
 
-          {/* Headline: Max 2 lines desktop */}
+          {/* Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight max-w-4xl">
             Failure Imagination for <br className="hidden sm:inline" />
             Senior Systems Engineers.
           </h1>
 
-          {/* Subtext: Exactly 19 words (under the strict 20-word limit!) */}
+          {/* Subtext (18 words) */}
           <p className="text-base sm:text-lg text-zinc-400 font-sans leading-relaxed max-w-2xl">
-            Forensic case studies of famous production outages, bidirectionally cross-linked with the canonical computer science literature that prevents them.
+            Forensic post-mortems of history's most instructive outages, cross-linked with 6,454 canonical talks and foundational books.
           </p>
 
-          {/* CTAs: 1 primary + 1 secondary */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href="#disasters"
-              className="px-5 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold transition-all shadow-md shadow-red-950 active:scale-[0.98] flex items-center gap-2"
-            >
-              <Flame className="w-4 h-4" />
-              <span>Explore Outage Autopsies</span>
-            </a>
+          {/* Quick Metrics Bar */}
+          <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-mono">
+            <div className="px-3 py-1 rounded-lg bg-[#0e1117] border border-[#1e2430] text-red-400 font-semibold flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5" />
+              <span>15 Forensic Autopsies</span>
+            </div>
+            <div className="px-3 py-1 rounded-lg bg-[#0e1117] border border-[#1e2430] text-amber-300 font-semibold flex items-center gap-1.5">
+              <Video className="w-3.5 h-3.5 text-amber-400" />
+              <span>6,454 HackerTube Talks</span>
+            </div>
+            <div className="px-3 py-1 rounded-lg bg-[#0e1117] border border-[#1e2430] text-emerald-400 font-semibold flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>30 Canonical Books</span>
+            </div>
+            <div className="px-3 py-1 rounded-lg bg-[#0e1117] border border-[#1e2430] text-blue-400 font-semibold flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5" />
+              <span>100% Bidirectional Graph</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <a
-              href="#library"
-              className="px-5 py-2.5 rounded-lg bg-[#141822] hover:bg-[#1c2230] text-zinc-200 border border-[#272f3d] font-mono text-xs font-semibold transition-all active:scale-[0.98] flex items-center gap-2"
+      {/* 4. Tab Navigation Strip */}
+      <section className="sticky top-16 z-30 w-full bg-[#08090b]/95 backdrop-blur-md border-b border-[#181d26]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 overflow-x-auto py-2.5 text-xs font-mono no-scrollbar">
+            <button
+              onClick={() => setActiveTab('hackertube')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap font-bold ${
+                activeTab === 'hackertube'
+                  ? 'bg-amber-950/70 text-amber-300 border border-amber-500/50 shadow-md shadow-amber-950/30'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#12151d]'
+              }`}
             >
-              <BookOpen className="w-4 h-4 text-emerald-400" />
-              <span>Browse Timeless Canon</span>
-            </a>
+              <Video className="w-4 h-4 text-amber-400" />
+              <span>HackerTube Talks (6,454)</span>
+            </button>
 
             <button
-              onClick={() => setSearchPaletteOpen(true)}
-              className="px-4 py-2.5 rounded-lg bg-[#0e1117] hover:bg-[#141820] text-zinc-400 border border-[#1f2634] font-mono text-xs transition-colors flex items-center gap-2"
+              onClick={() => setActiveTab('disasters')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap font-bold ${
+                activeTab === 'disasters'
+                  ? 'bg-red-950/70 text-red-300 border border-red-500/50 shadow-md shadow-red-950/30'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#12151d]'
+              }`}
             >
-              <span>Quick Search</span>
-              <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 text-[10px] text-zinc-400 border border-zinc-700">
-                ⌘K
-              </kbd>
+              <Flame className="w-4 h-4 text-red-500" />
+              <span>Disaster Encyclopedia</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('books')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap font-bold ${
+                activeTab === 'books'
+                  ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/50 shadow-md shadow-emerald-950/30'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#12151d]'
+              }`}
+            >
+              <BookOpen className="w-4 h-4 text-emerald-400" />
+              <span>Timeless Books & Papers</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('matrix')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap font-bold ${
+                activeTab === 'matrix'
+                  ? 'bg-blue-950/70 text-blue-300 border border-blue-500/50 shadow-md shadow-blue-950/30'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#12151d]'
+              }`}
+            >
+              <Grid className="w-4 h-4 text-blue-400" />
+              <span>Root-Cause Matrix</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('simulator')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap font-bold ${
+                activeTab === 'simulator'
+                  ? 'bg-zinc-800 text-white border border-zinc-600 shadow-md'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#12151d]'
+              }`}
+            >
+              <Terminal className="w-4 h-4 text-red-400" />
+              <span>Failure Simulator</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* 4. Telemetry Metric Stats Bar (Directly beneath hero, never cluttering hero) */}
-      <section className="w-full bg-[#0a0c10] border-b border-[#181d26] py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
-            <div className="flex items-center gap-2.5 p-2 rounded bg-[#0d1015] border border-[#1b202a]">
-              <span className="w-2 h-2 rounded-full bg-red-500" />
-              <div>
-                <span className="text-zinc-500 block text-[10px]">FORENSIC OUTAGES</span>
-                <span className="text-zinc-200 font-bold">{stats.incidentCount} Case Studies</span>
-              </div>
+      {/* 5. Main Content Surface */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        {/* Tab 1: HackerTube Explorer */}
+        {activeTab === 'hackertube' && (
+          <div className="space-y-6">
+            <div className="space-y-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                <Video className="w-5 h-5 text-amber-400" />
+                <span>The HackerTube Engineering Canon</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono">
+                The top 1% of conference talks repeatedly recommended across 20 years of Hacker News. Watch directly with YouTube embed player and explore linked real-world disasters.
+              </p>
             </div>
 
-            <div className="flex items-center gap-2.5 p-2 rounded bg-[#0d1015] border border-[#1b202a]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <div>
-                <span className="text-zinc-500 block text-[10px]">TIMELESS CURRICULUM</span>
-                <span className="text-zinc-200 font-bold">{stats.resourceCount} Books & Talks</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 p-2 rounded bg-[#0d1015] border border-[#1b202a]">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              <div>
-                <span className="text-zinc-500 block text-[10px]">KNOWLEDGE GRAPH</span>
-                <span className="text-zinc-200 font-bold">100% Bidirectional</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 p-2 rounded bg-[#0d1015] border border-[#1b202a]">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <div>
-                <span className="text-zinc-500 block text-[10px]">AVERAGE LINDY SCORE</span>
-                <span className="text-zinc-200 font-bold">{stats.averageLindyScore}.0 Resilience</span>
-              </div>
-            </div>
+            <HackerTubeExplorer onSelectIncident={setActiveIncident} />
           </div>
-        </div>
-      </section>
+        )}
 
-      {/* 5. Main Exploration Surface */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        {/* Faceted Filter Toolbar */}
-        <FilterBar
-          filters={filters}
-          onFilterChange={setFilters}
-          onReset={resetFilters}
-          totalMatches={searchResults.totalMatches}
-        />
-
-        {/* Pillar 1: Disaster Post-Mortems Section */}
-        {searchResults.incidents.length > 0 && (
-          <section id="disasters" className="space-y-4 scroll-mt-20">
-            <div className="flex items-center justify-between border-b border-[#1b202c] pb-3">
-              <div className="flex items-center gap-2">
-                <Flame className="w-5 h-5 text-red-500" />
-                <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-                  Production Disaster Encyclopedia
+        {/* Tab 2: Disaster Post-Mortems */}
+        {activeTab === 'disasters' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1b202c] pb-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-red-500" />
+                  <span>The Production Disaster Encyclopedia</span>
                 </h2>
-                <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-red-950/60 text-red-400 border border-red-500/30">
-                  {searchResults.incidents.length} Autopsies
-                </span>
+                <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-1">
+                  Forensic post-mortems of famous outages: what broke, the deep CS mechanism, and the defensive formula.
+                </p>
               </div>
 
-              <span className="text-xs font-mono text-zinc-500 hidden sm:inline">
-                Forensically verified post-mortems
+              <span className="px-3 py-1 rounded-lg bg-red-950/60 border border-red-500/30 text-red-300 font-mono text-xs font-bold">
+                15 Verified Post-Mortems
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {searchResults.incidents.map((incident) => (
                 <IncidentCard
                   key={incident.id}
@@ -186,29 +220,29 @@ export default function HomePage() {
                 />
               ))}
             </div>
-          </section>
+          </div>
         )}
 
-        {/* Pillar 2: Timeless Technical Library Section */}
-        {searchResults.resources.length > 0 && (
-          <section id="library" className="space-y-4 scroll-mt-20 pt-6">
-            <div className="flex items-center justify-between border-b border-[#1b202c] pb-3">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-emerald-400" />
-                <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-                  The Timeless Technical Library
+        {/* Tab 3: Timeless Books & Papers */}
+        {activeTab === 'books' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1b202c] pb-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-emerald-400" />
+                  <span>The Timeless Technical Library</span>
                 </h2>
-                <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
-                  {searchResults.resources.length} Canonical Works
-                </span>
+                <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-1">
+                  Foundational textbooks and seminal papers filtered for 10+ year persistence over hype.
+                </p>
               </div>
 
-              <span className="text-xs font-mono text-zinc-500 hidden sm:inline">
-                Lindy-filtered books, papers & talks
+              <span className="px-3 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold">
+                Lindy-Filtered
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {searchResults.resources.map((resource) => (
                 <ResourceCard
                   key={resource.id}
@@ -217,30 +251,48 @@ export default function HomePage() {
                 />
               ))}
             </div>
-          </section>
+          </div>
         )}
 
-        {/* Empty Search Fallback */}
-        {searchResults.totalMatches === 0 && (
-          <div className="p-12 rounded-xl bg-[#0c0e13] border border-[#1f2533] text-center space-y-3 font-mono">
-            <Terminal className="w-8 h-8 text-zinc-600 mx-auto" />
-            <h3 className="text-base font-bold text-zinc-300">
-              No matching records found for "{filters.query}"
-            </h3>
-            <p className="text-xs text-zinc-500 max-w-sm mx-auto">
-              Try searching for a mechanism like "cache stampede", "split brain", "redos", or a company like "Shopify" or "GitLab".
-            </p>
-            <button
-              onClick={resetFilters}
-              className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200 transition-colors"
-            >
-              Reset All Filters
-            </button>
+        {/* Tab 4: Root Cause Matrix */}
+        {activeTab === 'matrix' && (
+          <div className="space-y-6">
+            <div className="space-y-1 border-b border-[#1b202c] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                <Grid className="w-5 h-5 text-blue-400" />
+                <span>The Root-Cause Concept Matrix</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono">
+                Computer science failure mechanisms correlated with real outages, typical blast radiuses, and defensive engineering patterns.
+              </p>
+            </div>
+
+            <FailureMatrix
+              onSelectIncident={setActiveIncident}
+              onSelectResource={setActiveResource}
+            />
+          </div>
+        )}
+
+        {/* Tab 5: Failure Simulator */}
+        {activeTab === 'simulator' && (
+          <div className="space-y-6">
+            <div className="space-y-1 border-b border-[#1b202c] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                <Terminal className="w-5 h-5 text-red-400" />
+                <span>System Design Failure Simulator</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono">
+                Test your operational failure imagination against real production alerts.
+              </p>
+            </div>
+
+            <FailureSimulator onSelectResource={setActiveResource} />
           </div>
         )}
 
         {/* Bi-Weekly Email Digest Box */}
-        <section className="pt-8">
+        <section className="pt-6">
           <DigestSignup />
         </section>
       </main>
@@ -248,7 +300,7 @@ export default function HomePage() {
       {/* 6. Footer */}
       <Footer />
 
-      {/* 7. Modals (Incident Detail, Resource Detail, Command Palette) */}
+      {/* 7. Modals */}
       <IncidentDetailModal
         incident={activeIncident}
         onClose={() => setActiveIncident(null)}
@@ -267,11 +319,21 @@ export default function HomePage() {
         }}
       />
 
+      <VideoTheaterModal
+        video={activeVideo}
+        onClose={() => setActiveVideo(null)}
+        onSelectIncident={(inc) => {
+          setActiveVideo(null);
+          setActiveIncident(inc);
+        }}
+      />
+
       <CommandPalette
         isOpen={searchPaletteOpen}
         onClose={() => setSearchPaletteOpen(false)}
         onSelectIncident={setActiveIncident}
         onSelectResource={setActiveResource}
+        onSelectVideo={setActiveVideo}
       />
     </div>
   );

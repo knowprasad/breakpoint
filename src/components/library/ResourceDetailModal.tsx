@@ -92,7 +92,7 @@ export function ResourceDetailModal({ resource, onClose, onSelectIncident }: Res
               <p>{resource.why_recommended}</p>
 
               {resource.pull_quote && (
-                <div className="p-3 rounded bg-[#090b0f] border-l-2 border-emerald-400 flex items-start gap-2.5 text-xs italic text-zinc-300">
+                <div className="p-3.5 rounded-xl bg-[#090b0f] border border-[#1b202c] flex items-start gap-2.5 text-xs italic text-zinc-300">
                   <Quote className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
                     <p className="mb-1">"{resource.pull_quote.text}"</p>

@@ -1,11 +1,10 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { DisasterIncident } from '@/types/incident';
 import { SeverityBadge, RootCausePill } from '@/components/common/Badge';
 import { getRelatedResourcesForIncident } from '@/lib/db';
-import { Clock, ShieldAlert, BookOpen, ArrowRight, Zap } from 'lucide-react';
+import { Clock, ShieldAlert, BookOpen, ArrowRight, Flame, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface IncidentCardProps {
   incident: DisasterIncident;
@@ -25,61 +24,83 @@ export function IncidentCard({ incident, onSelect }: IncidentCardProps) {
   return (
     <div
       onClick={handleClick}
-      className="group relative flex flex-col justify-between p-5 rounded-lg bg-[#0e1116] hover:bg-[#13171f] border border-[#1f242e] hover:border-red-500/40 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md hover:shadow-red-950/20 active:scale-[0.99]"
+      className="group relative flex flex-col justify-between p-6 rounded-2xl bg-[#0c0e14] hover:bg-[#111520] border border-[#1e2332] hover:border-red-500/50 transition-all duration-200 cursor-pointer shadow-md hover:shadow-2xl hover:shadow-red-950/30 overflow-hidden active:scale-[0.99]"
     >
-      {/* Top Meta Bar */}
+      {/* Top Ambient Glow Line for P0 */}
+      {incident.severity === 'Critical P0' && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-red-500 to-amber-500 opacity-80" />
+      )}
+
       <div>
+        {/* Top Header: Company & Severity */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xl select-none" role="img" aria-label={incident.company}>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center text-lg select-none">
               {incident.company_logo || '🔥'}
-            </span>
-            <span className="font-mono text-sm font-semibold text-zinc-200 group-hover:text-red-400 transition-colors">
-              {incident.company}
-            </span>
-            <span className="text-zinc-500 font-mono text-xs">({incident.year})</span>
+            </div>
+            <div>
+              <span className="font-mono text-xs font-bold text-zinc-100 group-hover:text-red-400 transition-colors block">
+                {incident.company}
+              </span>
+              <span className="text-zinc-500 font-mono text-[11px] block">
+                Year {incident.year} • {incident.duration}
+              </span>
+            </div>
           </div>
+
           <SeverityBadge severity={incident.severity} />
         </div>
 
         {/* Title */}
-        <h3 className="text-base font-bold text-zinc-100 group-hover:text-white transition-colors leading-snug mb-2">
+        <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-red-300 transition-colors leading-snug mb-2.5">
           {incident.title}
         </h3>
 
-        {/* Service & Duration */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400 mb-3">
-          <span className="text-zinc-500">Service:</span>
-          <span className="text-zinc-300 font-medium">{incident.service_affected}</span>
-          <span className="text-zinc-600">•</span>
-          <span className="flex items-center gap-1 text-zinc-400">
-            <Clock className="w-3 h-3 text-zinc-500" />
-            {incident.duration}
+        {/* Blast Radius Box */}
+        <div className="p-2.5 rounded-lg bg-red-950/20 border border-red-500/20 mb-3.5 flex items-start gap-2 text-xs">
+          <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+          <span className="text-red-200/90 line-clamp-2 leading-relaxed">
+            <strong className="text-red-300 font-mono">Blast Radius:</strong> {incident.impact}
           </span>
         </div>
 
-        {/* The Trigger Excerpt */}
-        <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">
-          <span className="text-red-400 font-semibold font-mono">Trigger: </span>
-          {incident.trigger}
-        </p>
+        {/* Forensic 3-Step Chain */}
+        <div className="space-y-2 text-xs font-mono mb-4 text-zinc-300">
+          <div className="p-2 rounded bg-[#07080b] border border-[#161a24] space-y-1">
+            <span className="text-[10px] text-red-400 font-bold uppercase tracking-wider block">
+              Trigger Catalyst:
+            </span>
+            <p className="text-zinc-400 line-clamp-2 font-sans text-xs">
+              {incident.trigger}
+            </p>
+          </div>
+
+          <div className="p-2 rounded bg-[#07080b] border border-[#161a24] space-y-1">
+            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider block">
+              Deep CS Mechanism:
+            </span>
+            <p className="text-zinc-400 line-clamp-2 font-sans text-xs">
+              {incident.mechanism_explanation}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Bottom Footer: Root Cause Tag & Bidirectional Linked Resources */}
-      <div className="pt-3 border-t border-[#1a1f28] flex flex-col gap-2.5">
-        <div className="flex items-center justify-between gap-2">
+      {/* Footer: Root Cause Tag & Prevention Linkage */}
+      <div className="pt-3 border-t border-[#181d26] space-y-2.5">
+        <div className="flex items-center justify-between text-xs font-mono">
           <RootCausePill tag={incident.root_cause_tag} />
-          <span className="text-xs font-mono text-zinc-500 group-hover:text-red-400 flex items-center gap-1 transition-colors">
-            Autopsy <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          <span className="text-zinc-500 group-hover:text-red-400 flex items-center gap-1 transition-colors font-bold">
+            Examine Autopsy <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </span>
         </div>
 
-        {/* Bidirectional Linking preview */}
+        {/* Linked Canonical Studies */}
         {relatedResources.length > 0 && (
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 bg-[#08090b] px-2.5 py-1.5 rounded border border-[#1a1f28]">
-            <BookOpen className="w-3 h-3 text-emerald-400 shrink-0" />
-            <span className="text-zinc-500 shrink-0">Prevention:</span>
-            <span className="text-zinc-300 truncate">
+          <div className="flex items-center gap-2 p-2 rounded-lg bg-[#08090d] border border-[#191e2b] text-[11px] font-mono text-zinc-400">
+            <BookOpen className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span className="text-zinc-500 shrink-0">Antidote:</span>
+            <span className="text-emerald-300 font-semibold truncate">
               {relatedResources.map((r) => r.title).join(', ')}
             </span>
           </div>

@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
-import { getAllIncidents, getAllResources, searchAndFilter } from '@/lib/db';
-import { Search, Flame, BookOpen, AlertOctagon, CornerDownLeft, X } from 'lucide-react';
+import { HackerTubeVideo } from '@/types/hackertube';
+import { searchAndFilter } from '@/lib/db';
+import { Search, Flame, BookOpen, AlertOctagon, CornerDownLeft, X, Video, Star } from 'lucide-react';
 import { SeverityBadge, ResourceTypeBadge } from './Badge';
 
 interface CommandPaletteProps {
@@ -12,25 +13,50 @@ interface CommandPaletteProps {
   onClose: () => void;
   onSelectIncident: (incident: DisasterIncident) => void;
   onSelectResource: (resource: LibraryResource) => void;
+  onSelectVideo?: (video: HackerTubeVideo) => void;
 }
 
 export function CommandPalette({
   isOpen,
   onClose,
   onSelectIncident,
-  onSelectResource
+  onSelectResource,
+  onSelectVideo
 }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [videoResults, setVideoResults] = useState<HackerTubeVideo[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setQuery('');
       setSelectedIndex(0);
+      setVideoResults([]);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setVideoResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/videos?q=${encodeURIComponent(query)}&limit=5`);
+        if (res.ok) {
+          const data = await res.json();
+          setVideoResults(data.videos || []);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,9 +78,11 @@ export function CommandPalette({
   const combinedItems: Array<
     | { type: 'incident'; item: DisasterIncident }
     | { type: 'resource'; item: LibraryResource }
+    | { type: 'video'; item: HackerTubeVideo }
   > = [
-    ...searchResults.incidents.slice(0, 6).map((item) => ({ type: 'incident' as const, item })),
-    ...searchResults.resources.slice(0, 6).map((item) => ({ type: 'resource' as const, item }))
+    ...searchResults.incidents.slice(0, 4).map((item) => ({ type: 'incident' as const, item })),
+    ...searchResults.resources.slice(0, 3).map((item) => ({ type: 'resource' as const, item })),
+    ...videoResults.slice(0, 5).map((item) => ({ type: 'video' as const, item }))
   ];
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -69,7 +97,8 @@ export function CommandPalette({
       const current = combinedItems[selectedIndex];
       if (current) {
         if (current.type === 'incident') onSelectIncident(current.item);
-        else onSelectResource(current.item);
+        else if (current.type === 'resource') onSelectResource(current.item);
+        else if (current.type === 'video' && onSelectVideo) onSelectVideo(current.item);
         onClose();
       }
     }
@@ -78,14 +107,11 @@ export function CommandPalette({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4">
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
       {/* Palette Container */}
       <div
-        className="relative w-full max-w-2xl rounded-xl bg-[#0d0f14] border border-[#272e3c] shadow-2xl overflow-hidden z-10 font-mono animate-in fade-in zoom-in-95 duration-100"
+        className="relative w-full max-w-2xl rounded-2xl bg-[#0c0e14] border border-[#272e3c] shadow-2xl overflow-hidden z-10 font-mono animate-in fade-in zoom-in-95 duration-100"
         onKeyDown={handleKeyDown}
       >
         {/* Input Bar */}
@@ -99,7 +125,7 @@ export function CommandPalette({
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
-            placeholder="Search disasters, talks, books, and root causes (e.g. cache stampede, crowdstrike, ddia)..."
+            placeholder="Search disasters, 6,454 HackerTube talks, books, and mechanisms..."
             className="w-full bg-transparent text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
           />
           {query && (
@@ -119,7 +145,7 @@ export function CommandPalette({
         <div className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
           {combinedItems.length === 0 ? (
             <div className="py-12 text-center text-xs text-zinc-500">
-              No matching production outages or canonical literature found.
+              Type to search 6,454 talks, famous post-mortems, and books.
             </div>
           ) : (
             combinedItems.map((entry, idx) => {
@@ -159,7 +185,7 @@ export function CommandPalette({
                     )}
                   </div>
                 );
-              } else {
+              } else if (entry.type === 'resource') {
                 const res = entry.item;
                 return (
                   <div
@@ -194,6 +220,44 @@ export function CommandPalette({
                     </div>
                     {isSelected && (
                       <CornerDownLeft className="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-2" />
+                    )}
+                  </div>
+                );
+              } else {
+                const vid = entry.item;
+                return (
+                  <div
+                    key={vid.vid}
+                    onClick={() => {
+                      if (onSelectVideo) onSelectVideo(vid);
+                      onClose();
+                    }}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                      isSelected
+                        ? 'bg-amber-950/40 border border-amber-500/40 text-white'
+                        : 'hover:bg-zinc-900/60 text-zinc-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Video className="w-4 h-4 text-amber-400 shrink-0" />
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-zinc-200 truncate">
+                            {vid.title}
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/60 text-amber-300 border border-amber-500/30 flex items-center gap-0.5 font-bold">
+                            <Star className="w-2.5 h-2.5 fill-current text-amber-400" />
+                            {vid.score.toFixed(1)}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-zinc-400 truncate block">
+                          {vid.channel} • {vid.primary_topic}
+                        </span>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <CornerDownLeft className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-2" />
                     )}
                   </div>
                 );
