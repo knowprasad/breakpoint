@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { HackerTubeVideo } from '@/types/hackertube';
 import { VideoCard } from './VideoCard';
-import { VideoTheaterModal } from './VideoTheaterModal';
 import { PlaylistManagerModal } from './PlaylistManagerModal';
 import { DisasterIncident } from '@/types/incident';
 import {
   loadUserStore,
+  saveUserStore,
   clearWatchHistory,
   exportUserDataAsJSON,
   exportUserDataAsMarkdown,
@@ -30,7 +30,9 @@ import {
   Download,
   Trash2,
   FileCode,
-  FileText
+  FileText,
+  Play,
+  Upload
 } from 'lucide-react';
 
 interface HackerTubeExplorerProps {
@@ -53,7 +55,6 @@ const TOP_AREAS = [
 export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: HackerTubeExplorerProps) {
   const [activeTab, setActiveTab] = useState<TabMode>('all');
   const [videos, setVideos] = useState<HackerTubeVideo[]>(initialVideos);
-  const [selectedVideo, setSelectedVideo] = useState<HackerTubeVideo | null>(null);
   const [query, setQuery] = useState('');
   const [selectedArea, setSelectedArea] = useState('all');
   const [sortBy, setSortBy] = useState<'score' | 'mentions' | 'recommenders'>('score');
@@ -149,6 +150,41 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
     a.download = `breakpoint-curriculum-${new Date().toISOString().slice(0, 10)}.md`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handlePlayAllOnYouTube = () => {
+    let targetVideos: HackerTubeVideo[] = [];
+    if (activeTab === 'liked') targetVideos = userStore.liked;
+    else if (activeTab === 'watchLater') targetVideos = userStore.watchLater;
+    else if (activeTab === 'history') targetVideos = userStore.history.map((h) => h.video);
+    else targetVideos = videos;
+
+    const vids = targetVideos.slice(0, 50).map((v) => v.vid).filter(Boolean);
+    if (vids.length === 0) return;
+    const url = `https://www.youtube.com/watch_videos?video_ids=${vids.join(',')}`;
+    window.open(url, '_blank');
+  };
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target?.result as string);
+        if (parsed && (parsed.history || parsed.liked || parsed.playlists || parsed.watchLater)) {
+          saveUserStore(parsed);
+          setUserStore(parsed);
+          alert('Curriculum successfully imported!');
+        } else {
+          alert('Invalid Breakpoint curriculum JSON format.');
+        }
+      } catch (err) {
+        alert('Failed to parse curriculum JSON.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   // Filtered lists for personal views
@@ -256,15 +292,38 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
           </button>
         </div>
 
-        {/* Data Portability / Curriculum Export Buttons */}
-        <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+        {/* Actions Cluster: Play All on YouTube + Curriculum Import/Export */}
+        <div className="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+          <button
+            onClick={handlePlayAllOnYouTube}
+            title="Open current talks as a continuous playlist on YouTube"
+            className="px-2.5 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 hover:text-white transition-colors flex items-center gap-1.5 font-bold"
+          >
+            <Play className="w-3.5 h-3.5 fill-current" />
+            <span>Play All on YouTube</span>
+          </button>
+
+          <label
+            title="Import curriculum backup JSON"
+            className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <Upload className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Import</span>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportJSON}
+              className="hidden"
+            />
+          </label>
+
           <button
             onClick={handleExportMarkdown}
             title="Export your curriculum to Markdown format"
             className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5"
           >
             <FileText className="w-3.5 h-3.5 text-amber-400" />
-            <span>Export .md</span>
+            <span>.md</span>
           </button>
 
           <button
@@ -273,7 +332,7 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
             className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5"
           >
             <FileCode className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Export .json</span>
+            <span>.json</span>
           </button>
         </div>
       </div>
@@ -356,7 +415,6 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                 <VideoCard
                   key={video.vid}
                   video={video}
-                  onSelect={setSelectedVideo}
                   onOpenPlaylistModal={handleOpenPlaylistForVideo}
                 />
               ))}
@@ -414,7 +472,6 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                 <VideoCard
                   key={video.vid}
                   video={video}
-                  onSelect={setSelectedVideo}
                   onOpenPlaylistModal={handleOpenPlaylistForVideo}
                 />
               ))}
@@ -458,7 +515,6 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                   </span>
                   <VideoCard
                     video={item.video}
-                    onSelect={setSelectedVideo}
                     onOpenPlaylistModal={handleOpenPlaylistForVideo}
                   />
                 </div>
@@ -489,7 +545,6 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
                 <VideoCard
                   key={video.vid}
                   video={video}
-                  onSelect={setSelectedVideo}
                   onOpenPlaylistModal={handleOpenPlaylistForVideo}
                 />
               ))}
@@ -506,21 +561,11 @@ export function HackerTubeExplorer({ initialVideos = [], onSelectIncident }: Hac
         </div>
       )}
 
-      {/* Theater Modal Player */}
-      <VideoTheaterModal
-        video={selectedVideo}
-        onClose={() => setSelectedVideo(null)}
-        onSelectIncident={onSelectIncident}
-        onSelectVideo={(v) => setSelectedVideo(v)}
-        onOpenPlaylistModal={handleOpenPlaylistForVideo}
-      />
-
       {/* Playlist Manager Modal */}
       <PlaylistManagerModal
         isOpen={playlistModalOpen}
         onClose={() => setPlaylistModalOpen(false)}
         targetVideo={playlistTargetVideo}
-        onPlayVideo={(v) => setSelectedVideo(v)}
       />
     </div>
   );

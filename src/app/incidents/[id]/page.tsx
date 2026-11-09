@@ -2,11 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllIncidents, getIncidentById, getRelatedResourcesForIncident } from '@/lib/db';
+import { getCuratedTalksForIncident } from '@/data/incidentVideos';
 import { Navbar } from '@/components/layout/Navbar';
 import { Ticker } from '@/components/layout/Ticker';
 import { Footer } from '@/components/layout/Footer';
 import { SeverityBadge, RootCausePill, CategoryPill, ResourceTypeBadge } from '@/components/common/Badge';
-import { ExternalLink, MessageSquare, Clock, BookOpen, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { ExternalLink, MessageSquare, Clock, BookOpen, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft, Play, Flame } from 'lucide-react';
 
 export async function generateStaticParams() {
   const incidents = getAllIncidents();
@@ -22,6 +23,7 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
   }
 
   const relatedResources = getRelatedResourcesForIncident(incident.id);
+  const relatedVideos = getCuratedTalksForIncident(incident.id);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#08090b] text-zinc-100 font-sans selection:bg-red-500/30 selection:text-red-200">
@@ -171,6 +173,64 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
             </div>
           </div>
         </div>
+
+        {/* Bidirectional Linking: HackerTube Talks Explaining Solutions */}
+        {relatedVideos.length > 0 && (
+          <div className="pt-6 border-t border-[#1a1f28] space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-mono font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                <Flame className="w-4 h-4 text-red-400" />
+                <span>HackerTube Talks Explaining Solutions</span>
+              </h3>
+              <span className="text-xs font-mono text-zinc-500">
+                Bidirectional Knowledge Graph
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {relatedVideos.map((vid) => (
+                <Link
+                  key={vid.vid}
+                  href={`/watch/${vid.vid}`}
+                  className="p-4 rounded-xl bg-[#0f1218] hover:bg-[#141822] border border-[#1e2432] hover:border-red-500/40 transition-all flex flex-col justify-between group"
+                >
+                  <div className="space-y-3">
+                    <div className="relative aspect-video rounded-lg overflow-hidden bg-black/60">
+                      <img
+                        src={vid.thumbnail_url}
+                        alt=""
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-full bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play className="w-4 h-4 fill-current ml-0.5" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-1">
+                        <span className="font-semibold text-zinc-300 truncate max-w-[180px]">
+                          {vid.channel}
+                        </span>
+                        <span className="text-amber-400 font-bold">★ {vid.score.toFixed(1)}</span>
+                      </div>
+                      <h4 className="text-sm font-bold text-zinc-200 group-hover:text-red-400 transition-colors leading-snug line-clamp-2">
+                        {vid.title}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 mt-3 border-t border-[#1a1f2a] flex items-center justify-between text-xs font-mono text-red-400">
+                    <span>Watch Mitigating Talk</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bidirectional Linking: Canonical Studies to Prevent This */}
         <div className="pt-6 border-t border-[#1a1f28] space-y-4">

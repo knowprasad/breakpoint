@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { HackerTubeVideo } from '@/types/hackertube';
 import {
   Playlist,
@@ -283,18 +284,14 @@ export function PlaylistManagerModal({
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                          {onPlayVideo && (
-                            <button
-                              onClick={() => {
-                                onPlayVideo(vid);
-                                onClose();
-                              }}
-                              className="p-1.5 rounded-lg bg-zinc-800 hover:bg-red-600 text-white transition-colors"
-                              title="Play Video"
-                            >
-                              <Play className="w-3.5 h-3.5 fill-current" />
-                            </button>
-                          )}
+                          <Link
+                            href={`/watch/${vid.vid}`}
+                            onClick={onClose}
+                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-red-600 text-white transition-colors flex items-center justify-center"
+                            title="Play Video"
+                          >
+                            <Play className="w-3.5 h-3.5 fill-current" />
+                          </Link>
                           <button
                             onClick={() => {
                               removeVideoFromPlaylist(selectedPlaylist.id, vid.vid);

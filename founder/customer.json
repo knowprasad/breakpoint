@@ -1,0 +1,70 @@
+{
+  "business": "breakpoint: The Production Disaster Encyclopedia & HackerTube Canon",
+  "target": "Software engineers, SREs, systems architects, and engineering students who read Hacker News and build production systems",
+  "where": "Global / Remote (tech hubs: SF, NYC, Seattle, London, Berlin, Bangalore)",
+  "age": [22, 48],
+  "segments": [
+    {
+      "name": "Staff SRE & Infrastructure Architect",
+      "share": 0.30,
+      "income": [160000, 320000]
+    },
+    {
+      "name": "Mid-Level Backend & Distributed Systems Engineer",
+      "share": 0.35,
+      "income": [90000, 180000]
+    },
+    {
+      "name": "Junior Engineer & System Design Interview Candidate",
+      "share": 0.20,
+      "income": [45000, 100000]
+    },
+    {
+      "name": "Engineering Manager & Tech Lead",
+      "share": 0.15,
+      "income": [150000, 260000]
+    }
+  ],
+  "behaviours": [
+    {
+      "name": "Lindy Purist",
+      "share": 0.22,
+      "how": "Ignores tech hype, studies foundational papers, SICP, DDIA, and 10+ year conference talks."
+    },
+    {
+      "name": "On-Call Veteran",
+      "share": 0.25,
+      "how": "Has lived through 3 AM outages; wants deep post-mortems with exact triggers and mitigation formulas."
+    },
+    {
+      "name": "Interview & Career Grinder",
+      "share": 0.20,
+      "how": "Watches conference talks and reads failure cases to crack L5/L6 system design rounds."
+    },
+    {
+      "name": "Curator & Sharer",
+      "share": 0.18,
+      "how": "Builds playlists and shares architecture post-mortems in team Slack channels."
+    },
+    {
+      "name": "HN Skimmer",
+      "share": 0.15,
+      "how": "Clicks interesting HN links; bounces in 5 seconds if there is marketing hero fluff or paywalls."
+    }
+  ],
+  "objections": [
+    "Is this actually useful or just another bookmarked link I will never open again?",
+    "Why should I trust these incident autopsies over the original blog posts?",
+    "Is it easy to find specific talks and outages, or is it overwhelming with 6,454 videos?",
+    "Can I share a specific incident or talk link with my team so they land directly on it?",
+    "Is it clutter-free and fast on mobile?",
+    "Is there an account login requirement, or is my library local and private?",
+    "Does the simulator actually test realistic distributed systems failure, or is it too basic?"
+  ],
+  "habits": [
+    "reads Hacker News during morning coffee",
+    "studies system design during commute or weekend blocks",
+    "runs post-mortems after production incidents at work",
+    "watches high-signal engineering conference talks at 1.5x speed"
+  ]
+}

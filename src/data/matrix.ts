@@ -22,8 +22,7 @@ export const ROOT_CAUSE_MATRIX: RootCauseMatrixItem[] = [
     cs_principle: 'CAP Theorem, Quorum Consensus (Raft/Paxos), and Network Partitions',
     summary: 'Occurs when a distributed cluster partitions into isolated sub-groups that both believe they are authoritative, promoting dual leaders and accepting divergent, unresolvable concurrent writes.',
     incident_ids: [
-      'incident-github-2018-database-partition-split-brain',
-      'incident-discord-2022-cassandra-gc-pause-split-brain'
+      'incident-github-2018-database-partition-split-brain'
     ],
     resource_ids: ['paper-raft-consensus', 'book-ddia', 'talk-martin-kleppmann-crdt'],
     risk_level: 'Severe',
@@ -135,15 +134,28 @@ export const ROOT_CAUSE_MATRIX: RootCauseMatrixItem[] = [
   },
   {
     id: 'rc-clock-skew',
-    tag: 'clock-skew-leap-second',
-    title: 'Distributed Clock Skew & Leap Time Drift',
+    tag: 'clock-skew-drift',
+    title: 'Distributed Clock Skew & NTP Drift',
     category: 'distributed-systems',
     cs_principle: 'Lamport Timestamps, TrueTime, NTP Drift, and Relativity',
     summary: 'Occurs when distributed servers rely on physical wall clocks that drift by seconds, causing time-based security assertions (JWT nbf/iat) or replication log ordering to fail.',
     incident_ids: ['incident-zoom-2020-leap-second-jwt-clock-skew'],
-    resource_ids: ['paper-lamport-clocks-1978', 'book-ddia'],
+    resource_ids: ['paper-lamport-clocks-1978', 'book-ddia', 'talk-time-clocks-spanner'],
     risk_level: 'High',
     typical_blast_radius: 'Widespread authentication failures ("Token Not Yet Valid"), causal inconsistency in databases, and lock timeouts.',
     defensive_pattern: 'Never compare distributed timestamps strictly; configure JWT and assertions with 60-120s clock skew leeway; synchronize with AWS Time Sync or Google TrueTime.'
+  },
+  {
+    id: 'rc-gc-tombstones',
+    tag: 'gc-pause-tombstones',
+    title: 'JVM GC Pauses & Wide-Column Tombstone Amplification',
+    category: 'databases-storage',
+    cs_principle: 'Garbage Collection Stop-The-World, Memory Pressure, and LSM Compaction',
+    summary: 'Occurs when wide-partition scans across millions of deleted row tombstones trigger multi-second JVM Stop-The-World (STW) pauses, causing peers to mark the node dead and triggering unrecoverable flapping.',
+    incident_ids: ['incident-discord-2022-cassandra-gc-pause-split-brain'],
+    resource_ids: ['talk-discord-scylladb-migration', 'paper-dynamo-amazon', 'book-ddia'],
+    risk_level: 'High',
+    typical_blast_radius: '100% CPU lockup, p99 read latency spikes to 10+ seconds, peer gossip ring instability.',
+    defensive_pattern: 'Enforce tombstone failure thresholds, tune generation sizes, or migrate to thread-per-core GC-free architectures (C++/Rust, ScyllaDB).'
   }
 ];

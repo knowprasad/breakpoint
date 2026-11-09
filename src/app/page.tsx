@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ticker } from '@/components/layout/Ticker';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -15,21 +15,44 @@ import { FailureMatrix } from '@/components/matrix/FailureMatrix';
 import { FailureSimulator } from '@/components/simulator/FailureSimulator';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
-import { HackerTubeVideo } from '@/types/hackertube';
-import { VideoTheaterModal } from '@/components/hackertube/VideoTheaterModal';
 import { getAllIncidents, getAllResources } from '@/lib/db';
 import { Flame, BookOpen, Video, Grid, Terminal } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator'>('hackertube');
 
   const [activeIncident, setActiveIncident] = useState<DisasterIncident | null>(null);
   const [activeResource, setActiveResource] = useState<LibraryResource | null>(null);
-  const [activeVideo, setActiveVideo] = useState<HackerTubeVideo | null>(null);
   const [searchPaletteOpen, setSearchPaletteOpen] = useState(false);
 
   const incidents = getAllIncidents();
   const resources = getAllResources();
+
+  // Sync active tab with URL hash for instant external linking (#disasters, #library, etc.)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.toLowerCase().replace('#', '');
+      if (hash === 'disasters') setActiveTab('disasters');
+      else if (hash === 'library' || hash === 'books') setActiveTab('books');
+      else if (hash === 'matrix') setActiveTab('matrix');
+      else if (hash === 'simulator') setActiveTab('simulator');
+      else if (hash === 'hackertube' || hash === 'talks') setActiveTab('hackertube');
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const switchTab = (tab: 'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator') => {
+    setActiveTab(tab);
+    const hash = tab === 'books' ? 'library' : tab;
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${hash}`);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#07080b] text-white font-sans">
@@ -44,7 +67,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 overflow-x-auto py-2.5 text-xs font-mono no-scrollbar">
             <button
-              onClick={() => setActiveTab('hackertube')}
+              onClick={() => switchTab('hackertube')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'hackertube'
                   ? 'bg-red-600 text-white shadow-sm shadow-red-950/50'
@@ -56,7 +79,7 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('disasters')}
+              onClick={() => switchTab('disasters')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'disasters'
                   ? 'bg-red-950 text-red-200 border border-red-500/50 shadow-sm shadow-red-950/40'
@@ -68,7 +91,7 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('books')}
+              onClick={() => switchTab('books')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'books'
                   ? 'bg-emerald-950 text-emerald-200 border border-emerald-500/50 shadow-sm shadow-emerald-950/40'
@@ -80,7 +103,7 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('matrix')}
+              onClick={() => switchTab('matrix')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'matrix'
                   ? 'bg-blue-950 text-blue-200 border border-blue-500/50 shadow-sm shadow-blue-950/40'
@@ -92,7 +115,7 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('simulator')}
+              onClick={() => switchTab('simulator')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'simulator'
                   ? 'bg-zinc-800 text-white border border-zinc-600'
@@ -235,7 +258,7 @@ export default function HomePage() {
         }}
         onSelectVideo={(vid) => {
           setActiveIncident(null);
-          setActiveVideo(vid);
+          router.push(`/watch/${vid.vid}`);
         }}
       />
 
@@ -248,22 +271,15 @@ export default function HomePage() {
         }}
       />
 
-      <VideoTheaterModal
-        video={activeVideo}
-        onClose={() => setActiveVideo(null)}
-        onSelectIncident={(inc) => {
-          setActiveVideo(null);
-          setActiveIncident(inc);
-        }}
-        onSelectVideo={(vid) => setActiveVideo(vid)}
-      />
-
       <CommandPalette
         isOpen={searchPaletteOpen}
         onClose={() => setSearchPaletteOpen(false)}
         onSelectIncident={setActiveIncident}
         onSelectResource={setActiveResource}
-        onSelectVideo={setActiveVideo}
+        onSelectVideo={(vid) => {
+          setSearchPaletteOpen(false);
+          router.push(`/watch/${vid.vid}`);
+        }}
       />
     </div>
   );

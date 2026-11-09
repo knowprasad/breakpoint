@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
 import { HackerTubeVideo } from '@/types/hackertube';
@@ -243,11 +244,12 @@ export function IncidentDetailModal({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {relatedVideos.map((vid) => (
-                  <div
+                  <Link
                     key={vid.vid}
+                    href={`/watch/${vid.vid}`}
                     onClick={() => {
+                      onClose();
                       if (onSelectVideo) {
-                        onClose();
                         onSelectVideo(vid);
                       }
                     }}
@@ -285,7 +287,7 @@ export function IncidentDetailModal({
                       <span>Watch Mitigating Talk</span>
                       <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

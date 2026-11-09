@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { HackerTubeVideo } from '@/types/hackertube';
 import {
   Play,
@@ -20,7 +21,7 @@ import {
 
 interface VideoCardProps {
   video: HackerTubeVideo;
-  onSelect: (video: HackerTubeVideo) => void;
+  onSelect?: (video: HackerTubeVideo) => void;
   onOpenPlaylistModal?: (video: HackerTubeVideo) => void;
 }
 
@@ -40,18 +41,21 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
   }, [video.vid]);
 
   const handleToggleLike = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     const newStatus = toggleLikedVideo(video);
     setLiked(newStatus);
   };
 
   const handleToggleWatchLater = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     const newStatus = toggleWatchLater(video);
     setSavedLater(newStatus);
   };
 
   const handleOpenPlaylist = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (onOpenPlaylistModal) {
       onOpenPlaylistModal(video);
@@ -59,8 +63,14 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
   };
 
   return (
-    <div
-      onClick={() => onSelect(video)}
+    <Link
+      href={`/watch/${video.vid}`}
+      onClick={(e) => {
+        if (onSelect) {
+          // If custom handler is provided, we can allow it
+          onSelect(video);
+        }
+      }}
       className="group relative flex flex-col justify-between rounded-xl bg-[#0c0e14] hover:bg-[#121620] border border-[#1e2330] hover:border-red-500/40 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-red-950/20 overflow-hidden active:scale-[0.99]"
     >
       <div>
@@ -69,7 +79,13 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
           <img
             src={imgSrc}
             alt={video.title}
-            onError={() => setImgSrc(`https://i.ytimg.com/vi/${video.vid}/mqdefault.jpg`)}
+            onError={() => {
+              if (imgSrc.includes('/hq2.jpg')) {
+                setImgSrc(`https://i.ytimg.com/vi/${video.vid}/hqdefault.jpg`);
+              } else {
+                setImgSrc(`https://i.ytimg.com/vi/${video.vid}/mqdefault.jpg`);
+              }
+            }}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
@@ -189,6 +205,6 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

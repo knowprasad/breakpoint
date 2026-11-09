@@ -44,7 +44,7 @@ export function getHackerTubeRepository(): HackerTubeVideo[] {
         quote: v.quote,
         hn: v.hn || { mentions: 0, recommenders: 0, rec_months: 0, strong_recs: 0 },
         score: typeof v.score === 'number' ? v.score : 0,
-        thumbnail_url: `https://i.ytimg.com/vi/${v.vid}/hqdefault.jpg`,
+        thumbnail_url: `https://i.ytimg.com/vi/${v.vid}/hq2.jpg`,
         related_incident_ids: []
       };
 

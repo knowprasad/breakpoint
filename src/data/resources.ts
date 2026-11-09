@@ -555,5 +555,441 @@ export const SEEDED_RESOURCES: LibraryResource[] = [
     related_incident_ids: [
       'incident-shopify-2019-cache-avalanche'
     ]
+  },
+  {
+    id: 'book-release-it-nygard',
+    type: 'book',
+    title: 'Release It! Design and Deploy Production-Ready Software',
+    creator: 'Michael T. Nygard',
+    url: 'https://pragprog.com/titles/mnee2/release-it-second-edition/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'distributed-systems',
+    tags: ['circuit-breakers', 'bulkheads', 'timeouts', 'stability-patterns', 'resilience'],
+    summary: 'The seminal textbook that introduced Circuit Breakers, Bulkheads, Steady State, and Fail-Fast architectures to modern software engineering.',
+    mental_model_3min: 'Most software architectures assume steady-state perfection. Nygard proves that every integration point is an executioner: without timeouts, circuit breakers, and bounded thread pools, a slow remote dependency will back up socket buffers, exhaust connection pools, and topple your entire fleet. Resilience requires designing systems to fail fast, isolate blast radiuses via bulkheads, and shed load gracefully.',
+    why_recommended: 'The canonical work cited in virtually every major production post-mortem. It taught the industry why Netflix, AWS, and Stripe build circuit breakers and chaos monkeys.',
+    pull_quote: {
+      text: 'A failure in a remote system should not be a crisis in yours. The circuit breaker prevents a localized hiccup from cascading into an enterprise-wide catastrophe.',
+      source: 'Release It! (Stability Antipatterns)',
+      year: '2018'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Every outgoing socket call must have an explicit connection timeout and read timeout.',
+      'Wrap dangerous network calls in Circuit Breakers to fail immediately during outages.',
+      'Partition thread pools with Bulkheads so slow third parties cannot starve vital workflows.',
+      'Design for Steady State: automate log rotation, cache eviction, and connection recycling.'
+    ],
+    lindy_score: 97.5,
+    related_incident_ids: [
+      'incident-stripe-2020-rate-limiter-cascade',
+      'incident-netflix-2012-christmas-eve-elb',
+      'incident-shopify-2019-cache-avalanche'
+    ]
+  },
+  {
+    id: 'book-tcp-ip-illustrated',
+    type: 'book',
+    title: 'TCP/IP Illustrated, Volume 1: The Protocols',
+    creator: 'W. Richard Stevens',
+    url: 'https://www.pearson.com/en-us/subject-catalog/p/tcp-ip-illustrated-volume-1-the-protocols/P200000000109',
+    thumbnail_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'networking-bgp',
+    tags: ['networking', 'tcp', 'ip', 'bgp', 'dns', 'congestion-control', 'packet-analysis'],
+    summary: 'The undisputed classic textbook detailing the mechanics of the internet protocol suite through practical packet traces and socket behavior.',
+    mental_model_3min: 'The internet is an uncoordinated packet-switched network where TCP provides reliable ordered delivery on top of unreliable IP datagrams. Flow control (sliding windows) prevents receivers from overflowing, while congestion control (slow start, AIMD, packet loss detection) dynamically shares bandwidth. BGP uses path-vector routing to steer traffic across autonomous systems.',
+    why_recommended: 'Mandatory reading for Staff SREs and systems engineers. Stevens uses actual tcpdump traces to show how protocols behave in the wild.',
+    pull_quote: {
+      text: 'Stevens did not merely explain the RFCs; he ran tcpdump on every line, proving what the kernel network stack actually does with bytes.',
+      source: 'ACM Computing Reviews',
+      year: '1994'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Understand the TCP 3-way handshake, TIME_WAIT socket states, and SYN flood protection.',
+      'TCP congestion collapse occurs when retransmitted packets starve real throughput.',
+      'DNS resolution is hierarchical and vulnerable to cryptographic TTL and RRSIG expirations.',
+      'BGP path-vector decisions rely on AS-Path length and local preference policies.'
+    ],
+    lindy_score: 99.0,
+    related_incident_ids: [
+      'incident-facebook-2021-bgp-routing-blackhole',
+      'incident-slack-2021-dnssec-expiration',
+      'incident-cloudflare-2019-regex-cpu-spike'
+    ]
+  },
+  {
+    id: 'book-continuous-delivery-humble',
+    type: 'book',
+    title: 'Continuous Delivery: Reliable Software Releases',
+    creator: 'Jez Humble & David Farley',
+    url: 'https://continuousdelivery.com/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'deployment-ci-cd',
+    tags: ['ci-cd', 'deployments', 'devops', 'release-engineering', 'canary-rollouts'],
+    summary: 'The foundation of modern release engineering: build once, deploy identically, automate testing pipelines, and eliminate deployment drama.',
+    mental_model_3min: 'Deployments should be so routine they are boring. Every change creates a release candidate that flows through automated verification stages. By decoupling deployment (getting bits onto servers) from release (enabling functionality via feature flags), teams can rollback instantly without re-deploying binaries.',
+    why_recommended: 'The definitive manifesto that transformed software deployments from quarterly all-hands crises to continuous, safe automated pipelines.',
+    pull_quote: {
+      text: 'If it hurts, do it more frequently, and bring the pain forward. Automate everything until deployment is a non-event.',
+      source: 'Continuous Delivery',
+      year: '2010'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Build your binaries exactly once and promote identical artifacts across all stages.',
+      'Enforce atomic, automated deployments to prevent split-version fleet drift.',
+      'Ruthlessly eliminate dead code and dormant flags to avoid Knight Capital disasters.',
+      'Deploy behind feature flags and test in production with dark launches and canaries.'
+    ],
+    lindy_score: 95.0,
+    related_incident_ids: [
+      'incident-knight-capital-2012-dead-code-deployment',
+      'incident-crowdstrike-2024-bsod-kernel-driver'
+    ]
+  },
+  {
+    id: 'paper-dynamo-amazon',
+    type: 'paper',
+    title: "Dynamo: Amazon's Highly Available Key-value Store",
+    creator: 'Giuseppe DeCandia et al. (SOSP 2007)',
+    url: 'https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf',
+    thumbnail_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'distributed-systems',
+    tags: ['consistent-hashing', 'vector-clocks', 'sloppy-quorum', 'eventual-consistency', 'dynamo'],
+    summary: 'The seminal paper that catalyzed the NoSQL and distributed storage revolution, showing how to balance availability and latency with eventual consistency.',
+    mental_model_3min: 'Dynamo sacrifices ACID consistency for guaranteed write availability: it is always writable. It combines Consistent Hashing for scalable partitioning, Vector Clocks for version conflict detection, Sloppy Quorums and Hinted Handoff for partition tolerance, and Anti-entropy via Merkle Trees for background synchronization.',
+    why_recommended: 'The direct architectural parent of Cassandra, Riak, and DynamoDB. Essential reading for distributed storage engineers.',
+    pull_quote: {
+      text: 'Scale and reliability require that systems are designed from day one to operate in an environment where network partitions and node failures are the norm, not the exception.',
+      source: 'Werner Vogels / Amazon SOSP 2007',
+      year: '2007'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Consistent hashing with virtual nodes provides uniform key distribution and graceful node addition.',
+      'Sloppy quorum (N, R, W) allows trade-offs between consistency and latency.',
+      'Tombstones and anti-entropy Merkle trees keep partitioned replicas eventually consistent.',
+      'Vector clocks expose concurrent write conflicts to client resolution logic.'
+    ],
+    lindy_score: 97.0,
+    related_incident_ids: [
+      'incident-discord-2022-cassandra-gc-pause-split-brain',
+      'incident-github-2018-database-partition-split-brain'
+    ]
+  },
+  {
+    id: 'paper-chandy-lamport',
+    type: 'paper',
+    title: 'Distributed Snapshots: Determining Global States',
+    creator: 'K. Mani Chandy & Leslie Lamport (ACM TOCS 1985)',
+    url: 'https://lamport.azurewebsites.net/pubs/chandy.pdf',
+    thumbnail_url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'distributed-systems',
+    tags: ['distributed-systems', 'snapshots', 'global-state', 'algorithms', 'checkpoints'],
+    summary: 'The fundamental algorithm enabling distributed systems to capture consistent global checkpoints without halting in-flight message processing.',
+    mental_model_3min: 'In a distributed system without a shared clock or shared memory, capturing a global state requires recording both process states and messages in-flight along channels. Chandy-Lamport injects marker tokens along communication channels, ensuring every message sent before the marker is included in the snapshot without stopping execution.',
+    why_recommended: 'The algorithmic foundation of checkpointing, fault tolerance, and backup consistency in distributed databases like FoundationDB, Flink, and CockroachDB.',
+    pull_quote: {
+      text: 'A distributed snapshot gives you a consistent slice of spacetime in a cluster without stopping the universe.',
+      source: 'Leslie Lamport (ACM Turing Award citation)',
+      year: '1985'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Never attempt distributed backups by grabbing uncoordinated server snapshots.',
+      'Markers separate messages into pre-snapshot and post-snapshot epochs.',
+      'Consistent checkpoints guarantee that no effect is recorded without its cause.',
+      'Underpins modern stream processing state recovery (Apache Flink checkpointing).'
+    ],
+    lindy_score: 98.0,
+    related_incident_ids: [
+      'incident-gitlab-2017-database-loss',
+      'incident-github-2018-database-partition-split-brain'
+    ]
+  },
+  {
+    id: 'book-intro-to-automata',
+    type: 'book',
+    title: 'Introduction to Automata Theory, Languages, and Computation',
+    creator: 'John E. Hopcroft, Rajeev Motwani, Jeffrey D. Ullman',
+    url: 'https://en.wikipedia.org/wiki/Introduction_to_Automata_Theory,_Languages,_and_Computation',
+    thumbnail_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'theoretical-cs',
+    tags: ['automata', 'dfa', 'nfa', 'regular-expressions', 'redos', 'parsing'],
+    summary: 'The classic computer science textbook that proves the formal equivalence of Regular Expressions, DFAs, and NFAs—and explains the mathematical mechanics behind regex backtracking.',
+    mental_model_3min: 'Regular expressions define regular languages that can always be matched in linear O(n) time using Deterministic Finite Automata (DFA). Backtracking NFA engines (used in Perl, Python, JavaScript) introduce non-deterministic branching: when an expression contains ambiguous nested quantifiers, backtracking degenerates into O(2^n) exponential search on non-matching inputs (Catastrophic Backtracking / ReDoS).',
+    why_recommended: 'The mathematical vaccine against regex-induced production outages. Reading Chapter 3 explains why Cloudflare’s WAF melted.',
+    pull_quote: {
+      text: 'A DFA matches regular expressions in linear time guaranteed. Backtracking regex engines choose convenience over safety and pay with exponential CPU death.',
+      source: 'Hopcroft & Ullman',
+      year: '1979'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'DFA guarantees O(n) match time; backtracking NFA can degenerate into O(2^n).',
+      'Never allow unvetted regular expressions with nested quantifiers in production WAFs.',
+      'Use linear-time regex engines (Russ Cox RE2, Hyperscan, Rust regex) for untrusted input.',
+      'Static analysis can detect catastrophic backtracking patterns before deployment.'
+    ],
+    lindy_score: 99.0,
+    related_incident_ids: [
+      'incident-cloudflare-2019-regex-cpu-spike'
+    ]
+  },
+  {
+    id: 'course-mit-6004',
+    type: 'course',
+    title: 'MIT 6.004: Computation Structures',
+    creator: 'Chris Terman & Steve Ward (MIT OpenCourseWare)',
+    url: 'https://6004.mit.edu/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'hardware-architecture',
+    tags: ['computer-architecture', 'cpu', 'memory-hierarchy', 'assembly', 'os-interfaces'],
+    summary: 'The legendary MIT course that bridges silicon gates, CPU pipelines, virtual memory page tables, and assembly-level software execution.',
+    mental_model_3min: 'Computers are hierarchies of abstraction. Transistors build logic gates; gates build ALUs and registers; pipelined CPUs execute instructions through fetch-decode-execute cycles; virtual memory page tables translate virtual addresses to physical DRAM rows through the TLB. When a software program violates hardware memory bounds, the CPU memory management unit (MMU) halts execution and triggers a hardware trap.',
+    why_recommended: 'Gives software engineers the hardware intuition required to understand cache lines, kernel traps, and Ring 0 page faults.',
+    pull_quote: {
+      text: 'There is no magic in computer systems. From electrons to operating systems, it is all deterministic state machines.',
+      source: 'MIT 6.004 Course Introduction',
+      year: '2020'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'CPU Page Tables map virtual memory; out-of-bounds reads cause immediate MMU hardware faults.',
+      'Ring 0 kernel space executes with unrestricted hardware access; an unhandled fault causes a BugCheck.',
+      'Cache hierarchy (L1/L2/L3/DRAM) dictates latency cliffs by orders of magnitude.',
+      'Interrupt handlers and context switching have concrete nanosecond CPU costs.'
+    ],
+    lindy_score: 96.0,
+    related_incident_ids: [
+      'incident-crowdstrike-2024-bsod-kernel-driver',
+      'incident-datadog-2023-ebpf-kernel-panic'
+    ]
+  },
+  {
+    id: 'talk-bgp-routing-internals',
+    type: 'talk',
+    title: 'BGP Routing from First Principles & Anycast Networks',
+    creator: 'Cloudflare & NANOG Engineering',
+    url: 'https://www.youtube.com/watch?v=fE2KDzZaxvE',
+    thumbnail_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'networking-bgp',
+    tags: ['bgp', 'routing', 'anycast', 'autonomous-systems', 'internet-infrastructure'],
+    summary: 'A deep dive into how Border Gateway Protocol stitches the global internet together, how route withdrawals propagate, and how Anycast routes traffic to nearest edge points.',
+    mental_model_3min: 'BGP is the routing protocol of the internet: Autonomous Systems (AS) exchange reachable IP prefix advertisements. If internal monitoring mistakenly triggers route withdrawal, Tier-1 ISP routers drop those paths from their routing tables within seconds, rendering entire digital empires unreachable until routes are manually re-advertised.',
+    why_recommended: 'Explains the exact mechanics of global internet disconnects like Facebook 2021 and Cloudflare route flaps.',
+    pull_quote: {
+      text: 'If BGP withdraws your prefix, your servers might be running at 100% health in Ashburn, but the rest of the planet literally does not know how to send a packet to you.',
+      source: 'NANOG Keynote',
+      year: '2021'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'BGP is trust-based and lacks built-in route origin validation without RPKI.',
+      'Automated routing audit scripts must have hard stops preventing total prefix withdrawals.',
+      'Out-of-band networks must remain strictly independent of in-band routed infrastructure.',
+      'DNS authoritatives depend on BGP Anycast for global low-latency availability.'
+    ],
+    lindy_score: 94.0,
+    related_incident_ids: [
+      'incident-facebook-2021-bgp-routing-blackhole',
+      'incident-slack-2021-dnssec-expiration'
+    ]
+  },
+  {
+    id: 'book-site-reliability-workbook',
+    type: 'book',
+    title: 'The Site Reliability Workbook',
+    creator: 'Betsy Beyer, Niall Richard Murphy, David K. Rensin, Kent Kawahara, Stephen Thorne',
+    url: 'https://sre.google/workbook/table-of-contents/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'sre-resilience',
+    tags: ['sre', 'slo', 'sli', 'error-budgets', 'on-call', 'postmortems'],
+    summary: 'The practical companion to Google SRE, showing how to implement SLOs, error budgets, canary rollouts, and blameless post-mortem cultures in real production environments.',
+    mental_model_3min: '100% reliability is the wrong target: it slows innovation to zero and costs exponentially more. SRE establishes Service Level Objectives (SLOs) backed by Error Budgets: as long as budget remains, teams ship features rapidly; when budget is exhausted, deployments halt to harden resilience.',
+    why_recommended: 'The standard operational handbook for modern engineering platforms. Highly practical examples and templates.',
+    pull_quote: {
+      text: 'Hope is not a strategy. Engineering reliability requires measuring error budgets, practicing disaster recovery drills, and treating postmortems as systemic learning.',
+      source: 'The Site Reliability Workbook',
+      year: '2018'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'SLOs align product development speed with customer tolerance for downtime.',
+      'Automate canary deployments with automated rollback on error rate spikes.',
+      'Blameless postmortems identify systemic design flaws instead of scapegoating operators.',
+      'Limit operational toil to under 50% of an engineering team’s time.'
+    ],
+    lindy_score: 96.0,
+    related_incident_ids: [
+      'incident-gitlab-2017-database-loss',
+      'incident-netflix-2012-christmas-eve-elb',
+      'incident-aws-s3-2017-typo-command'
+    ]
+  },
+  {
+    id: 'book-chaos-engineering',
+    type: 'book',
+    title: 'Chaos Engineering: System Resiliency in Practice',
+    creator: 'Casey Rosenthal & Nora Jones',
+    url: 'https://www.oreilly.com/library/view/chaos-engineering/9781492043850/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'sre-resilience',
+    tags: ['chaos-engineering', 'fault-injection', 'resilience', 'blast-radius', 'game-days'],
+    summary: 'The discipline of experimenting on a distributed system to build confidence in its capability to withstand turbulent conditions in production.',
+    mental_model_3min: 'Do not wait for production failure to test your failover logic. Chaos Engineering defines steady state metrics, hypothesizes that normal behavior will continue during disruptions, introduces real-world variables (node crashes, packet drops, clock skews), and observes whether automated self-healing acts as intended.',
+    why_recommended: 'Explains the mindset that enabled Netflix to survive the complete loss of AWS US-East-1 during peak Christmas Eve traffic.',
+    pull_quote: {
+      text: 'You don’t choose whether you will have failures in production. You only choose whether you find them on your terms or your customers’ terms.',
+      source: 'Casey Rosenthal (Chaos Engineering)',
+      year: '2020'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Formulate hypotheses based on measurable steady state metrics (e.g. streaming starts per second).',
+      'Inject failure in production with small blast radiuses and automated abort triggers.',
+      'Chaos Kong regularly exercises full multi-region cloud evacuation.',
+      'Disclose hidden dependencies before they combine into cascading failures.'
+    ],
+    lindy_score: 93.0,
+    related_incident_ids: [
+      'incident-netflix-2012-christmas-eve-elb',
+      'incident-github-2018-database-partition-split-brain'
+    ]
+  },
+  {
+    id: 'book-building-microservices',
+    type: 'book',
+    title: 'Building Microservices: Designing Fine-Grained Systems',
+    creator: 'Sam Newman',
+    url: 'https://samnewman.io/books/building_microservices_2nd_edition/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'distributed-systems',
+    tags: ['microservices', 'distributed-systems', 'service-mesh', 'api-gateways', 'resilience'],
+    summary: 'The industry-standard architectural guide to modeling microservices, distributed transactions, saga patterns, resilience, and avoiding distributed monolith traps.',
+    mental_model_3min: 'Microservices exchange computational autonomy for distributed complexity. If two services must be deployed together or share a database, they are not microservices—they are a distributed monolith with network latency. Resilient architectures align services around bounded contexts and communicate through asynchronous events.',
+    why_recommended: 'Provides the cautionary architectural wisdom needed to avoid cascading rate-limiter collapses and network partition failures.',
+    pull_quote: {
+      text: 'Microservices don’t make things simpler; they make boundaries explicit and force you to deal with network unreliability.',
+      source: 'Sam Newman',
+      year: '2021'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Model services around business domain bounded contexts (DDD).',
+      'Never share databases across service boundaries; use sagas and event streams for transactions.',
+      'Protect upstream dependencies with rate limiters, backoff, and circuit breakers.',
+      'Avoid distributed locks; prefer idempotent state machines.'
+    ],
+    lindy_score: 92.0,
+    related_incident_ids: [
+      'incident-stripe-2020-rate-limiter-cascade',
+      'incident-shopify-2019-cache-avalanche'
+    ]
+  },
+  {
+    id: 'talk-rich-hickey-hammock-driven-dev',
+    type: 'talk',
+    title: 'Hammock Driven Development',
+    creator: 'Rich Hickey',
+    url: 'https://www.youtube.com/watch?v=f84n5oFoZBc',
+    thumbnail_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'software-craftsmanship',
+    tags: ['software-design', 'architecture', 'problem-solving', 'rich-hickey', 'simplicity'],
+    summary: 'A legendary talk on software design, understanding problem boundaries, and solving hard architectural conundrums through deep focus before writing code.',
+    mental_model_3min: 'Typing code is the easiest and least valuable part of software engineering; understanding the problem and its edge cases is the hardest. Most software bugs and production disasters occur because engineers jumped straight to implementation before considering failure modes, concurrency race conditions, and invariants.',
+    why_recommended: 'Watched and revered by hundreds of thousands of senior engineers. It trains developers to think like architects.',
+    pull_quote: {
+      text: 'We don’t think enough. We just start typing. Thinking is the ultimate tool for avoiding accidental complexity.',
+      source: 'Rich Hickey (Strange Loop)',
+      year: '2010'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'State the problem clearly in writing before touching the keyboard.',
+      'Analyze what can go wrong when inputs are delayed, duplicate, or out of order.',
+      'Separate facts from state and identity.',
+      'Sleeping on a problem allows your background mind to identify critical flaw combinations.'
+    ],
+    lindy_score: 97.0,
+    related_incident_ids: [
+      'incident-knight-capital-2012-dead-code-deployment'
+    ]
+  },
+  {
+    id: 'talk-time-clocks-spanner',
+    type: 'talk',
+    title: 'Time, Clocks, and the Ordering of Events in Distributed Systems',
+    creator: 'Google Engineering & Leslie Lamport',
+    url: 'https://www.youtube.com/watch?v=vmwnhZmEZjc',
+    thumbnail_url: 'https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'distributed-systems',
+    tags: ['clocks', 'lamport-timestamps', 'truetime', 'spanner', 'distributed-systems'],
+    summary: 'Explains why physical clocks cannot be trusted in distributed systems, how Lamport timestamps establish causal order, and how Google Spanner uses TrueTime atomic clocks to provide external consistency.',
+    mental_model_3min: 'Physical clocks in computers drift due to temperature, quartz crystal imperfections, and network jitter during NTP sync. Comparing timestamps across two servers is a recipe for silent data loss and race conditions. Systems must either use logical clocks (Lamport/Vector clocks) for causal order or bounded uncertainty intervals (TrueTime [earliest, latest]) with wait-out-the-uncertainty guarantees.',
+    why_recommended: 'The theoretical masterclass explaining the exact flaw in Zoom’s JWT token expiration and GitHub’s MySQL replication split-brain.',
+    pull_quote: {
+      text: 'Physical time is an illusion across networks. You cannot ask which event happened first unless there is a causal chain connecting them.',
+      source: 'ACM Classic Lecture',
+      year: '2014'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'NTP synchronization does not eliminate clock skew; clocks routinely drift by milliseconds or seconds.',
+      'Always include explicit clock tolerance/leeway when validating time-based tokens (JWT nbf/exp).',
+      'TrueTime works by making uncertainty explicit: timestamps are intervals [t.earliest, t.latest].',
+      'Lamport clocks define happen-before relationships without relying on physical wall clocks.'
+    ],
+    lindy_score: 98.0,
+    related_incident_ids: [
+      'incident-zoom-2020-leap-second-jwt-clock-skew',
+      'incident-github-2018-database-partition-split-brain'
+    ]
+  },
+  {
+    id: 'talk-dan-luu-postmortems',
+    type: 'talk',
+    title: 'Postmortems, Normalization of Deviance, and Complex Systems',
+    creator: 'Dan Luu',
+    url: 'https://danluu.com/postmortem-lessons/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'sre-resilience',
+    tags: ['postmortems', 'reliability', 'normalization-of-deviance', 'systems-safety'],
+    summary: 'A forensic critique of why companies repeatedly suffer catastrophic outages despite having post-mortem processes, and how normalization of deviance blinds organizations to latent hazards.',
+    mental_model_3min: 'Complex systems fail not because of a single point of failure, but because multiple small latent bugs and warnings were tolerated until an unexpected operational event aligned them into a catastrophic hole in the Swiss cheese model. True postmortems don’t stop at the immediate trigger—they uncover why the system was operating in a degraded state for weeks prior.',
+    why_recommended: 'Dan Luu’s analyses are widely cited by Staff and Principal engineers on Hacker News as the sharpest writing on production safety.',
+    pull_quote: {
+      text: 'Catastrophes rarely happen because someone made an unprecedented mistake. They happen because a practice that was dangerous slowly became normal because nothing blew up yesterday.',
+      source: 'Dan Luu',
+      year: '2019'
+    },
+    level: 'Intermediate',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Never accept flaky tests, failing backup crons, or ignored alerts as normal background noise.',
+      'Near-misses are free failure drills; investigate them with the same rigor as Sev0 outages.',
+      'Checklists and peer review catch cognitive blindspots during high-pressure recovery.',
+      'Design systems so safety properties are verified continuously by machines, not humans.'
+    ],
+    lindy_score: 95.0,
+    related_incident_ids: [
+      'incident-gitlab-2017-database-loss',
+      'incident-crowdstrike-2024-bsod-kernel-driver',
+      'incident-knight-capital-2012-dead-code-deployment'
+    ]
   }
 ];
