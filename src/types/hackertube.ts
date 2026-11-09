@@ -20,6 +20,28 @@ export interface HackerTubeHNStats {
   last_year?: number;
 }
 
+export interface ForensicSummary {
+  trap: string;           // Concrete anti-pattern or failure mode
+  mental_model: string;   // Core invariant (e.g., WAL, Fencing tokens, Jittered backoff)
+  production_rule: string;// PR-level rule of thumb to enforce in code reviews
+}
+
+export type ArchitectureLayer =
+  | 'Kernel/OS'
+  | 'Databases/Storage'
+  | 'Distributed Systems'
+  | 'Networking & Edge'
+  | 'Application Runtime'
+  | string;
+
+export type FailureVector =
+  | 'Cascading Failures & Thundering Herds'
+  | 'Data Loss & Split-Brain'
+  | 'Concurrency & Deadlocks'
+  | 'Configuration & Human Error'
+  | 'Resource Exhaustion'
+  | string;
+
 export interface HackerTubeVideo {
   vid: string;
   url: string;
@@ -38,4 +60,8 @@ export interface HackerTubeVideo {
   score: number;
   thumbnail_url: string;
   related_incident_ids?: string[];
+  prevented_outage?: string;
+  architecture_layer?: ArchitectureLayer;
+  failure_vector?: FailureVector;
+  forensic_summary?: ForensicSummary;
 }

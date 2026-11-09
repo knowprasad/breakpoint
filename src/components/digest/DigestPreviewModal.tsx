@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { SAMPLE_DIGEST_ISSUES } from '@/data/digest';
-import { DigestIssue } from '@/types/digest';
-import { X, Mail, Zap, Brain, ArrowRight, ExternalLink, Calendar, CheckCircle2 } from 'lucide-react';
+import { X, Mail, Zap, Brain, ArrowRight, Send, CheckCircle2, Loader2 } from 'lucide-react';
 
 interface DigestPreviewModalProps {
   isOpen: boolean;
@@ -12,10 +11,53 @@ interface DigestPreviewModalProps {
 
 export function DigestPreviewModal({ isOpen, onClose }: DigestPreviewModalProps) {
   const [selectedIssueId, setSelectedIssueId] = useState<string>(SAMPLE_DIGEST_ISSUES[0].id);
+  const [testEmail, setTestEmail] = useState('');
+  const [testStatus, setTestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [testFeedback, setTestFeedback] = useState('');
 
   if (!isOpen) return null;
 
   const currentIssue = SAMPLE_DIGEST_ISSUES.find((i) => i.id === selectedIssueId) || SAMPLE_DIGEST_ISSUES[0];
+
+  const handleSendTest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!testEmail || !testEmail.includes('@')) {
+      setTestStatus('error');
+      setTestFeedback('Please enter a valid email.');
+      return;
+    }
+
+    setTestStatus('loading');
+    setTestFeedback('');
+
+    try {
+      const res = await fetch('/api/digest/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          testEmail,
+          issueId: currentIssue.id,
+          track: currentIssue.track
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to dispatch test email.');
+      }
+
+      setTestStatus('success');
+      setTestFeedback(
+        data.simulated
+          ? `Dispatched in simulation mode to ${testEmail} (logged to server console).`
+          : `Live email dispatched to ${testEmail}! Check your inbox.`
+      );
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error sending test email.';
+      setTestStatus('error');
+      setTestFeedback(message);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -35,8 +77,12 @@ export function DigestPreviewModal({ isOpen, onClose }: DigestPreviewModalProps)
             {SAMPLE_DIGEST_ISSUES.map((issue) => (
               <button
                 key={issue.id}
-                onClick={() => setSelectedIssueId(issue.id)}
-                className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all ${
+                onClick={() => {
+                  setSelectedIssueId(issue.id);
+                  setTestStatus('idle');
+                  setTestFeedback('');
+                }}
+                className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
                   selectedIssueId === issue.id
                     ? 'bg-zinc-800 text-white font-bold border border-zinc-700'
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
@@ -53,7 +99,7 @@ export function DigestPreviewModal({ isOpen, onClose }: DigestPreviewModalProps)
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors ml-2"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors ml-2 cursor-pointer"
               title="Close"
             >
               <X className="w-4 h-4" />
@@ -146,16 +192,53 @@ export function DigestPreviewModal({ isOpen, onClose }: DigestPreviewModalProps)
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="p-4 border-t border-[#1f2533] bg-[#0d0f14] flex items-center justify-between text-xs font-mono">
-          <span className="text-zinc-500">Delivered twice weekly to engineering subscribers</span>
+        {/* Send Test Dispatch Bar */}
+        <div className="p-3 sm:p-4 border-t border-[#1f2533] bg-[#0c0e14] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <form onSubmit={handleSendTest} className="flex-1 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Mail className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-zinc-500" />
+              <input
+                type="email"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                placeholder="Send this issue to test email..."
+                className="w-full pl-8 pr-3 py-1.5 rounded bg-[#131720] border border-[#222938] text-xs font-mono text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={testStatus === 'loading'}
+              className="px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-mono text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              {testStatus === 'loading' ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Send className="w-3.5 h-3.5" />
+              )}
+              <span>Send Test</span>
+            </button>
+          </form>
+
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors"
+            className="px-3 py-1.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors font-mono text-xs cursor-pointer"
           >
             Close Preview
           </button>
         </div>
+
+        {/* Feedback message banner if test email was sent */}
+        {testFeedback && (
+          <div
+            className={`px-4 py-2 text-xs font-mono border-t ${
+              testStatus === 'success'
+                ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                : 'bg-red-950/60 border-red-500/40 text-red-300'
+            }`}
+          >
+            {testFeedback}
+          </div>
+        )}
       </div>
     </div>
   );

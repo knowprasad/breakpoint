@@ -1,12 +1,24 @@
-export type IncidentSeverity = 'Critical P0' | 'Major P1' | 'High P2';
+export type IncidentSeverity = 'P0' | 'P1' | 'Critical P0' | 'Major P1' | 'High P2';
 
 export interface TimelineEntry {
   time: string;
   description: string;
 }
 
-export interface DisasterIncident {
-  id: string;                         // e.g. "incident-shopify-2019-cache-avalanche"
+export interface DisasterRecord {
+  id: string;
+  slug?: string;
+  organization?: string;
+  severity: IncidentSeverity;
+  headline?: string;
+  blastRadius?: string;
+  rootCauseSnippet?: string;
+  whyLocalhostMissedIt?: string;
+  mitigationApplied?: string;
+  recommendedTalkIds?: string[];
+}
+
+export interface DisasterIncident extends DisasterRecord {
   title: string;
   company: string;                    // e.g. "Shopify", "GitLab", "Cloudflare"
   company_logo?: string;              // Emoji or SVG identifier
@@ -16,7 +28,6 @@ export interface DisasterIncident {
   service_affected: string;
   category: string;                   // e.g. "databases-storage", "networking-bgp", "distributed-systems"
   root_cause_tag: string;             // e.g. "thundering-herd", "redos", "split-brain"
-  severity: IncidentSeverity;
   trigger: string;                    // Immediate human action or release catalyst
   mechanism_explanation: string;      // Deep CS mechanism & architectural flaw
   mechanism_diagram?: string[];       // Architecture flow diagram lines / ASCII representation

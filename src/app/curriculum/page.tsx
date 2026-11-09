@@ -13,7 +13,7 @@ export default function CurriculumPage() {
   const [searchPaletteOpen, setSearchPaletteOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07080b] text-zinc-100 font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className="min-h-screen flex flex-col bg-[#1c2128] text-[#adbac7] font-sans selection:bg-[#57ab5a]/20 selection:text-[#57ab5a]">
       <Ticker />
       <Navbar onOpenSearch={() => setSearchPaletteOpen(true)} />
 

@@ -170,6 +170,19 @@ export function IncidentDetailModal({
             </div>
           </div>
 
+          {/* Junior Engineer Special: Why Localhost & Unit Tests Missed It */}
+          {incident.whyLocalhostMissedIt && (
+            <div className="p-4 rounded-lg bg-[#1a1710] border border-[#c69026]/40 space-y-2">
+              <div className="flex items-center gap-2 text-[#c69026] font-mono text-xs font-bold uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-[#c69026]" />
+                <span>Why Localhost & Unit Tests Missed This</span>
+              </div>
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans">
+                {incident.whyLocalhostMissedIt}
+              </p>
+            </div>
+          )}
+
           {/* Tab Navigation for Deep Dive */}
           <div className="border-b border-[#202633] flex items-center gap-2 pt-2">
             <button

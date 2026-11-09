@@ -187,7 +187,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
     return (
       <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-200">
         {/* Top Mini Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#0e1117] border border-[#202735] font-mono text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#22272e] border border-[#373e47] font-mono text-xs">
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4 text-amber-400" />
             <span className="font-bold text-white uppercase tracking-wider">
@@ -201,7 +201,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setShowScorecard(false)}
-              className="text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors font-mono"
+              className="text-[#768390] hover:text-white flex items-center gap-1.5 transition-colors font-mono"
             >
               <Terminal className="w-3.5 h-3.5" />
               <span>Review Drills</span>
@@ -209,7 +209,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
 
             <button
               onClick={handleReset}
-              className="text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors font-mono"
+              className="text-[#768390] hover:text-white flex items-center gap-1.5 transition-colors font-mono"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Retake All</span>
@@ -227,7 +227,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               <span>{currentRank.tag}</span>
             </div>
 
-            <span className="text-xs font-mono text-zinc-400">
+            <span className="text-xs font-mono text-[#768390]">
               8-Stage Production Incident Benchmark
             </span>
           </div>
@@ -239,24 +239,24 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
                 {currentRank.title}
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans max-w-2xl">
+            <p className="text-sm sm:text-base text-[#adbac7] leading-relaxed font-sans max-w-2xl">
               {currentRank.description}
             </p>
           </div>
 
           {/* Metric Badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-            <div className="p-3.5 rounded-xl bg-[#08090d]/80 border border-zinc-800">
+            <div className="p-3.5 rounded-xl bg-[#1c2128] border border-[#373e47]">
               <span className="text-[11px] font-mono text-zinc-500 uppercase block mb-1">
                 Accuracy Score
               </span>
               <div className="text-xl sm:text-2xl font-bold font-mono text-white">
                 {solvedCount} / {totalScenarios}{' '}
-                <span className="text-xs font-normal text-zinc-400">({percentage}%)</span>
+                <span className="text-xs font-normal text-[#768390]">({percentage}%)</span>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#08090d]/80 border border-zinc-800">
+            <div className="p-3.5 rounded-xl bg-[#1c2128] border border-[#373e47]">
               <span className="text-[11px] font-mono text-zinc-500 uppercase block mb-1">
                 Crises Averted
               </span>
@@ -265,7 +265,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#08090d]/80 border border-zinc-800">
+            <div className="p-3.5 rounded-xl bg-[#1c2128] border border-[#373e47]">
               <span className="text-[11px] font-mono text-zinc-500 uppercase block mb-1">
                 Cascaded to Outage
               </span>
@@ -274,11 +274,11 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#08090d]/80 border border-zinc-800">
+            <div className="p-3.5 rounded-xl bg-[#1c2128] border border-[#373e47]">
               <span className="text-[11px] font-mono text-zinc-500 uppercase block mb-1">
                 Unanswered
               </span>
-              <div className="text-xl sm:text-2xl font-bold font-mono text-zinc-400">
+              <div className="text-xl sm:text-2xl font-bold font-mono text-[#768390]">
                 {totalScenarios - answeredCount}
               </div>
             </div>
@@ -286,7 +286,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
 
           {/* Progress Bar */}
           <div className="space-y-1.5 pt-2">
-            <div className="flex justify-between text-xs font-mono text-zinc-400">
+            <div className="flex justify-between text-xs font-mono text-[#768390]">
               <span>Simulation Progress</span>
               <span>
                 {answeredCount}/{totalScenarios} Drills Executed
@@ -329,15 +329,15 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
 
             <button
               onClick={handleReset}
-              className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-[#141822] hover:bg-[#1a202d] text-zinc-200 border border-[#252c3d] transition-all flex items-center gap-2 active:scale-95"
+              className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-[#141822] hover:bg-[#1a202d] text-[#cdd9e5] border border-[#252c3d] transition-all flex items-center gap-2 active:scale-95"
             >
-              <RotateCcw className="w-4 h-4 text-zinc-400" />
+              <RotateCcw className="w-4 h-4 text-[#768390]" />
               <span>Retake Simulation Drills</span>
             </button>
 
             <button
               onClick={() => setShowScorecard(false)}
-              className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-transparent hover:bg-zinc-800/50 text-zinc-400 hover:text-white border border-transparent transition-all flex items-center gap-1.5 ml-auto"
+              className="px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-transparent hover:bg-zinc-800/50 text-[#768390] hover:text-white border border-transparent transition-all flex items-center gap-1.5 ml-auto"
             >
               <span>Inspect Drill Details</span>
               <ChevronRight className="w-4 h-4" />
@@ -377,10 +377,10 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-[#161a24] border border-[#232b3b] font-mono text-xs font-bold flex items-center justify-center text-zinc-400">
+                      <span className="w-6 h-6 rounded-md bg-[#161a24] border border-[#232b3b] font-mono text-xs font-bold flex items-center justify-center text-[#768390]">
                         {idx + 1}
                       </span>
-                      <span className="text-xs font-mono text-zinc-400">
+                      <span className="text-xs font-mono text-[#768390]">
                         {scenario.company_context}
                       </span>
                     </div>
@@ -404,17 +404,17 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
                     )}
                   </div>
 
-                  <h4 className="text-sm sm:text-base font-bold text-zinc-100 mb-2">
+                  <h4 className="text-sm sm:text-base font-bold text-[#cdd9e5] mb-2">
                     {scenario.title}
                   </h4>
 
                   {opt && (
                     <div className="mt-3 pt-3 border-t border-zinc-800/80 space-y-2">
-                      <div className="text-xs font-mono text-zinc-300 flex items-start gap-2">
+                      <div className="text-xs font-mono text-[#adbac7] flex items-start gap-2">
                         <span className="text-zinc-500 shrink-0">Selected:</span>
-                        <span className="text-zinc-200">{opt.action}</span>
+                        <span className="text-[#cdd9e5]">{opt.action}</span>
                       </div>
-                      <div className="text-xs font-mono text-zinc-400 flex items-start gap-2">
+                      <div className="text-xs font-mono text-[#768390] flex items-start gap-2">
                         <span className="text-emerald-400 font-bold shrink-0">Rule:</span>
                         <span>{opt.lesson}</span>
                       </div>
@@ -564,13 +564,13 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
           <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block">
             Incoming Production Telemetry
           </span>
-          <div className="p-4 rounded-lg bg-[#050608] border border-[#1a1f2b] font-mono text-xs space-y-1.5 text-zinc-300">
+          <div className="p-4 rounded-lg bg-[#050608] border border-[#1a1f2b] font-mono text-xs space-y-1.5 text-[#adbac7]">
             <div className="text-red-400 font-bold flex items-center gap-1.5 mb-2">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
               <span>{currentScenario.alert_title}</span>
             </div>
             {currentScenario.alert_metrics.map((metric, idx) => (
-              <div key={idx} className="text-zinc-400 pl-4 border-l border-zinc-800">
+              <div key={idx} className="text-[#768390] pl-4 border-l border-zinc-800">
                 {metric}
               </div>
             ))}
@@ -582,14 +582,14 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
           <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block">
             Incident Commander Situation
           </span>
-          <p className="text-sm sm:text-base text-zinc-200 leading-relaxed font-sans">
+          <p className="text-sm sm:text-base text-[#cdd9e5] leading-relaxed font-sans">
             {currentScenario.situation}
           </p>
         </div>
 
         {/* Action Options */}
         <div className="space-y-3 pt-2">
-          <span className="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider block">
+          <span className="text-xs font-mono font-bold text-[#adbac7] uppercase tracking-wider block">
             What is your diagnostic decision?
           </span>
 
@@ -598,7 +598,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               const isSelected = currentAnswer?.optionId === opt.id;
               const hasAnswered = Boolean(currentAnswer);
 
-              let buttonStyle = 'bg-[#10131b] hover:bg-[#151924] border-[#1f2533] text-zinc-200';
+              let buttonStyle = 'bg-[#10131b] hover:bg-[#151924] border-[#1f2533] text-[#cdd9e5]';
               if (hasAnswered) {
                 if (opt.is_correct) {
                   buttonStyle = 'bg-emerald-950/40 border-emerald-500/50 text-emerald-200 font-semibold';
@@ -656,11 +656,11 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               </h4>
             </div>
 
-            <p className="text-sm text-zinc-200 leading-relaxed font-sans">
+            <p className="text-sm text-[#cdd9e5] leading-relaxed font-sans">
               {chosenOption.outcome}
             </p>
 
-            <div className="p-3 rounded-lg bg-[#08090d] border border-zinc-800 text-xs font-mono text-zinc-300">
+            <div className="p-3 rounded-lg bg-[#08090d] border border-zinc-800 text-xs font-mono text-[#adbac7]">
               <span className="text-emerald-400 font-bold block mb-0.5">Architectural Rule:</span>
               {chosenOption.lesson}
             </div>
@@ -668,7 +668,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
             {/* Linked Canonical Resource */}
             {linkedResource && (
               <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-800/80 text-xs font-mono">
-                <span className="text-zinc-400">Canonical defense literature:</span>
+                <span className="text-[#768390]">Canonical defense literature:</span>
                 <button
                   type="button"
                   onClick={() => onSelectResource && onSelectResource(linkedResource)}
@@ -697,7 +697,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
             ) : (
               <button
                 onClick={() => setShowScorecard(true)}
-                className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1"
+                className="text-xs font-mono text-zinc-500 hover:text-[#adbac7] transition-colors flex items-center gap-1"
               >
                 <span>Finish Early & View Scorecard</span>
                 <ChevronRight className="w-3.5 h-3.5" />

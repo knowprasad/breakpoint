@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { HackerTubeVideo } from '@/types/hackertube';
+import { HackerTubeVideo, ArchitectureLayer, FailureVector } from '@/types/hackertube';
 import { OfficialPlaylist } from '@/types/playlist';
 import { VideoCard } from './VideoCard';
 import { DisasterIncident } from '@/types/incident';
-import { getClientVideoCatalog, searchClientVideos } from '@/lib/clientCatalog';
+import { getClientVideoCatalog, searchClientVideos, queryTalkCatalog, initCatalogWorker } from '@/lib/clientCatalog';
+import { CANONICAL_24_SYSTEMS_TALKS } from '@/data/canonicalTalks24';
 import {
   loadUserStore,
   saveUserStore,
@@ -58,17 +59,37 @@ const TOP_AREAS = [
   { id: 'Mathematics & Theoretical CS', name: 'Theoretical CS (479)', shortName: 'Theory' }
 ];
 
-export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerProps) {
+const ARCHITECTURE_LAYERS: { id: ArchitectureLayer; label: string; icon: string }[] = [
+  { id: 'Kernel/OS', label: 'Kernel/OS', icon: '⚡' },
+  { id: 'Databases/Storage', label: 'Databases/Storage', icon: '💾' },
+  { id: 'Distributed Systems', label: 'Distributed Systems', icon: '🌐' },
+  { id: 'Networking & Edge', label: 'Networking & Edge', icon: '📡' },
+  { id: 'Application Runtime', label: 'Application Runtime', icon: '📦' }
+];
+
+const FAILURE_VECTORS: { id: FailureVector; label: string; icon: string }[] = [
+  { id: 'Cascading Failures & Thundering Herds', label: 'Cascading Failures & Thundering Herds', icon: '🌊' },
+  { id: 'Data Loss & Split-Brain', label: 'Data Loss & Split-Brain', icon: '💔' },
+  { id: 'Concurrency & Deadlocks', label: 'Concurrency & Deadlocks', icon: '🔒' },
+  { id: 'Configuration & Human Error', label: 'Configuration & Human Error', icon: '⚠️' },
+  { id: 'Resource Exhaustion', label: 'Resource Exhaustion', icon: '🛑' }
+];
+
+export function HackerTubeExplorer({ initialVideos = CANONICAL_24_SYSTEMS_TALKS }: HackerTubeExplorerProps) {
   const [activeTab, setActiveTab] = useState<TabMode>('all');
-  const [videos, setVideos] = useState<HackerTubeVideo[]>(initialVideos);
+  const [videos, setVideos] = useState<HackerTubeVideo[]>(
+    initialVideos && initialVideos.length > 0 ? initialVideos : CANONICAL_24_SYSTEMS_TALKS
+  );
   const [query, setQuery] = useState('');
-  const [selectedArea, setSelectedArea] = useState('all');
+  const [selectedArchitectureLayers, setSelectedArchitectureLayers] = useState<ArchitectureLayer[]>([]);
+  const [selectedFailureVectors, setSelectedFailureVectors] = useState<FailureVector[]>([]);
   const [sortBy, setSortBy] = useState<'score' | 'mentions' | 'recommenders'>('score');
-  const [level, setLevel] = useState('all');
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(6454);
+  const [queryLatencyMs, setQueryLatencyMs] = useState<number | null>(null);
+  const [isWorkerIndexing, setIsWorkerIndexing] = useState(true);
 
   // User Library Store State
   const [userStore, setUserStore] = useState<UserStoreState>(() => loadUserStore());
@@ -82,6 +103,38 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
   const [officialPlaylists, setOfficialPlaylists] = useState<OfficialPlaylist[]>([]);
   const [selectedOfficialPlaylistSlug, setSelectedOfficialPlaylistSlug] = useState<string | null>(null);
   const [playlistSection, setPlaylistSection] = useState<'all' | 'official' | 'custom'>('all');
+
+  useEffect(() => {
+    const worker = initCatalogWorker();
+    if (worker) {
+      const handleWorkerMsg = (e: MessageEvent) => {
+        if (e.data?.type === 'INDEX_READY') {
+          setIsWorkerIndexing(false);
+          setTotalCount(e.data.totalCount || 6454);
+        }
+      };
+      worker.addEventListener('message', handleWorkerMsg);
+      return () => worker.removeEventListener('message', handleWorkerMsg);
+    }
+  }, []);
+
+  const toggleArchitectureLayer = (layer: ArchitectureLayer) => {
+    setSelectedArchitectureLayers((prev) =>
+      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
+    );
+  };
+
+  const toggleFailureVector = (vector: FailureVector) => {
+    setSelectedFailureVectors((prev) =>
+      prev.includes(vector) ? prev.filter((v) => v !== vector) : [...prev, vector]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setQuery('');
+    setSelectedArchitectureLayers([]);
+    setSelectedFailureVectors([]);
+  };
 
   useEffect(() => {
     if (activeTab === 'playlists' && officialPlaylists.length === 0) {
@@ -109,11 +162,10 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
   const fetchVideos = async (reset = false, newOffset = 0) => {
     setLoading(true);
     try {
-      const catalog = await getClientVideoCatalog();
-      const res = searchClientVideos(catalog, {
+      const res = await queryTalkCatalog({
         query,
-        area: selectedArea,
-        level,
+        architectureLayers: selectedArchitectureLayers,
+        failureVectors: selectedFailureVectors,
         sortBy,
         limit: 24,
         offset: newOffset
@@ -127,8 +179,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
       setTotalCount(res.totalCount);
       setHasMore(res.hasMore);
       setOffset(newOffset);
+      if (typeof res.latencyMs === 'number') {
+        setQueryLatencyMs(res.latencyMs);
+      }
     } catch (e) {
-      console.error('Error filtering videos', e);
+      console.error('Error querying catalog', e);
     } finally {
       setLoading(false);
     }
@@ -138,10 +193,10 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
     if (activeTab === 'all') {
       const timer = setTimeout(() => {
         fetchVideos(true, 0);
-      }, 250);
+      }, 150);
       return () => clearTimeout(timer);
     }
-  }, [query, selectedArea, sortBy, level, activeTab]);
+  }, [query, selectedArchitectureLayers, selectedFailureVectors, sortBy, activeTab]);
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
@@ -434,9 +489,9 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
       {/* Main Content Area Based on Active Tab */}
       {activeTab === 'all' && (
         <div className="space-y-6">
-          {/* Search & Area Chips Toolbar */}
-          <div className="space-y-3">
-            {/* Search Bar + Sort */}
+          {/* Multi-Select Architectural & Failure Vector Filter Bar */}
+          <div className="space-y-3.5">
+            {/* Search Bar + Secondary Sort + Clear Action */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#768390] pointer-events-none" />
@@ -444,7 +499,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search 6,454 talks (Raft, eBPF, Rich Hickey)..."
+                  placeholder="Search 6,454 systems talks (Raft, eBPF, singleflight, XFetch)..."
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-base sm:text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono shadow-inner transition-colors"
                 />
                 {query ? (
@@ -465,13 +520,13 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                 )}
               </div>
 
-              {/* Responsive Filters: 2-column grid on small screens, flex row on tablet+ */}
-              <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 shrink-0">
+              {/* Secondary Sort Selector */}
+              <div className="flex items-center gap-2 shrink-0">
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'score' | 'mentions' | 'recommenders')}
-                    className="w-full sm:w-auto appearance-none py-2.5 pl-3 pr-8 rounded-xl bg-[#22272e] border border-[#373e47] hover:border-[#444c56] focus:border-[#539bf5] text-xs font-mono text-[#adbac7] focus:outline-none transition-colors cursor-pointer truncate"
+                    className="appearance-none py-2.5 pl-3 pr-8 rounded-xl bg-[#22272e] border border-[#373e47] hover:border-[#444c56] focus:border-[#539bf5] text-xs font-mono text-[#adbac7] focus:outline-none transition-colors cursor-pointer"
                   >
                     <option value="score">Sort: HN Score</option>
                     <option value="mentions">Sort: Mentions</option>
@@ -484,54 +539,101 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                   </div>
                 </div>
 
-                <div className="relative">
-                  <select
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    className="w-full sm:w-auto appearance-none py-2.5 pl-3 pr-8 rounded-xl bg-[#22272e] border border-[#373e47] hover:border-[#444c56] focus:border-[#539bf5] text-xs font-mono text-[#adbac7] focus:outline-none transition-colors cursor-pointer truncate"
+                {(selectedArchitectureLayers.length > 0 || selectedFailureVectors.length > 0 || query) && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="px-3 py-2.5 rounded-xl bg-[#1c2128] border border-[#f47067]/40 text-[#f47067] hover:bg-[#f47067]/15 transition-colors text-xs font-mono font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                   >
-                    <option value="all">Level: All</option>
-                    <option value="intro">Level: Intro</option>
-                    <option value="intermediate">Level: Intermediate</option>
-                    <option value="advanced">Level: Advanced</option>
-                  </select>
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#768390]">
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
+                    <X className="w-3.5 h-3.5" />
+                    <span>Clear Filters</span>
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Area Filter Chips - Smooth Touch Swipe on Mobile */}
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 pt-0.5 text-xs font-mono no-scrollbar -mx-1 px-1">
-              {TOP_AREAS.map((area) => (
-                <button
-                  key={area.id}
-                  onClick={() => setSelectedArea(area.id)}
-                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer text-xs ${
-                    selectedArea === area.id
-                      ? 'bg-[#2d333b] border border-[#444c56] text-[#adbac7] font-semibold shadow-sm'
-                      : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
-                  }`}
-                >
-                  <span className="sm:hidden">{area.shortName}</span>
-                  <span className="hidden sm:inline">{area.name}</span>
-                </button>
-              ))}
+            {/* Primary Filter Group 1: Architecture Layer */}
+            <div className="p-3 sm:p-3.5 rounded-xl bg-[#22272e]/60 border border-[#373e47] space-y-2">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="font-bold uppercase tracking-wider text-[#adbac7] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#539bf5]" />
+                  <span>Architecture Layer (Multi-Select)</span>
+                </span>
+                <span className="text-[11px] text-[#768390]">
+                  {selectedArchitectureLayers.length === 0 ? 'All Layers' : `${selectedArchitectureLayers.length} active`}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
+                {ARCHITECTURE_LAYERS.map((layer) => {
+                  const isSelected = selectedArchitectureLayers.includes(layer.id);
+                  return (
+                    <button
+                      key={layer.id}
+                      type="button"
+                      onClick={() => toggleArchitectureLayer(layer.id)}
+                      className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all cursor-pointer text-xs ${
+                        isSelected
+                          ? 'bg-[#539bf5]/20 border-[#539bf5] text-[#539bf5] font-bold shadow-sm'
+                          : 'bg-[#22272e] border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
+                      }`}
+                    >
+                      <span>{layer.icon}</span>
+                      <span>{layer.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Primary Filter Group 2: Failure Vector */}
+            <div className="p-3 sm:p-3.5 rounded-xl bg-[#22272e]/60 border border-[#373e47] space-y-2">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="font-bold uppercase tracking-wider text-[#adbac7] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#f47067]" />
+                  <span>Failure Vector (Multi-Select)</span>
+                </span>
+                <span className="text-[11px] text-[#768390]">
+                  {selectedFailureVectors.length === 0 ? 'All Vectors' : `${selectedFailureVectors.length} active`}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
+                {FAILURE_VECTORS.map((vector) => {
+                  const isSelected = selectedFailureVectors.includes(vector.id);
+                  return (
+                    <button
+                      key={vector.id}
+                      type="button"
+                      onClick={() => toggleFailureVector(vector.id)}
+                      className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all cursor-pointer text-xs ${
+                        isSelected
+                          ? 'bg-[#f47067]/20 border-[#f47067] text-[#f47067] font-bold shadow-sm'
+                          : 'bg-[#22272e] border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
+                      }`}
+                    >
+                      <span>{vector.icon}</span>
+                      <span>{vector.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
           {/* Results Count Header */}
           <div className="flex items-center justify-between text-xs font-mono text-[#768390] border-b border-[#373e47]/60 pb-3">
             <div className="flex items-center gap-2">
-              <span>Displaying <strong>{videos.length}</strong> of <strong>{totalCount}</strong> curated talks</span>
+              <span>Displaying <strong className="text-[#adbac7]">{videos.length}</strong> of <strong className="text-[#adbac7]">{totalCount}</strong> curated talks</span>
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#539bf5]" />}
             </div>
-            <span className="text-[#768390] hidden sm:inline">
-              Filtered by organic Hacker News recommendations
-            </span>
+            <div className="flex items-center gap-3 text-[11px] text-[#768390]">
+              {queryLatencyMs !== null && (
+                <span className="font-mono text-[#57ab5a]">
+                  ⚡ {queryLatencyMs}ms query latency
+                </span>
+              )}
+              <span className="hidden sm:inline">
+                {isWorkerIndexing ? 'Indexing talks in Web Worker...' : 'Web Worker MiniSearch index active'}
+              </span>
+            </div>
           </div>
 
           {/* Video Grid */}
@@ -543,15 +645,12 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             </div>
           ) : !loading ? (
             <div className="p-12 rounded-xl bg-[#22272e] border border-[#373e47] text-center space-y-2 font-mono">
-              <p className="text-zinc-400 text-sm">No videos found matching your query.</p>
+              <p className="text-zinc-400 text-sm">No videos found matching your query or filter criteria.</p>
               <button
-                onClick={() => {
-                  setQuery('');
-                  setSelectedArea('all');
-                }}
+                onClick={clearAllFilters}
                 className="text-xs text-red-400 hover:underline cursor-pointer"
               >
-                Clear filters
+                Reset all filters
               </button>
             </div>
           ) : null}

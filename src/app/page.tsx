@@ -5,18 +5,15 @@ import { Ticker } from '@/components/layout/Ticker';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { IncidentCard } from '@/components/disasters/IncidentCard';
-import { IncidentDetailModal } from '@/components/disasters/IncidentDetailModal';
 import { ResourceCard } from '@/components/library/ResourceCard';
-import { ResourceDetailModal } from '@/components/library/ResourceDetailModal';
 import { LibraryExplorer } from '@/components/library/LibraryExplorer';
 import { HackerTubeExplorer } from '@/components/hackertube/HackerTubeExplorer';
+import { CANONICAL_24_SYSTEMS_TALKS } from '@/data/canonicalTalks24';
 import { CommandPalette } from '@/components/common/CommandPalette';
 import { DigestSignup } from '@/components/digest/DigestSignup';
 import { FailureMatrix } from '@/components/matrix/FailureMatrix';
 import { FailureSimulator } from '@/components/simulator/FailureSimulator';
 import { EngineeringTracks } from '@/components/curriculum/EngineeringTracks';
-import { DisasterIncident } from '@/types/incident';
-import { LibraryResource } from '@/types/resource';
 import { getAllIncidents, getAllResources } from '@/lib/db';
 import { Flame, BookOpen, Video, Grid, Terminal, Search, X, Award } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -34,9 +31,6 @@ const DISASTER_STACKS = [
 export default function HomePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator' | 'curriculum'>('hackertube');
-
-  const [activeIncident, setActiveIncident] = useState<DisasterIncident | null>(null);
-  const [activeResource, setActiveResource] = useState<LibraryResource | null>(null);
   const [searchPaletteOpen, setSearchPaletteOpen] = useState(false);
 
   // Faceted Technology Stack & Search Filters for Disaster Encyclopedia
@@ -185,7 +179,10 @@ export default function HomePage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-8">
         {/* Tab 1: HackerTube Explorer (Active by Default) */}
         {activeTab === 'hackertube' && (
-          <HackerTubeExplorer onSelectIncident={setActiveIncident} />
+          <HackerTubeExplorer
+            initialVideos={CANONICAL_24_SYSTEMS_TALKS}
+            onSelectIncident={(inc) => router.push(`/incidents/${inc.id}`)}
+          />
         )}
 
         {/* Tab 2: Disaster Post-Mortems */}
@@ -215,7 +212,7 @@ export default function HomePage() {
                   type="text"
                   value={disasterSearch}
                   onChange={(e) => setDisasterSearch(e.target.value)}
-                  placeholder="Filter 151 incident autopsies (CrowdStrike, S3, BGP)..."
+                  placeholder="Filter 34 real-world incident autopsies (CrowdStrike, Steam, Discord)..."
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-base sm:text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono shadow-inner transition-colors"
                 />
                 {disasterSearch ? (
@@ -270,19 +267,19 @@ export default function HomePage() {
                   <IncidentCard
                     key={incident.id}
                     incident={incident}
-                    onSelect={setActiveIncident}
+                    onSelect={(inc) => router.push(`/incidents/${inc.id}`)}
                   />
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center rounded-xl bg-[#0d0f14] border border-[#1b202c] space-y-3 font-mono">
-                <p className="text-zinc-400 text-sm">No disaster autopsies match your current filter.</p>
+              <div className="p-12 text-center rounded-2xl bg-[#22272e] border border-[#373e47] space-y-3 font-mono">
+                <p className="text-[#768390] text-sm">No disaster autopsies match your current filter.</p>
                 <button
                   onClick={() => {
                     setDisasterSearch('');
                     setDisasterStack('all');
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-red-950/50 border border-red-500/40 text-red-300 text-xs font-bold hover:bg-red-900/60 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-[#f47067]/15 border border-[#f47067]/40 text-[#f47067] text-xs font-bold hover:bg-[#f47067]/25 transition-colors"
                 >
                   Reset Stack Filters
                 </button>
@@ -294,42 +291,42 @@ export default function HomePage() {
         {/* Tab 3: Timeless Library */}
         {activeTab === 'books' && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1b202c] pb-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#373e47] pb-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-emerald-400" />
+                <h2 className="text-xl sm:text-2xl font-bold text-[#cdd9e5] tracking-tight flex items-center gap-2 font-mono">
+                  <BookOpen className="w-5 h-5 text-[#57ab5a]" />
                   <span>The Timeless Technical Library</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-1">
+                <p className="text-xs sm:text-sm text-[#768390] font-mono mt-1">
                   Foundational textbooks and seminal papers filtered for 10+ year persistence over temporary hype.
                 </p>
               </div>
 
-              <span className="px-3 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold">
+              <span className="px-3 py-1 rounded-lg bg-[#22272e] border border-[#57ab5a]/30 text-[#57ab5a] font-mono text-xs font-bold">
                 Lindy-Filtered
               </span>
             </div>
 
-            <LibraryExplorer onSelectResource={setActiveResource} />
+            <LibraryExplorer onSelectResource={(res) => router.push(`/resources/${res.id}`)} />
           </div>
         )}
 
         {/* Tab 4: Root Cause Matrix */}
         {activeTab === 'matrix' && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#1b202c] pb-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                <Grid className="w-5 h-5 text-blue-400" />
+            <div className="space-y-1 border-b border-[#373e47] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#cdd9e5] tracking-tight flex items-center gap-2 font-mono">
+                <Grid className="w-5 h-5 text-[#539bf5]" />
                 <span>The Root-Cause Concept Matrix</span>
               </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 font-mono">
+              <p className="text-xs sm:text-sm text-[#768390] font-mono">
                 Computer science failure mechanisms correlated with real outages, typical blast radiuses, and defensive patterns.
               </p>
             </div>
 
             <FailureMatrix
-              onSelectIncident={setActiveIncident}
-              onSelectResource={setActiveResource}
+              onSelectIncident={(inc) => router.push(`/incidents/${inc.id}`)}
+              onSelectResource={(res) => router.push(`/resources/${res.id}`)}
             />
           </div>
         )}
@@ -337,17 +334,17 @@ export default function HomePage() {
         {/* Tab 5: Failure Simulator */}
         {activeTab === 'simulator' && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#1b202c] pb-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                <Terminal className="w-5 h-5 text-red-400" />
+            <div className="space-y-1 border-b border-[#373e47] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#cdd9e5] tracking-tight flex items-center gap-2 font-mono">
+                <Terminal className="w-5 h-5 text-[#f47067]" />
                 <span>System Design Failure Simulator</span>
               </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 font-mono">
+              <p className="text-xs sm:text-sm text-[#768390] font-mono">
                 Test your operational failure imagination against real production alerts.
               </p>
             </div>
 
-            <FailureSimulator onSelectResource={setActiveResource} />
+            <FailureSimulator onSelectResource={(res) => router.push(`/resources/${res.id}`)} />
           </div>
         )}
 
@@ -365,34 +362,18 @@ export default function HomePage() {
       {/* 5. Footer */}
       <Footer />
 
-      {/* 6. Modals */}
-      <IncidentDetailModal
-        incident={activeIncident}
-        onClose={() => setActiveIncident(null)}
-        onSelectResource={(res) => {
-          setActiveIncident(null);
-          setActiveResource(res);
-        }}
-        onSelectVideo={(vid) => {
-          setActiveIncident(null);
-          router.push(`/watch/${vid.vid}`);
-        }}
-      />
-
-      <ResourceDetailModal
-        resource={activeResource}
-        onClose={() => setActiveResource(null)}
-        onSelectIncident={(inc) => {
-          setActiveResource(null);
-          setActiveIncident(inc);
-        }}
-      />
-
+      {/* 6. Universal Command Palette */}
       <CommandPalette
         isOpen={searchPaletteOpen}
         onClose={() => setSearchPaletteOpen(false)}
-        onSelectIncident={setActiveIncident}
-        onSelectResource={setActiveResource}
+        onSelectIncident={(inc) => {
+          setSearchPaletteOpen(false);
+          router.push(`/incidents/${inc.id}`);
+        }}
+        onSelectResource={(res) => {
+          setSearchPaletteOpen(false);
+          router.push(`/resources/${res.id}`);
+        }}
         onSelectVideo={(vid) => {
           setSearchPaletteOpen(false);
           router.push(`/watch/${vid.vid}`);

@@ -3,7 +3,7 @@ import { IncidentSeverity } from '@/types/incident';
 import { ResourceType, ResourceLevel, ShelfLife } from '@/types/resource';
 
 export function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
-  if (severity === 'Critical P0') {
+  if (severity === 'P0' || severity === 'Critical P0') {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#f47067]/15 text-[#f47067] border border-[#f47067]/40 shadow-sm">
         <span className="w-1.5 h-1.5 rounded-full bg-[#f47067]" />
@@ -11,7 +11,7 @@ export function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
       </span>
     );
   }
-  if (severity === 'Major P1') {
+  if (severity === 'P1' || severity === 'Major P1') {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#c69026]/15 text-[#c69026] border border-[#c69026]/40">
         <span className="w-1.5 h-1.5 rounded-full bg-[#c69026]" />
@@ -63,7 +63,7 @@ export function CategoryPill({ category }: { category: string }) {
 export function RootCausePill({ tag }: { tag: string }) {
   const label = tag.replace(/-/g, ' ');
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono text-amber-300/90 bg-amber-950/40 border border-amber-600/30">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono text-[#c69026] bg-[#c69026]/15 border border-[#c69026]/30">
       #{label}
     </span>
   );

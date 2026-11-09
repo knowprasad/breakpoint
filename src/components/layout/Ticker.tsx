@@ -12,7 +12,11 @@ const TICKER_ITEMS = [
   { company: 'AWS S3', year: 2017, text: 'CLI argument typo removes S3 index subsystem; aggressive retry storms delay cold recovery 4.5h', severity: 'P0', id: 'incident-aws-s3-2017-typo-command' },
   { company: 'Meta', year: 2021, text: 'Backbone audit command severs internal links; DNS withdraws BGP routes globally', severity: 'P0', id: 'incident-facebook-2021-bgp-routing-blackhole' },
   { company: 'GitHub', year: 2018, text: '43s optical fiber partition promotes dual MySQL primaries, causing 24h split-brain binlog surgery', severity: 'P1', id: 'incident-github-2018-database-partition-split-brain' },
-  { company: 'Knight Capital', year: 2012, text: 'Undeployed 8th server runs 2003 Power Peg code, losing $460M in 45 minutes of market opening', severity: 'P0', id: 'incident-knight-capital-2012-dead-code-deployment' }
+  { company: 'Knight Capital', year: 2012, text: 'Undeployed 8th server runs 2003 Power Peg code, losing $460M in 45 minutes of market opening', severity: 'P0', id: 'incident-knight-capital-2012-dead-code-deployment' },
+  { company: 'Valve Steam', year: 2015, text: 'Varnish caching bug leaks 34,000 user profiles and purchase history on Christmas morning', severity: 'P0', id: 'incident-valve-steam-2015-caching-profile-leak' },
+  { company: 'Discord', year: 2023, text: 'Trillions of messages migrated from Cassandra to ScyllaDB & Rust, dropping P99 latency to 15ms', severity: 'P1', id: 'incident-discord-2023-cassandra-to-scylladb-rust' },
+  { company: 'Ariane 5', year: 1996, text: '64-bit float to 16-bit integer overflow self-destructs $500M rocket 37s into flight', severity: 'P0', id: 'incident-ariane5-1996-float-to-int-overflow' },
+  { company: 'Cloudflare', year: 2017, text: 'Cloudbleed parser buffer overrun leaks decrypted HTTPS cookies and passwords into web search cache', severity: 'P0', id: 'incident-cloudflare-2017-cloudbleed-buffer-overrun' }
 ];
 
 export function Ticker() {

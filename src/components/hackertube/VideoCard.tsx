@@ -10,7 +10,17 @@ import {
   Star,
   Heart,
   Bookmark,
-  X
+  X,
+  ShieldAlert,
+  Layers,
+  Cpu,
+  Database,
+  Network,
+  Share2,
+  Box,
+  AlertTriangle,
+  Lightbulb,
+  CheckCircle2
 } from 'lucide-react';
 import {
   isVideoLiked,
@@ -61,26 +71,30 @@ export function VideoCard({
     setSavedLater(newStatus);
   };
 
+  const primaryIncidentId = video.related_incident_ids && video.related_incident_ids.length > 0
+    ? video.related_incident_ids[0]
+    : null;
+
+  const outageBadgeText = video.prevented_outage
+    ? `Prevents: ${video.prevented_outage}`
+    : primaryIncidentId
+    ? `Prevents: ${primaryIncidentId.replace('incident-', '').split('-').slice(0, 2).map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')} Outage`
+    : null;
+
   return (
-    <Link
-      href={`/watch/${video.vid}`}
-      onClick={(e) => {
-        if (onSelect) {
-          onSelect(video);
-        }
-      }}
-      className="group relative flex flex-col justify-between rounded-xl bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] hover:border-[#444c56] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md overflow-hidden active:scale-[0.99]"
-    >
+    <div className="group relative flex flex-col justify-between rounded-xl bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] hover:border-[#539bf5]/50 transition-all duration-200 shadow-sm hover:shadow-md overflow-hidden">
       <div>
         {/* 16:9 Thumbnail Box */}
-        <div className="relative aspect-video w-full bg-[#1c2128] overflow-hidden">
+        <Link
+          href={`/watch/${video.vid}`}
+          onClick={() => onSelect && onSelect(video)}
+          className="relative aspect-video w-full bg-[#1c2128] overflow-hidden block"
+        >
           <img
             src={imgSrc}
             alt={video.title}
             onError={() => {
-              if (imgSrc.includes('/hq2.jpg')) {
-                setImgSrc(`https://i.ytimg.com/vi/${video.vid}/hqdefault.jpg`);
-              } else {
+              if (imgSrc.includes('/hq2.jpg') || imgSrc.includes('/hqdefault.jpg')) {
                 setImgSrc(`https://i.ytimg.com/vi/${video.vid}/mqdefault.jpg`);
               }
             }}
@@ -157,37 +171,84 @@ export function VideoCard({
 
             <span className="px-2 py-0.5 rounded bg-[#1c2128]/90 backdrop-blur-md text-[#c69026] border border-[#373e47] flex items-center gap-1 font-bold">
               <Star className="w-3 h-3 fill-current text-[#c69026]" />
-              <span>{video.score.toFixed(1)}</span>
+              <span>{(video.score || 0).toFixed(1)}</span>
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Content Body */}
-        <div className="p-4 space-y-2.5">
-          {/* Topic & Level */}
+        <div className="p-4 space-y-3">
+          {/* Outage Badge if associated */}
+          {outageBadgeText && primaryIncidentId && (
+            <Link
+              href={`/incidents/${primaryIncidentId}`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#f47067]/15 border border-[#f47067]/40 text-[#f47067] text-[11px] font-mono font-bold tracking-tight hover:bg-[#f47067]/25 transition-colors"
+            >
+              <Flame className="w-3.5 h-3.5 text-[#f47067] shrink-0" />
+              <span className="truncate">{outageBadgeText}</span>
+            </Link>
+          )}
+
+          {/* Layer & Vector Filter Badges */}
           <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-[#1c2128] border border-[#373e47] text-[#768390] capitalize">
-              {video.primary_topic || video.content_type}
-            </span>
+            {video.architecture_layer && (
+              <span className="px-2 py-0.5 rounded bg-[#539bf5]/15 border border-[#539bf5]/35 text-[#539bf5] font-semibold">
+                {video.architecture_layer}
+              </span>
+            )}
+            {video.failure_vector && (
+              <span className="px-2 py-0.5 rounded bg-[#c69026]/15 border border-[#c69026]/35 text-[#c69026] font-semibold truncate max-w-[190px]">
+                {video.failure_vector}
+              </span>
+            )}
+            {!video.architecture_layer && (
+              <span className="px-2 py-0.5 rounded bg-[#1c2128] border border-[#373e47] text-[#768390] capitalize">
+                {video.primary_topic || video.content_type}
+              </span>
+            )}
             <span className="px-1.5 py-0.5 rounded bg-[#1c2128] text-[#768390] capitalize">
               {video.level}
             </span>
-            {video.shelf_life === 'evergreen' && (
-              <span className="px-1.5 py-0.5 rounded bg-[#57ab5a]/15 border border-[#57ab5a]/40 text-[#57ab5a] font-semibold">
-                Evergreen
-              </span>
-            )}
           </div>
 
           {/* Title */}
-          <h3 className="text-sm font-bold text-[#adbac7] group-hover:text-white transition-colors line-clamp-2 leading-snug">
-            {video.title}
-          </h3>
+          <Link
+            href={`/watch/${video.vid}`}
+            onClick={() => onSelect && onSelect(video)}
+            className="block"
+          >
+            <h3 className="text-sm font-bold text-[#adbac7] group-hover:text-white transition-colors line-clamp-2 leading-snug">
+              {video.title}
+            </h3>
+          </Link>
 
-          {/* Summary */}
-          <p className="text-xs text-[#768390] line-clamp-2 leading-relaxed">
-            {video.summary}
-          </p>
+          {/* 3-Bullet Forensic Summary */}
+          {video.forensic_summary ? (
+            <div className="p-3 rounded-lg bg-[#1c2128] border border-[#373e47]/70 space-y-2 text-[11px] font-mono">
+              <div className="flex items-start gap-1.5 text-zinc-300">
+                <span className="text-[#f47067] font-bold shrink-0">The Trap:</span>
+                <span className="text-[#adbac7] leading-relaxed line-clamp-2">
+                  {video.forensic_summary.trap}
+                </span>
+              </div>
+              <div className="flex items-start gap-1.5 text-zinc-300">
+                <span className="text-[#539bf5] font-bold shrink-0">The Mental Model:</span>
+                <span className="text-[#adbac7] leading-relaxed line-clamp-2">
+                  {video.forensic_summary.mental_model}
+                </span>
+              </div>
+              <div className="flex items-start gap-1.5 text-zinc-300">
+                <span className="text-[#57ab5a] font-bold shrink-0">The Production Rule:</span>
+                <span className="text-[#adbac7] leading-relaxed line-clamp-2">
+                  {video.forensic_summary.production_rule}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-[#768390] line-clamp-2 leading-relaxed">
+              {video.summary}
+            </p>
+          )}
 
           {/* Hacker News Pull Quote */}
           {video.quote && (
@@ -198,22 +259,23 @@ export function VideoCard({
         </div>
       </div>
 
-      {/* Card Footer: HN Mentions & Linked Disasters */}
+      {/* Card Footer: HN Mentions & Watch Link */}
       <div className="p-4 pt-0">
         <div className="pt-2.5 border-t border-[#373e47]/60 flex items-center justify-between text-[11px] font-mono text-[#768390]">
           <div className="flex items-center gap-1 text-[#768390]">
             <MessageSquare className="w-3 h-3 text-[#c69026]" />
-            <span>{video.hn.mentions} HN recs ({video.hn.rec_months} mos)</span>
+            <span>{video.hn?.mentions || 0} HN recs</span>
           </div>
 
-          {video.related_incident_ids && video.related_incident_ids.length > 0 && (
-            <div className="flex items-center gap-1 text-[#f47067] font-semibold">
-              <Flame className="w-3 h-3 text-[#f47067]" />
-              <span>Prevents Outages</span>
-            </div>
-          )}
+          <Link
+            href={`/watch/${video.vid}`}
+            className="text-xs font-mono text-[#539bf5] hover:text-[#79c0ff] flex items-center gap-1 font-semibold group-hover:translate-x-0.5 transition-transform"
+          >
+            <span>Watch Talk</span>
+            <span>→</span>
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
