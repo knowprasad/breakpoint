@@ -5,6 +5,7 @@ import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
 import { HackerTubeVideo } from '@/types/hackertube';
 import { searchAndFilter } from '@/lib/db';
+import { getClientVideoCatalog, searchClientVideos } from '@/lib/clientCatalog';
 import { Search, Flame, BookOpen, AlertOctagon, CornerDownLeft, X, Video, Star } from 'lucide-react';
 import { SeverityBadge, ResourceTypeBadge } from './Badge';
 
@@ -43,15 +44,15 @@ export function CommandPalette({
     let cancelled = false;
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/videos?q=${encodeURIComponent(query)}&limit=5`);
-        if (res.ok && !cancelled) {
-          const data = await res.json();
-          setVideoResults(data.videos || []);
+        const catalog = await getClientVideoCatalog();
+        if (!cancelled) {
+          const res = searchClientVideos(catalog, { query, limit: 5 });
+          setVideoResults(res.videos);
         }
       } catch {
         // ignore
       }
-    }, 150);
+    }, 100);
 
     return () => {
       cancelled = true;

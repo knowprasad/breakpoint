@@ -26,6 +26,7 @@ import {
   toggleWatchLater
 } from '@/lib/userStore';
 import { AddToPlaylistPopover } from './AddToPlaylistPopover';
+import { getClientVideoCatalog } from '@/lib/clientCatalog';
 
 interface VideoTheaterModalProps {
   video: HackerTubeVideo | null;
@@ -65,14 +66,15 @@ export function VideoTheaterModal({
       if (active) setLoadingSimilar(true);
     });
 
-    fetch(`/api/similar?vid=${video.vid}&limit=6`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (active && data.similar) {
-          setSimilarTalks(data.similar);
-        }
+    getClientVideoCatalog()
+      .then((catalog) => {
+        if (!active) return;
+        const matches = catalog
+          .filter((v) => v.vid !== video.vid && (v.primary_topic === video.primary_topic || v.tags?.some((t) => video.tags?.includes(t))))
+          .slice(0, 6);
+        setSimilarTalks(matches.length > 0 ? matches : catalog.slice(0, 6));
       })
-      .catch((err) => console.error('Error fetching similar talks:', err))
+      .catch((err) => console.error("Error finding similar talks:", err))
       .finally(() => {
         if (active) setLoadingSimilar(false);
       });

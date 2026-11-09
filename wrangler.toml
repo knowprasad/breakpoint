@@ -1,0 +1,7 @@
+# Cloudflare Pages Configuration for breakpoint
+name = "breakpoint"
+pages_build_output_dir = "out"
+compatibility_date = "2026-11-09"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]

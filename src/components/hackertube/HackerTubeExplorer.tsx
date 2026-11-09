@@ -6,6 +6,7 @@ import { HackerTubeVideo } from '@/types/hackertube';
 import { OfficialPlaylist } from '@/types/playlist';
 import { VideoCard } from './VideoCard';
 import { DisasterIncident } from '@/types/incident';
+import { getClientVideoCatalog, searchClientVideos } from '@/lib/clientCatalog';
 import {
   loadUserStore,
   saveUserStore,
@@ -84,11 +85,12 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
 
   useEffect(() => {
     if (activeTab === 'playlists' && officialPlaylists.length === 0) {
-      fetch('/api/playlists?full=true')
+      fetch('/data/playlists.json')
         .then((r) => r.json())
         .then((data) => {
-          if (data.playlists) {
-            setOfficialPlaylists(data.playlists);
+          const list = Array.isArray(data) ? data : (data.playlists || []);
+          if (list.length > 0) {
+            setOfficialPlaylists(list);
           }
         })
         .catch((e) => console.error('Failed to load official playlists', e));
@@ -103,33 +105,30 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
     return () => window.removeEventListener('breakpoint-store-changed', handleStoreChange);
   }, []);
 
-  // Fetch videos for "All Talks" from API
+  // Fetch / search videos for "All Talks" from client catalog
   const fetchVideos = async (reset = false, newOffset = 0) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({
-        q: query,
+      const catalog = await getClientVideoCatalog();
+      const res = searchClientVideos(catalog, {
+        query,
         area: selectedArea,
-        level: level,
-        sort: sortBy,
-        limit: '24',
-        offset: newOffset.toString()
+        level,
+        sortBy,
+        limit: 24,
+        offset: newOffset
       });
 
-      const res = await fetch(`/api/videos?${params.toString()}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (reset) {
-          setVideos(data.videos);
-        } else {
-          setVideos((prev) => [...prev, ...data.videos]);
-        }
-        setTotalCount(data.totalCount);
-        setHasMore(data.hasMore);
-        setOffset(newOffset);
+      if (reset) {
+        setVideos(res.videos);
+      } else {
+        setVideos((prev) => [...prev, ...res.videos]);
       }
+      setTotalCount(res.totalCount);
+      setHasMore(res.hasMore);
+      setOffset(newOffset);
     } catch (e) {
-      console.error('Error fetching videos', e);
+      console.error('Error filtering videos', e);
     } finally {
       setLoading(false);
     }

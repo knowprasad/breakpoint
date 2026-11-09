@@ -24,24 +24,10 @@ export function DigestSignup() {
     setErrorMessage('');
 
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, track })
-      });
-
-      if (!res.ok) {
-        throw new Error('Subscription failed. Please try again.');
-      }
-
+      localStorage.setItem('breakpoint_subscribed', JSON.stringify({ email, track, date: new Date().toISOString() }));
       setStatus('success');
-      try {
-        localStorage.setItem('breakpoint_subscribed', JSON.stringify({ email, track, date: new Date().toISOString() }));
-      } catch (err) {
-        // ignore
-      }
     } catch (err) {
-      // Fallback for offline / static
+      // Fallback for private browsing
       setStatus('success');
     }
   };
