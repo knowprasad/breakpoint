@@ -23,21 +23,27 @@ export async function getClientVideoCatalog(): Promise<HackerTubeVideo[]> {
         if (!res.ok) throw new Error('Failed to load /data/videos.json');
         return res.json();
       })
-      .then((data: any[]) => {
-        cachedCatalog = data.map((v) => ({
-          vid: v.vid,
+      .then((data: unknown[]) => {
+        const rawList = data as Record<string, unknown>[];
+        cachedCatalog = rawList.map((v) => ({
+          vid: String(v.vid || ''),
           url: `https://www.youtube.com/watch?v=${v.vid}`,
-          title: v.title,
-          channel: v.channel,
-          summary: v.summary || '',
-          why_hn: v.why_hn || '',
-          content_type: 'talk',
-          level: v.level || 'intermediate',
-          shelf_life: 'evergreen',
-          primary_topic: v.primary_topic || '',
-          tags: v.tags || [],
+          title: String(v.title || ''),
+          channel: String(v.channel || ''),
+          summary: String(v.summary || ''),
+          why_hn: String(v.why_hn || ''),
+          content_type: 'talk' as const,
+          level: (v.level as 'intro' | 'intermediate' | 'advanced') || 'intermediate',
+          shelf_life: 'evergreen' as const,
+          primary_topic: String(v.primary_topic || ''),
+          tags: Array.isArray(v.tags) ? (v.tags as string[]) : [],
           categories: [],
-          hn: v.hn || { mentions: 0, recommenders: 0, rec_months: 0, strong_recs: 0 },
+          hn: (v.hn as { mentions: number; recommenders: number; rec_months: number; strong_recs: number }) || {
+            mentions: 0,
+            recommenders: 0,
+            rec_months: 0,
+            strong_recs: 0,
+          },
           score: v.score || 0,
           thumbnail_url: `https://i.ytimg.com/vi/${v.vid}/hq2.jpg`,
           related_incident_ids: []
