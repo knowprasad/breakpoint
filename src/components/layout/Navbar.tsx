@@ -59,21 +59,21 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[#07080b]/95 backdrop-blur-md border-b border-[#1b202c]">
+      <header className="sticky top-0 z-40 w-full bg-[#1c2128]/95 backdrop-blur-md border-b border-[#373e47]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
           {/* Brand: breakpoint */}
           <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-red-950/80 border border-red-500/50 text-red-400 flex items-center justify-center transition-all group-hover:scale-105 group-hover:border-red-400 group-hover:bg-red-900/90 shadow-md shadow-red-950/60 font-mono font-bold text-sm">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-400/40 animate-pulse" />
+            <div className="w-8 h-8 rounded-lg bg-[#22272e] border border-[#373e47] text-[#adbac7] flex items-center justify-center transition-all group-hover:border-[#444c56] shadow-sm font-mono font-bold text-sm">
+              <span className="w-2 h-2 rounded-full bg-[#f47067]" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-mono font-bold text-base tracking-tight text-white group-hover:text-red-400 transition-colors">
+              <div className="flex items-center gap-2 font-mono font-bold text-base tracking-tight text-[#adbac7] group-hover:text-white transition-colors">
                 <span>breakpoint</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800/90 text-zinc-400 font-normal border border-zinc-700/60">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#22272e] text-[#768390] font-normal border border-[#373e47]">
                   v1.0
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline tracking-tight">
+              <span className="text-[10px] font-mono text-[#768390] hidden sm:inline tracking-tight">
                 Production Disaster Encyclopedia & Engineering Canon
               </span>
             </div>
@@ -83,17 +83,17 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
           <div className="flex-1 max-w-md hidden md:block">
             <button
               onClick={handleSearchClick}
-              className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-[#0e1117] hover:bg-[#141822] text-zinc-400 hover:text-zinc-200 border border-[#202735] hover:border-zinc-600 text-xs font-mono transition-all"
+              className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-[#22272e] hover:bg-[#282e37] text-[#768390] hover:text-[#adbac7] border border-[#373e47] hover:border-[#444c56] text-xs font-mono transition-all"
             >
               <div className="flex items-center gap-2">
-                <Search className="w-3.5 h-3.5 text-zinc-500" />
+                <Search className="w-3.5 h-3.5 text-[#768390]" />
                 <span>Search 6,454 talks, outages & books...</span>
               </div>
               <div className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#181d26] text-zinc-400 border border-[#273040]">
+                <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#1c2128] text-[#768390] border border-[#373e47]">
                   /
                 </kbd>
-                <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#181d26] text-zinc-400 border border-[#273040]">
+                <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-[#1c2128] text-[#768390] border border-[#373e47]">
                   ⌘K
                 </kbd>
               </div>
@@ -105,7 +105,7 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
             {/* Mobile Search Button */}
             <button
               onClick={handleSearchClick}
-              className="p-2 rounded-lg bg-[#0e1117] border border-[#202735] text-zinc-400 md:hidden hover:text-white"
+              className="p-2 rounded-lg bg-[#22272e] border border-[#373e47] text-[#768390] md:hidden hover:text-[#adbac7]"
               title="Search (/ or Cmd+K)"
             >
               <Search className="w-4 h-4" />
@@ -114,18 +114,18 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
             {/* Disaster Autopsies Link */}
             <Link
               href="/#disasters"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-[#10131a] border border-transparent hover:border-[#222836] transition-colors"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[#768390] hover:text-[#adbac7] hover:bg-[#22272e] border border-transparent transition-colors"
             >
-              <Flame className="w-3.5 h-3.5 text-red-500" />
+              <Flame className="w-3.5 h-3.5 text-[#f47067]" />
               <span>Disasters</span>
             </Link>
 
             {/* Library Link */}
             <Link
               href="/#library"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-zinc-400 hover:text-emerald-400 hover:bg-[#10131a] border border-transparent hover:border-[#222836] transition-colors"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[#768390] hover:text-[#adbac7] hover:bg-[#22272e] border border-transparent transition-colors"
             >
-              <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+              <BookOpen className="w-3.5 h-3.5 text-[#57ab5a]" />
               <span>Library</span>
             </Link>
 
@@ -134,11 +134,11 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
               href="/curriculum"
               className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors ${
                 pathname === '/curriculum'
-                  ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/40'
-                  : 'text-zinc-400 hover:text-emerald-400 hover:bg-[#10131a]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#444c56]'
+                  : 'text-[#768390] hover:text-[#adbac7] hover:bg-[#22272e]'
               }`}
             >
-              <Award className="w-3.5 h-3.5 text-emerald-400" />
+              <Award className="w-3.5 h-3.5 text-[#57ab5a]" />
               <span>Tracks</span>
             </Link>
 
@@ -147,11 +147,11 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
               href="/matrix"
               className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors ${
                 pathname === '/matrix'
-                  ? 'bg-blue-950/70 text-blue-300 border border-blue-500/40'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#10131a]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#444c56]'
+                  : 'text-[#768390] hover:text-[#adbac7] hover:bg-[#22272e]'
               }`}
             >
-              <Grid className="w-3.5 h-3.5 text-blue-400" />
+              <Grid className="w-3.5 h-3.5 text-[#539bf5]" />
               <span>Matrix</span>
             </Link>
 
@@ -160,11 +160,11 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
               href="/simulator"
               className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors ${
                 pathname === '/simulator'
-                  ? 'bg-zinc-800 text-white border border-zinc-700'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#10131a]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#444c56]'
+                  : 'text-[#768390] hover:text-[#adbac7] hover:bg-[#22272e]'
               }`}
             >
-              <Terminal className="w-3.5 h-3.5 text-red-400" />
+              <Terminal className="w-3.5 h-3.5 text-[#f47067]" />
               <span>Simulator</span>
             </Link>
 
@@ -173,20 +173,20 @@ export function Navbar({ onOpenSearch, onOpenDigest }: NavbarProps) {
               onClick={() => setIsShortcutsOpen(true)}
               type="button"
               title="Keyboard Shortcuts (? or Shift+/)"
-              className="flex items-center gap-0.5 px-2 py-1.5 rounded-lg bg-[#0e1117] hover:bg-[#151a24] text-zinc-400 hover:text-zinc-200 border border-[#202735] hover:border-zinc-500 transition-all text-xs font-mono group shadow-sm active:scale-95"
+              className="flex items-center gap-0.5 px-2 py-1.5 rounded-lg bg-[#22272e] hover:bg-[#282e37] text-[#768390] hover:text-[#adbac7] border border-[#373e47] hover:border-[#444c56] transition-all text-xs font-mono group shadow-sm active:scale-95"
               aria-label="Keyboard Shortcuts"
             >
-              <span className="text-[10px] text-zinc-500 font-bold group-hover:text-zinc-400 select-none">[</span>
-              <kbd className="text-zinc-300 font-bold group-hover:text-emerald-400 transition-colors select-none">?</kbd>
-              <span className="text-[10px] text-zinc-500 font-bold group-hover:text-zinc-400 select-none">]</span>
+              <span className="text-[10px] text-[#768390] font-bold select-none">[</span>
+              <kbd className="text-[#adbac7] font-bold group-hover:text-white transition-colors select-none">?</kbd>
+              <span className="text-[10px] text-[#768390] font-bold select-none">]</span>
             </button>
 
             {/* Digest Signup */}
             <Link
               href="/digest"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold transition-all shadow-sm shadow-red-950"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2d333b] hover:bg-[#373e47] text-[#adbac7] hover:text-white border border-[#444c56] font-semibold transition-all shadow-sm"
             >
-              <Mail className="w-3.5 h-3.5" />
+              <Mail className="w-3.5 h-3.5 text-[#f47067]" />
               <span className="hidden xs:inline">Digest</span>
             </Link>
           </div>

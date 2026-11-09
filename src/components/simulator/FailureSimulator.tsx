@@ -454,24 +454,24 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Top Console Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#0e1117] border border-[#202735] font-mono text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#22272e] border border-[#373e47] font-mono text-xs">
         <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-red-400" />
-          <span className="font-bold text-white uppercase tracking-wider">
+          <Terminal className="w-4 h-4 text-[#f47067]" />
+          <span className="font-bold text-[#adbac7] uppercase tracking-wider">
             Failure Imagination Simulator
           </span>
-          <span className="text-zinc-500">
+          <span className="text-[#768390]">
             (Scenario {currentIndex + 1} of {totalScenarios})
           </span>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-emerald-400">
+            <span className="text-[#57ab5a]">
               Averted: <strong>{solvedCount}</strong>
             </span>
-            <span className="text-zinc-600">/</span>
-            <span className="text-red-400">
+            <span className="text-[#444c56]">/</span>
+            <span className="text-[#f47067]">
               Cascaded: <strong>{failedCount}</strong>
             </span>
           </div>
@@ -479,7 +479,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
           {answeredCount > 0 && (
             <button
               onClick={() => setShowScorecard(true)}
-              className="text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors font-bold"
+              className="text-[#c69026] hover:text-white flex items-center gap-1 transition-colors font-bold cursor-pointer"
             >
               <Award className="w-3.5 h-3.5" />
               <span>Scorecard</span>
@@ -488,7 +488,7 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
 
           <button
             onClick={handleReset}
-            className="text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+            className="text-[#768390] hover:text-[#adbac7] flex items-center gap-1 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset</span>
@@ -502,21 +502,21 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
           const ans = answers[sc.id];
           const isCurrent = idx === currentIndex;
 
-          let badgeStyle = 'bg-[#0e1117] border-[#222836] text-zinc-400 hover:border-zinc-600';
+          let badgeStyle = 'bg-[#22272e] border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:border-[#444c56]';
           if (ans) {
             badgeStyle = ans.isCorrect
-              ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300 font-bold'
-              : 'bg-red-950/60 border-red-500/50 text-red-300 font-bold';
+              ? 'bg-[#57ab5a]/15 border-[#57ab5a]/50 text-[#57ab5a] font-bold'
+              : 'bg-[#f47067]/15 border-[#f47067]/50 text-[#f47067] font-bold';
           }
           if (isCurrent) {
-            badgeStyle += ' ring-2 ring-red-500 ring-offset-2 ring-offset-[#08090b]';
+            badgeStyle += ' ring-2 ring-[#539bf5] ring-offset-2 ring-offset-[#1c2128]';
           }
 
           return (
             <button
               key={sc.id}
               onClick={() => setCurrentIndex(idx)}
-              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-mono text-xs transition-all ${badgeStyle}`}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-mono text-xs transition-all cursor-pointer ${badgeStyle}`}
             >
               <span>{idx + 1}.</span>
               <span className="hidden sm:inline truncate max-w-[100px]">
@@ -525,9 +525,9 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
               {ans && (
                 <span>
                   {ans.isCorrect ? (
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 inline" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#57ab5a] inline" />
                   ) : (
-                    <XCircle className="w-3.5 h-3.5 text-red-400 inline" />
+                    <XCircle className="w-3.5 h-3.5 text-[#f47067] inline" />
                   )}
                 </span>
               )}
@@ -537,24 +537,24 @@ export function FailureSimulator({ onSelectResource }: FailureSimulatorProps) {
       </div>
 
       {/* Scenario Console Card */}
-      <div className="rounded-2xl bg-[#0a0c10] border border-[#222836] p-6 sm:p-8 space-y-6 shadow-2xl">
+      <div className="rounded-2xl bg-[#22272e] border border-[#373e47] p-6 sm:p-8 space-y-6 shadow-sm">
         {/* Scenario Header */}
-        <div className="space-y-2 border-b border-[#1b212d] pb-5">
+        <div className="space-y-2 border-b border-[#373e47]/60 pb-5">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-mono text-red-400 font-semibold uppercase tracking-wider">
+            <span className="text-xs font-mono text-[#f47067] font-semibold uppercase tracking-wider">
               {currentScenario.company_context}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-zinc-500">
+              <span className="text-xs font-mono text-[#768390]">
                 Drill {currentIndex + 1} of {totalScenarios}
               </span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-red-950/80 text-red-400 border border-red-500/30 flex items-center gap-1">
-                <Flame className="w-3 h-3 text-red-400" />
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#f47067]/15 text-[#f47067] border border-[#f47067]/40 flex items-center gap-1">
+                <Flame className="w-3 h-3 text-[#f47067]" />
                 <span>P0 Crisis</span>
               </span>
             </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#adbac7] tracking-tight">
             {currentScenario.title}
           </h2>
         </div>

@@ -2,17 +2,17 @@
 
 @layer base {
   :root {
-    --background: #08090b;
-    --foreground: #e4e4e7;
-    --card: #0e1115;
-    --card-hover: #151921;
-    --border: #222731;
-    --muted: #71717a;
-    --accent: #3b82f6;
-    --p0: #ef4444;
-    --p1: #f59e0b;
-    --p2: #3b82f6;
-    --lindy: #10b981;
+    --background: #1c2128;
+    --foreground: #adbac7;
+    --card: #22272e;
+    --card-hover: #262c36;
+    --border: #373e47;
+    --muted: #768390;
+    --accent: #539bf5;
+    --p0: #f47067;
+    --p1: #c69026;
+    --p2: #539bf5;
+    --lindy: #57ab5a;
   }
 }
 
@@ -27,37 +27,23 @@ code, pre, .font-mono {
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars - soft, calm, non-distracting */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0c0e12;
+  background: #1c2128;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #272d38;
+  background: #373e47;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #384252;
-}
-
-/* Pulsing ember glow for P0 critical alerts */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px -3px rgba(239, 68, 68, 0.35);
-  }
-  50% {
-    box-shadow: 0 0 25px 2px rgba(239, 68, 68, 0.6);
-  }
-}
-
-.glow-p0 {
-  animation: pulseGlow 3s infinite ease-in-out;
+  background: #444c56;
 }
 
 /* Ticker marquee animation */
@@ -73,7 +59,7 @@ code, pre, .font-mono {
 .animate-ticker {
   display: flex;
   width: max-content;
-  animation: tickerSlide 45s linear infinite;
+  animation: tickerSlide 50s linear infinite;
 }
 
 .animate-ticker:hover {

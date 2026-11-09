@@ -70,29 +70,29 @@ export default async function WatchPage({
     .filter(Boolean) as DisasterIncident[];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07080b] text-zinc-100 font-sans selection:bg-red-500/30 selection:text-red-200">
+    <div className="min-h-screen flex flex-col bg-[#1c2128] text-[#adbac7] font-sans selection:bg-[#f47067]/20 selection:text-[#f47067]">
       <Ticker />
       <Navbar />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+        <div className="flex items-center justify-between text-xs font-mono text-[#768390]">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 hover:text-[#adbac7] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to All Talks</span>
           </Link>
 
-          <span className="text-zinc-600 hidden sm:inline">
+          <span className="text-[#768390] hidden sm:inline">
             HackerTube Canon / {video.primary_topic || 'Systems'}
           </span>
         </div>
 
         {/* Video Player Surface */}
         <section className="space-y-4">
-          <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-[#1e2430] shadow-2xl">
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-[#373e47] shadow-xl">
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${video.vid}?autoplay=1&rel=0`}
               title={video.title}
@@ -105,25 +105,25 @@ export default async function WatchPage({
           {/* Action Toolbar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
             <div className="space-y-1">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white leading-tight">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#adbac7] leading-tight">
                 {video.title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-zinc-400">
-                <span className="font-semibold text-zinc-200">{video.channel}</span>
-                <span className="text-zinc-600">•</span>
-                <span className="text-amber-400 font-bold flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-[#768390]">
+                <span className="font-semibold text-[#adbac7]">{video.channel}</span>
+                <span className="text-[#373e47]">•</span>
+                <span className="text-[#c69026] font-bold flex items-center gap-1">
                   <Star className="w-3.5 h-3.5 fill-current" />
                   <span>HN Score: {video.score.toFixed(1)}</span>
                 </span>
-                <span className="text-zinc-600">•</span>
+                <span className="text-[#373e47]">•</span>
                 <span className="capitalize">{video.content_type || 'talk'}</span>
-                <span className="text-zinc-600">•</span>
-                <span className="capitalize text-zinc-400 px-2 py-0.5 rounded bg-[#121620] border border-[#222838]">
+                <span className="text-[#373e47]">•</span>
+                <span className="capitalize text-[#768390] px-2 py-0.5 rounded bg-[#22272e] border border-[#373e47]">
                   {video.level}
                 </span>
                 {video.shelf_life === 'evergreen' && (
-                  <span className="text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">
+                  <span className="text-[#57ab5a] bg-[#57ab5a]/15 border border-[#57ab5a]/40 px-2 py-0.5 rounded text-[10px] font-semibold">
                     Evergreen
                   </span>
                 )}
@@ -136,14 +136,14 @@ export default async function WatchPage({
         </section>
 
         {/* Video Intelligence & Metadata Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-[#181d26]">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-[#373e47]/60">
           {/* Left 2 Columns: Summary & HN Commentary */}
           <div className="lg:col-span-2 space-y-6">
             {/* Why Hacker News Loves This Talk */}
             {video.quote && (
-              <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-[#121622] to-[#0d1017] border border-[#252d40] space-y-3">
+              <div className="p-4 sm:p-5 rounded-xl bg-[#22272e] border border-[#373e47] space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#c69026] font-bold flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5" />
                     <span>Why Hacker News Loves This Talk</span>
                   </span>
@@ -152,18 +152,18 @@ export default async function WatchPage({
                       href={`https://news.ycombinator.com/item?id=${video.quote.hn_comment_id}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[11px] font-mono text-zinc-400 hover:text-white transition-colors"
+                      className="text-[11px] font-mono text-[#768390] hover:text-[#adbac7] transition-colors"
                     >
                       View HN Thread ↗
                     </a>
                   )}
                 </div>
 
-                <p className="text-sm italic text-zinc-200 leading-relaxed font-serif">
+                <p className="text-sm italic text-[#adbac7] leading-relaxed font-serif">
                   &ldquo;{video.quote.text}&rdquo;
                 </p>
 
-                <div className="text-[11px] font-mono text-zinc-500">
+                <div className="text-[11px] font-mono text-[#768390]">
                   <span>Mentions on HN: {video.hn.mentions}</span>
                   <span className="mx-2">•</span>
                   <span>Recommended across {video.hn.rec_months} distinct months</span>
@@ -172,11 +172,11 @@ export default async function WatchPage({
             )}
 
             {/* Curator Summary */}
-            <div className="p-4 sm:p-5 rounded-xl bg-[#0c0e14] border border-[#1b202c] space-y-2">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold">
+            <div className="p-4 sm:p-5 rounded-xl bg-[#22272e] border border-[#373e47] space-y-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-[#768390] font-bold">
                 Talk Summary & Thesis
               </h3>
-              <p className="text-sm text-zinc-300 leading-relaxed">
+              <p className="text-sm text-[#adbac7] leading-relaxed">
                 {video.summary}
               </p>
             </div>
@@ -186,14 +186,14 @@ export default async function WatchPage({
 
             {/* Categories & Tags */}
             <div className="space-y-3">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-[#768390] font-bold">
                 Categorization & Core Topics
               </h3>
               <div className="flex flex-wrap gap-2">
                 {video.categories.map((c) => (
                   <span
                     key={c.id}
-                    className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#121620] border border-[#1f2533] text-zinc-300"
+                    className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#22272e] border border-[#373e47] text-[#adbac7]"
                   >
                     {c.area_name} ➔ {c.name}
                   </span>

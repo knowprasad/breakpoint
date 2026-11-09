@@ -69,11 +69,11 @@ export function VideoCard({
           onSelect(video);
         }
       }}
-      className="group relative flex flex-col justify-between rounded-xl bg-[#0c0e14] hover:bg-[#121620] border border-[#1e2330] hover:border-red-500/40 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-red-950/20 overflow-hidden active:scale-[0.99]"
+      className="group relative flex flex-col justify-between rounded-xl bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] hover:border-[#444c56] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md overflow-hidden active:scale-[0.99]"
     >
       <div>
         {/* 16:9 Thumbnail Box */}
-        <div className="relative aspect-video w-full bg-[#161a24] overflow-hidden">
+        <div className="relative aspect-video w-full bg-[#1c2128] overflow-hidden">
           <img
             src={imgSrc}
             alt={video.title}
@@ -89,12 +89,12 @@ export function VideoCard({
           />
 
           {/* Gradient Scrim */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e14] via-transparent to-transparent opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#22272e] via-transparent to-transparent opacity-80" />
 
           {/* Hover Play Button Overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
-            <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-950 transform group-hover:scale-110 transition-transform">
-              <Play className="w-5 h-5 fill-current ml-0.5" />
+            <div className="w-11 h-11 rounded-full bg-[#f47067] text-white flex items-center justify-center shadow-md transform group-hover:scale-110 transition-transform">
+              <Play className="w-4 h-4 fill-current ml-0.5" />
             </div>
           </div>
 
@@ -109,7 +109,7 @@ export function VideoCard({
                   onRemove();
                 }}
                 title="Remove talk from this playlist"
-                className="px-2 py-1 rounded-md backdrop-blur-md bg-black/80 hover:bg-red-950/90 border border-white/10 hover:border-red-500/60 text-zinc-300 hover:text-red-300 text-[10px] font-mono flex items-center gap-1 transition-all shadow-md cursor-pointer"
+                className="px-2 py-1 rounded-md backdrop-blur-md bg-[#1c2128]/90 hover:bg-[#f47067]/20 border border-[#373e47] hover:border-[#f47067]/60 text-[#adbac7] hover:text-[#f47067] text-[10px] font-mono flex items-center gap-1 transition-all shadow-md cursor-pointer"
               >
                 <X className="w-3 h-3" />
                 <span>Remove</span>
@@ -125,8 +125,8 @@ export function VideoCard({
               title={liked ? 'Unlike' : 'Like Talk'}
               className={`p-1.5 rounded-lg backdrop-blur-md border transition-all cursor-pointer ${
                 liked
-                  ? 'bg-red-950/80 border-red-500/60 text-red-400 hover:bg-red-900/90'
-                  : 'bg-black/60 border-white/10 text-zinc-300 hover:text-red-400 hover:border-red-500/40'
+                  ? 'bg-[#f47067]/20 border-[#f47067]/60 text-[#f47067]'
+                  : 'bg-[#1c2128]/80 border-[#373e47] text-[#adbac7] hover:text-[#f47067] hover:border-[#f47067]/40'
               }`}
             >
               <Heart className={`w-3.5 h-3.5 ${liked ? 'fill-current' : ''}`} />
@@ -138,8 +138,8 @@ export function VideoCard({
               title={savedLater ? 'Remove from Watch Later' : 'Watch Later'}
               className={`p-1.5 rounded-lg backdrop-blur-md border transition-all cursor-pointer ${
                 savedLater
-                  ? 'bg-amber-950/80 border-amber-500/60 text-amber-400 hover:bg-amber-900/90'
-                  : 'bg-black/60 border-white/10 text-zinc-300 hover:text-amber-400 hover:border-amber-500/40'
+                  ? 'bg-[#c69026]/20 border-[#c69026]/60 text-[#c69026]'
+                  : 'bg-[#1c2128]/80 border-[#373e47] text-[#adbac7] hover:text-[#c69026] hover:border-[#c69026]/40'
               }`}
             >
               <Bookmark className={`w-3.5 h-3.5 ${savedLater ? 'fill-current' : ''}`} />
@@ -151,12 +151,12 @@ export function VideoCard({
 
           {/* Channel Badge Overlay (Bottom) */}
           <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-zinc-200 border border-white/10 font-semibold truncate max-w-[170px]">
+            <span className="px-2 py-0.5 rounded bg-[#1c2128]/90 backdrop-blur-md text-[#adbac7] border border-[#373e47] font-semibold truncate max-w-[170px]">
               {video.channel}
             </span>
 
-            <span className="px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-amber-300 border border-amber-500/30 flex items-center gap-1 font-bold">
-              <Star className="w-3 h-3 fill-current text-amber-400" />
+            <span className="px-2 py-0.5 rounded bg-[#1c2128]/90 backdrop-blur-md text-[#c69026] border border-[#373e47] flex items-center gap-1 font-bold">
+              <Star className="w-3 h-3 fill-current text-[#c69026]" />
               <span>{video.score.toFixed(1)}</span>
             </span>
           </div>
@@ -166,32 +166,32 @@ export function VideoCard({
         <div className="p-4 space-y-2.5">
           {/* Topic & Level */}
           <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 capitalize">
+            <span className="px-2 py-0.5 rounded bg-[#1c2128] border border-[#373e47] text-[#768390] capitalize">
               {video.primary_topic || video.content_type}
             </span>
-            <span className="px-1.5 py-0.5 rounded bg-[#151922] text-zinc-500 capitalize">
+            <span className="px-1.5 py-0.5 rounded bg-[#1c2128] text-[#768390] capitalize">
               {video.level}
             </span>
             {video.shelf_life === 'evergreen' && (
-              <span className="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-semibold">
+              <span className="px-1.5 py-0.5 rounded bg-[#57ab5a]/15 border border-[#57ab5a]/40 text-[#57ab5a] font-semibold">
                 Evergreen
               </span>
             )}
           </div>
 
           {/* Title */}
-          <h3 className="text-sm font-bold text-zinc-100 group-hover:text-red-400 transition-colors line-clamp-2 leading-snug">
+          <h3 className="text-sm font-bold text-[#adbac7] group-hover:text-white transition-colors line-clamp-2 leading-snug">
             {video.title}
           </h3>
 
           {/* Summary */}
-          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-[#768390] line-clamp-2 leading-relaxed">
             {video.summary}
           </p>
 
           {/* Hacker News Pull Quote */}
           {video.quote && (
-            <div className="p-2.5 rounded-lg bg-[#07080b] border border-[#161a24] text-[11px] italic text-zinc-300 line-clamp-2">
+            <div className="p-2.5 rounded-lg bg-[#1c2128] border border-[#373e47]/60 text-[11px] italic text-[#768390] line-clamp-2">
               &ldquo;{video.quote.text}&rdquo;
             </div>
           )}
@@ -200,15 +200,15 @@ export function VideoCard({
 
       {/* Card Footer: HN Mentions & Linked Disasters */}
       <div className="p-4 pt-0">
-        <div className="pt-2.5 border-t border-[#181d26] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-          <div className="flex items-center gap-1 text-zinc-400">
-            <MessageSquare className="w-3 h-3 text-amber-400" />
+        <div className="pt-2.5 border-t border-[#373e47]/60 flex items-center justify-between text-[11px] font-mono text-[#768390]">
+          <div className="flex items-center gap-1 text-[#768390]">
+            <MessageSquare className="w-3 h-3 text-[#c69026]" />
             <span>{video.hn.mentions} HN recs ({video.hn.rec_months} mos)</span>
           </div>
 
           {video.related_incident_ids && video.related_incident_ids.length > 0 && (
-            <div className="flex items-center gap-1 text-red-400 font-semibold">
-              <Flame className="w-3 h-3 text-red-400" />
+            <div className="flex items-center gap-1 text-[#f47067] font-semibold">
+              <Flame className="w-3 h-3 text-[#f47067]" />
               <span>Prevents Outages</span>
             </div>
           )}

@@ -17,10 +17,10 @@ const TICKER_ITEMS = [
 
 export function Ticker() {
   return (
-    <div className="w-full bg-[#0d0f13] border-b border-red-500/20 text-xs font-mono py-1.5 overflow-hidden select-none">
+    <div className="w-full bg-[#1c2128] border-b border-[#373e47]/60 text-xs font-mono py-1.5 overflow-hidden select-none">
       <div className="flex items-center">
-        <div className="flex items-center gap-1.5 px-3 bg-red-950/80 text-red-400 font-bold tracking-wider uppercase border-r border-red-500/30 z-10 shrink-0">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
+        <div className="flex items-center gap-1.5 px-3 py-0.5 bg-[#22272e] text-[#adbac7] font-semibold tracking-wider uppercase border-r border-[#373e47] z-10 shrink-0 text-[11px]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#f47067] inline-block" />
           <span>PRODUCTION WIRE</span>
         </div>
 
@@ -31,18 +31,18 @@ export function Ticker() {
               <Link
                 key={idx}
                 href={`/incidents/${item.id}`}
-                className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-100 transition-colors group cursor-pointer"
+                className="inline-flex items-center gap-2 text-[#768390] hover:text-[#adbac7] transition-colors group cursor-pointer"
               >
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-950/60 text-red-400 border border-red-500/30">
+                <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-[#22272e] text-[#f47067] border border-[#373e47]">
                   {item.severity}
                 </span>
-                <span className="font-semibold text-zinc-300 group-hover:text-red-400 transition-colors">
+                <span className="font-semibold text-[#adbac7] group-hover:text-white transition-colors">
                   {item.company} ({item.year}):
                 </span>
-                <span className="text-zinc-400 group-hover:text-zinc-200">
+                <span className="text-[#768390] group-hover:text-[#adbac7]">
                   {item.text}
                 </span>
-                <span className="text-zinc-600 font-normal ml-3">•</span>
+                <span className="text-[#444c56] font-normal ml-3">•</span>
               </Link>
             ))}
           </div>

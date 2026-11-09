@@ -177,11 +177,11 @@ export function LibraryExplorer({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Search & Filter Control Center */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#0c0e14] border border-[#1e2332] shadow-xl space-y-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#22272e] border border-[#373e47] shadow-sm space-y-4">
         {/* Top: Instant Search Input */}
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
-            <Search className="w-4 h-4 text-emerald-400/80" />
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#768390]">
+            <Search className="w-4 h-4 text-[#57ab5a]" />
           </div>
 
           <input
@@ -190,7 +190,7 @@ export function LibraryExplorer({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search textbooks and papers by title, author, description, tags, or year (e.g. DDIA, Kleppmann, 1974, consensus)..."
-            className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-[#07090d] border border-[#222838] focus:border-emerald-500/70 focus:ring-1 focus:ring-emerald-500/40 text-sm font-mono text-zinc-200 placeholder-zinc-500 outline-none transition-all shadow-inner"
+            className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-[#1c2128] border border-[#373e47] focus:border-[#539bf5] text-sm font-mono text-[#adbac7] placeholder-[#768390] outline-none transition-all shadow-inner"
           />
 
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
@@ -201,14 +201,14 @@ export function LibraryExplorer({
                   searchInputRef.current?.focus();
                 }}
                 type="button"
-                className="p-1 rounded-md text-zinc-400 hover:text-white bg-[#141822] hover:bg-[#1b2230] border border-[#252f44] transition-colors"
+                className="p-1 rounded-md text-[#768390] hover:text-[#adbac7] bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] transition-colors"
                 title="Clear search"
                 aria-label="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             ) : (
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#121622] border border-[#222b3e] text-[10px] font-mono text-zinc-500">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#22272e] border border-[#373e47] text-[10px] font-mono text-[#768390]">
                 /
               </kbd>
             )}
@@ -217,12 +217,12 @@ export function LibraryExplorer({
 
         {/* Middle: Format Pills */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
-            <span className="flex items-center gap-1.5 text-zinc-400 uppercase tracking-wider text-[11px] font-bold">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center justify-between text-xs font-mono text-[#768390]">
+            <span className="flex items-center gap-1.5 text-[#adbac7] uppercase tracking-wider text-[11px] font-bold">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#57ab5a]" />
               <span>Format Filter</span>
             </span>
-            <span className="text-zinc-500 text-[11px]">
+            <span className="text-[#768390] text-[11px]">
               {filteredResources.length} matching of {allResources.length}
             </span>
           </div>
@@ -239,22 +239,22 @@ export function LibraryExplorer({
                   type="button"
                   className={`flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all border ${
                     isActive
-                      ? 'bg-emerald-950/80 border-emerald-500/60 text-emerald-300 shadow-md shadow-emerald-950/40 ring-1 ring-emerald-500/30'
-                      : 'bg-[#0f121a] hover:bg-[#151924] border-[#1f2535] hover:border-[#2f3950] text-zinc-400 hover:text-zinc-200'
+                      ? 'bg-[#2d333b] border-[#57ab5a]/50 text-[#adbac7] shadow-sm'
+                      : 'bg-[#1c2128] hover:bg-[#282e37] border-[#373e47] text-[#768390] hover:text-[#adbac7]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-400' : 'text-zinc-500'}`} />
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#57ab5a]' : 'text-[#768390]'}`} />
                     <span className="font-semibold">{pill.label}</span>
-                    <span className="text-[10px] text-zinc-500 hidden md:inline">
+                    <span className="text-[10px] text-[#768390] hidden md:inline">
                       ({pill.sublabel})
                     </span>
                   </div>
                   <span
                     className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold border ${
                       isActive
-                        ? 'bg-emerald-900/60 border-emerald-500/40 text-emerald-200'
-                        : 'bg-[#161a25] border-[#222a3a] text-zinc-400'
+                        ? 'bg-[#1c2128] border-[#373e47] text-[#adbac7]'
+                        : 'bg-[#1c2128] border-[#373e47] text-[#768390]'
                     }`}
                   >
                     {pill.count}
@@ -266,10 +266,10 @@ export function LibraryExplorer({
         </div>
 
         {/* Bottom: Level Selector & Reset */}
-        <div className="pt-3 border-t border-[#181d2a] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+        <div className="pt-3 border-t border-[#373e47]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="flex items-center gap-1.5 text-zinc-400 uppercase tracking-wider text-[11px] font-bold shrink-0">
-              <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="flex items-center gap-1.5 text-[#adbac7] uppercase tracking-wider text-[11px] font-bold shrink-0">
+              <GraduationCap className="w-3.5 h-3.5 text-[#539bf5]" />
               <span>Target Level:</span>
             </span>
 
@@ -284,12 +284,12 @@ export function LibraryExplorer({
                     type="button"
                     className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all border ${
                       isActive
-                        ? 'bg-cyan-950/80 border-cyan-500/60 text-cyan-200 shadow-sm ring-1 ring-cyan-500/30 font-bold'
-                        : 'bg-[#11141c] hover:bg-[#181d28] border-[#202737] text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-[#2d333b] border-[#539bf5]/50 text-[#adbac7] shadow-sm font-semibold'
+                        : 'bg-[#1c2128] hover:bg-[#282e37] border-[#373e47] text-[#768390] hover:text-[#adbac7]'
                     }`}
                   >
                     <span>{opt.label}</span>{' '}
-                    <span className="text-[10px] text-zinc-500">({opt.count})</span>
+                    <span className="text-[10px] text-[#768390]">({opt.count})</span>
                   </button>
                 );
               })}

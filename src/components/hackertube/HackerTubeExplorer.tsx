@@ -307,7 +307,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
   return (
     <div className="space-y-6">
       {/* Top Bar: View Mode Switcher + Export Actions */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#1b202c] pb-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#373e47]/70 pb-3">
         {/* Navigation Tabs (100% inline, zero modals!) */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar font-mono text-xs">
           <button
@@ -317,11 +317,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             }}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'all'
-                ? 'bg-red-950/70 border border-red-500/50 text-red-200'
-                : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
+                ? 'bg-[#2d333b] border border-[#444c56] text-[#adbac7]'
+                : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
             }`}
           >
-            <Compass className="w-3.5 h-3.5 text-red-400" />
+            <Compass className="w-3.5 h-3.5 text-[#539bf5]" />
             <span>All Talks (6,454)</span>
           </button>
 
@@ -332,11 +332,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             }}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'liked'
-                ? 'bg-red-950/70 border border-red-500/50 text-red-200'
-                : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
+                ? 'bg-[#2d333b] border border-[#f47067]/40 text-[#adbac7]'
+                : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
             }`}
           >
-            <Heart className="w-3.5 h-3.5 text-red-400 fill-current" />
+            <Heart className="w-3.5 h-3.5 text-[#f47067] fill-current" />
             <span>Liked ({userStore.liked.length})</span>
           </button>
 
@@ -347,11 +347,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             }}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'history'
-                ? 'bg-blue-950/70 border border-blue-500/50 text-blue-200'
-                : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
+                ? 'bg-[#2d333b] border border-[#539bf5]/40 text-[#adbac7]'
+                : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
             }`}
           >
-            <Clock className="w-3.5 h-3.5 text-blue-400" />
+            <Clock className="w-3.5 h-3.5 text-[#539bf5]" />
             <span>History ({userStore.history.length})</span>
           </button>
 
@@ -362,11 +362,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             }}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'watchLater'
-                ? 'bg-amber-950/70 border border-amber-500/50 text-amber-200'
-                : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
+                ? 'bg-[#2d333b] border border-[#c69026]/40 text-[#adbac7]'
+                : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
             }`}
           >
-            <Bookmark className="w-3.5 h-3.5 text-amber-400 fill-current" />
+            <Bookmark className="w-3.5 h-3.5 text-[#c69026] fill-current" />
             <span>Watch Later ({userStore.watchLater.length})</span>
           </button>
 
@@ -378,11 +378,11 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             }}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'playlists'
-                ? 'bg-emerald-950/70 border border-emerald-500/50 text-emerald-200'
-                : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-white'
+                ? 'bg-[#2d333b] border border-[#57ab5a]/40 text-[#adbac7]'
+                : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
             }`}
           >
-            <FolderKanban className="w-3.5 h-3.5 text-emerald-400" />
+            <FolderKanban className="w-3.5 h-3.5 text-[#57ab5a]" />
             <span>Playlists ({(officialPlaylists.length || 27) + userStore.playlists.length})</span>
           </button>
         </div>
@@ -392,17 +392,17 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
           <button
             onClick={handlePlayAllOnYouTube}
             title="Open current talks as a continuous playlist on YouTube"
-            className="px-2.5 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 hover:text-white transition-colors flex items-center gap-1.5 font-bold cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-[#2d333b] hover:bg-[#373e47] border border-[#444c56] text-[#adbac7] hover:text-white transition-colors flex items-center gap-1.5 font-bold cursor-pointer"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-3.5 h-3.5 fill-current text-[#f47067]" />
             <span>Play All</span>
           </button>
 
           <label
             title="Import curriculum backup JSON"
-            className="px-2.5 py-1.5 rounded-lg bg-[#10131a] hover:bg-[#161a24] border border-[#202735] hover:border-zinc-500 text-zinc-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] hover:border-[#444c56] text-[#adbac7] transition-colors flex items-center gap-1.5 cursor-pointer"
           >
-            <Upload className="w-3.5 h-3.5 text-emerald-400" />
+            <Upload className="w-3.5 h-3.5 text-[#57ab5a]" />
             <span>Import</span>
             <input
               type="file"
@@ -412,19 +412,19 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             />
           </label>
 
-          <div className="flex items-center rounded-lg bg-[#10131a] border border-[#202735] p-0.5 text-zinc-400">
-            <span className="px-1.5 text-[10px] uppercase font-bold text-zinc-500">Export</span>
+          <div className="flex items-center rounded-lg bg-[#22272e] border border-[#373e47] p-0.5 text-[#768390]">
+            <span className="px-1.5 text-[10px] uppercase font-bold text-[#768390]">Export</span>
             <button
               onClick={handleExportMarkdown}
               title="Export curriculum to Markdown (.md)"
-              className="px-2 py-1 rounded text-[11px] hover:text-white hover:bg-[#181e2b] transition-colors cursor-pointer"
+              className="px-2 py-1 rounded text-[11px] hover:text-[#adbac7] hover:bg-[#2d333b] transition-colors cursor-pointer"
             >
               .md
             </button>
             <button
               onClick={handleExportJSON}
               title="Export full store to JSON (.json)"
-              className="px-2 py-1 rounded text-[11px] hover:text-white hover:bg-[#181e2b] transition-colors text-cyan-400 cursor-pointer"
+              className="px-2 py-1 rounded text-[11px] hover:text-[#adbac7] hover:bg-[#2d333b] transition-colors text-[#539bf5] cursor-pointer"
             >
               .json
             </button>
@@ -440,18 +440,18 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
             {/* Search Bar + Sort */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-3 w-4 h-4 text-zinc-500" />
+                <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#768390]" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search 6,454 conference talks (e.g. Rich Hickey, Raft, B-Trees, eBPF, Rust)..."
-                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#0e1117] border border-[#202735] focus:border-red-500 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
+                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono"
                 />
                 {query && (
                   <button
                     onClick={() => setQuery('')}
-                    className="absolute right-3 top-3 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                    className="absolute right-3 top-3 text-[#768390] hover:text-[#adbac7] transition-colors cursor-pointer"
                     title="Clear search"
                   >
                     <X className="w-4 h-4" />
@@ -463,7 +463,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as 'score' | 'mentions' | 'recommenders')}
-                  className="py-2.5 px-3 rounded-xl bg-[#0e1117] border border-[#202735] text-xs font-mono text-zinc-300 focus:outline-none"
+                  className="py-2.5 px-3 rounded-xl bg-[#22272e] border border-[#373e47] text-xs font-mono text-[#adbac7] focus:outline-none"
                 >
                   <option value="score">Sort: Highest HN Score</option>
                   <option value="mentions">Sort: Most HN Mentions</option>
@@ -473,7 +473,7 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                 <select
                   value={level}
                   onChange={(e) => setLevel(e.target.value)}
-                  className="py-2.5 px-3 rounded-xl bg-[#0e1117] border border-[#202735] text-xs font-mono text-zinc-300 focus:outline-none"
+                  className="py-2.5 px-3 rounded-xl bg-[#22272e] border border-[#373e47] text-xs font-mono text-[#adbac7] focus:outline-none"
                 >
                   <option value="all">All Difficulty Levels</option>
                   <option value="intro">Introductory</option>
@@ -491,8 +491,8 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                   onClick={() => setSelectedArea(area.id)}
                   className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                     selectedArea === area.id
-                      ? 'bg-red-950/70 border border-red-500/50 text-red-200 font-bold shadow-sm'
-                      : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-zinc-200 hover:bg-[#141822]'
+                      ? 'bg-[#2d333b] border border-[#444c56] text-[#adbac7] font-semibold shadow-sm'
+                      : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
                   }`}
                 >
                   {area.name}
@@ -502,12 +502,12 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
           </div>
 
           {/* Results Count Header */}
-          <div className="flex items-center justify-between text-xs font-mono text-zinc-400 border-b border-[#181d26] pb-3">
+          <div className="flex items-center justify-between text-xs font-mono text-[#768390] border-b border-[#373e47]/60 pb-3">
             <div className="flex items-center gap-2">
               <span>Displaying <strong>{videos.length}</strong> of <strong>{totalCount}</strong> curated talks</span>
-              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-red-400" />}
+              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#539bf5]" />}
             </div>
-            <span className="text-zinc-500 hidden sm:inline">
+            <span className="text-[#768390] hidden sm:inline">
               Filtered by organic Hacker News recommendations
             </span>
           </div>
@@ -1062,13 +1062,13 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                       <div
                         key={pl.slug}
                         onClick={() => setSelectedOfficialPlaylistSlug(pl.slug)}
-                        className="group relative flex flex-col justify-between rounded-xl bg-[#0c0e14] hover:bg-[#121620] border border-[#1e2330] hover:border-red-500/50 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-red-950/20 overflow-hidden active:scale-[0.99]"
+                        className="group relative flex flex-col justify-between rounded-xl bg-[#22272e] hover:bg-[#282e37] border border-[#373e47] hover:border-[#444c56] transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md overflow-hidden active:scale-[0.99]"
                       >
                         <div>
                           {/* 2x2 Mosaic Thumbnail Cover */}
-                          <div className="relative aspect-video w-full bg-[#161a24] overflow-hidden grid grid-cols-2 gap-0.5">
+                          <div className="relative aspect-video w-full bg-[#1c2128] overflow-hidden grid grid-cols-2 gap-0.5">
                             {pl.cover.slice(0, 4).map((vid, idx) => (
-                              <div key={idx} className="relative w-full h-full bg-zinc-900 overflow-hidden">
+                              <div key={idx} className="relative w-full h-full bg-[#1c2128] overflow-hidden">
                                 <img
                                   src={`https://i.ytimg.com/vi/${vid}/hqdefault.jpg`}
                                   alt=""
@@ -1079,17 +1079,17 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                             ))}
 
                             {/* Playlist count overlay panel on the right */}
-                            <div className="absolute top-0 right-0 bottom-0 w-24 bg-gradient-to-l from-black/95 via-black/80 to-transparent flex flex-col items-center justify-center gap-0.5 text-white font-mono z-10">
-                              <FolderKanban className="w-5 h-5 text-red-400 mb-0.5" />
-                              <span className="text-sm font-bold">{pl.count}</span>
-                              <span className="text-[10px] text-zinc-400 uppercase tracking-wider">talks</span>
+                            <div className="absolute top-0 right-0 bottom-0 w-24 bg-gradient-to-l from-[#1c2128]/95 via-[#1c2128]/80 to-transparent flex flex-col items-center justify-center gap-0.5 text-[#adbac7] font-mono z-10">
+                              <FolderKanban className="w-5 h-5 text-[#539bf5] mb-0.5" />
+                              <span className="text-sm font-bold text-white">{pl.count}</span>
+                              <span className="text-[10px] text-[#768390] uppercase tracking-wider">talks</span>
                             </div>
 
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px] z-20">
-                              <div className="px-3.5 py-1.5 rounded-lg bg-red-600 text-white font-bold font-mono text-xs flex items-center gap-1.5 shadow-lg transform group-hover:scale-105 transition-transform">
+                              <div className="px-3.5 py-1.5 rounded-lg bg-[#2d333b] text-white border border-[#444c56] font-bold font-mono text-xs flex items-center gap-1.5 shadow-md transform group-hover:scale-105 transition-transform">
                                 <span>Open Track</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
+                                <ArrowRight className="w-3.5 h-3.5 text-[#539bf5]" />
                               </div>
                             </div>
                           </div>
@@ -1097,20 +1097,20 @@ export function HackerTubeExplorer({ initialVideos = [] }: HackerTubeExplorerPro
                           {/* Content Body */}
                           <div className="p-4 space-y-2">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-950/80 border border-red-500/40 text-red-300">
+                              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#1c2128] border border-[#373e47] text-[#adbac7]">
                                 Official Canon
                               </span>
-                              <span className="text-[10px] font-mono text-zinc-500">
+                              <span className="text-[10px] font-mono text-[#768390]">
                                 {pl.count} talks · {durationHours}h
                               </span>
                             </div>
 
-                            <h3 className="text-sm font-bold text-zinc-100 group-hover:text-red-400 transition-colors line-clamp-1 font-mono">
+                            <h3 className="text-sm font-bold text-[#adbac7] group-hover:text-white transition-colors line-clamp-1 font-mono">
                               {pl.title}
                             </h3>
 
                             {pl.pitch && (
-                              <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                              <p className="text-xs text-[#768390] line-clamp-2 leading-relaxed">
                                 {pl.pitch}
                               </p>
                             )}

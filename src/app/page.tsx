@@ -91,7 +91,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07080b] text-white font-sans">
+    <div className="min-h-screen flex flex-col bg-[#1c2128] text-[#adbac7] font-sans">
       {/* 1. Production Incident Ticker */}
       <Ticker />
 
@@ -99,18 +99,18 @@ export default function HomePage() {
       <Navbar onOpenSearch={() => setSearchPaletteOpen(true)} />
 
       {/* 3. Sticky Pillar Switcher (Zero Hero Marketing Fluff - Direct into Content) */}
-      <section className="sticky top-14 sm:top-16 z-30 w-full bg-[#07080b]/95 backdrop-blur-md border-b border-[#181d26]">
+      <section className="sticky top-14 sm:top-16 z-30 w-full bg-[#1c2128]/95 backdrop-blur-md border-b border-[#373e47]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 overflow-x-auto py-2.5 text-xs font-mono no-scrollbar">
             <button
               onClick={() => switchTab('hackertube')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'hackertube'
-                  ? 'bg-zinc-800 text-white border border-zinc-600 shadow-sm'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#444c56] shadow-sm'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <Video className="w-3.5 h-3.5 text-cyan-400" />
+              <Video className="w-3.5 h-3.5 text-[#539bf5]" />
               <span>Conference Canon (6,454)</span>
             </button>
 
@@ -118,11 +118,11 @@ export default function HomePage() {
               onClick={() => switchTab('disasters')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'disasters'
-                  ? 'bg-red-950 text-red-200 border border-red-500/50 shadow-sm shadow-red-950/40'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#f47067]/40 shadow-sm'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <Flame className="w-3.5 h-3.5 text-red-400" />
+              <Flame className="w-3.5 h-3.5 text-[#f47067]" />
               <span>Disaster Autopsies (15)</span>
             </button>
 
@@ -130,11 +130,11 @@ export default function HomePage() {
               onClick={() => switchTab('books')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'books'
-                  ? 'bg-emerald-950 text-emerald-200 border border-emerald-500/50 shadow-sm shadow-emerald-950/40'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#57ab5a]/40 shadow-sm'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+              <BookOpen className="w-3.5 h-3.5 text-[#57ab5a]" />
               <span>Timeless Library (31)</span>
             </button>
 
@@ -142,11 +142,11 @@ export default function HomePage() {
               onClick={() => switchTab('matrix')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'matrix'
-                  ? 'bg-blue-950 text-blue-200 border border-blue-500/50 shadow-sm shadow-blue-950/40'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#539bf5]/40 shadow-sm'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <Grid className="w-3.5 h-3.5 text-blue-400" />
+              <Grid className="w-3.5 h-3.5 text-[#539bf5]" />
               <span>Failure Matrix (10)</span>
             </button>
 
@@ -154,11 +154,11 @@ export default function HomePage() {
               onClick={() => switchTab('simulator')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'simulator'
-                  ? 'bg-zinc-800 text-white border border-zinc-600'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#444c56]'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <Terminal className="w-3.5 h-3.5 text-red-400" />
+              <Terminal className="w-3.5 h-3.5 text-[#f47067]" />
               <span>Simulator</span>
             </button>
 
@@ -166,15 +166,15 @@ export default function HomePage() {
               onClick={() => switchTab('curriculum')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
                 activeTab === 'curriculum'
-                  ? 'bg-emerald-950 text-emerald-200 border border-emerald-500/50 shadow-sm shadow-emerald-950/40'
-                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+                  ? 'bg-[#2d333b] text-[#adbac7] border border-[#57ab5a]/40 shadow-sm'
+                  : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
               }`}
             >
-              <Award className="w-3.5 h-3.5 text-emerald-400" />
+              <Award className="w-3.5 h-3.5 text-[#57ab5a]" />
               <span>Canon Tracks (4)</span>
             </button>
 
-            <div className="ml-auto hidden md:flex items-center gap-3 text-[11px] text-zinc-500">
+            <div className="ml-auto hidden md:flex items-center gap-3 text-[11px] text-[#768390]">
               <span>Lindy-curated from 20 years of Hacker News</span>
             </div>
           </div>
@@ -193,16 +193,16 @@ export default function HomePage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1b202c] pb-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-red-500" />
+                <h2 className="text-xl sm:text-2xl font-bold text-[#adbac7] tracking-tight flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-[#f47067]" />
                   <span>The Production Disaster Encyclopedia</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-1">
+                <p className="text-xs sm:text-sm text-[#768390] font-mono mt-1">
                   Forensic autopsies of famous outages: trigger ➔ deep CS mechanism ➔ defensive engineering formula.
                 </p>
               </div>
 
-              <span className="px-3 py-1 rounded-lg bg-red-950/60 border border-red-500/30 text-red-300 font-mono text-xs font-bold">
+              <span className="px-3 py-1 rounded-lg bg-[#22272e] border border-[#373e47] text-[#adbac7] font-mono text-xs font-semibold">
                 {filteredIncidents.length} of {incidents.length} Autopsies
               </span>
             </div>
@@ -210,18 +210,18 @@ export default function HomePage() {
             {/* Faceted Technology Stack Filter + Search */}
             <div className="space-y-3">
               <div className="relative">
-                <Search className="absolute left-3.5 top-3 w-4 h-4 text-zinc-500" />
+                <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#768390]" />
                 <input
                   type="text"
                   value={disasterSearch}
                   onChange={(e) => setDisasterSearch(e.target.value)}
                   placeholder="Filter by keyword, tech, company, or failure mode (e.g. Postgres, CrowdStrike, BGP, Canary)..."
-                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#0e1117] border border-[#202735] focus:border-red-500 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-mono"
+                  className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#22272e] border border-[#373e47] focus:border-[#539bf5] text-sm text-[#adbac7] placeholder:text-[#768390] focus:outline-none font-mono"
                 />
                 {disasterSearch && (
                   <button
                     onClick={() => setDisasterSearch('')}
-                    className="absolute right-3 top-3 text-zinc-500 hover:text-white transition-colors"
+                    className="absolute right-3 top-3 text-[#768390] hover:text-[#adbac7] transition-colors"
                     title="Clear filter"
                   >
                     <X className="w-4 h-4" />
@@ -242,12 +242,12 @@ export default function HomePage() {
                       onClick={() => setDisasterStack(stack.id)}
                       className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all flex items-center gap-1.5 ${
                         disasterStack === stack.id
-                          ? 'bg-red-950/70 border border-red-500/50 text-red-200 font-bold shadow-sm'
-                          : 'bg-[#10131a] border border-[#1e2330] text-zinc-400 hover:text-zinc-200 hover:bg-[#141822]'
+                          ? 'bg-[#2d333b] border border-[#444c56] text-[#adbac7] font-semibold shadow-sm'
+                          : 'bg-[#22272e] border border-[#373e47] text-[#768390] hover:text-[#adbac7] hover:bg-[#282e37]'
                       }`}
                     >
                       <span>{stack.label}</span>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/40 text-zinc-400">
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#1c2128] text-[#768390]">
                         {count}
                       </span>
                     </button>
