@@ -25,6 +25,7 @@ import {
   isVideoInWatchLater,
   toggleWatchLater
 } from '@/lib/userStore';
+import { AddToPlaylistPopover } from './AddToPlaylistPopover';
 
 interface VideoTheaterModalProps {
   video: HackerTubeVideo | null;
@@ -170,16 +171,7 @@ export function VideoTheaterModal({
             </button>
 
             {/* Add to Playlist */}
-            {onOpenPlaylistModal && (
-              <button
-                onClick={() => onOpenPlaylistModal(video)}
-                title="Add to Playlist"
-                className="px-2.5 py-1 rounded-lg border border-[#222938] bg-[#151922] text-zinc-400 hover:text-white hover:border-zinc-600 text-xs font-mono flex items-center gap-1.5 transition-all"
-              >
-                <FolderPlus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">+ Playlist</span>
-              </button>
-            )}
+            {video && <AddToPlaylistPopover video={video} variant="button" />}
 
             <button
               onClick={onClose}

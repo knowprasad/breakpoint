@@ -66,6 +66,7 @@ export function CopyPrChecklistButton({
           <>
             <ClipboardList className="w-3.5 h-3.5 text-emerald-400" />
             <span>Copy PR Review Checklist</span>
+            <span className="text-[10px] text-emerald-400/80 font-mono hidden sm:inline">(P)</span>
           </>
         )}
       </button>
@@ -92,6 +93,7 @@ export function CopyPrChecklistButton({
         <>
           <ClipboardList className="w-3 h-3 text-emerald-400" />
           <span>PR Checklist</span>
+          <span className="text-[10px] text-zinc-500 font-mono hidden sm:inline">(P)</span>
         </>
       )}
     </button>

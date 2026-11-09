@@ -136,5 +136,205 @@ export const SIMULATOR_SCENARIOS: SimulatorScenario[] = [
         related_resource_id: 'talk-martin-kleppmann-crdt'
       }
     ]
+  },
+  {
+    id: 'sim-crowdstrike-kernel-bsod',
+    title: 'Incident in Progress: Ring 0 Crash Loop & Global Host Paralyzation',
+    company_context: 'Global Endpoint Detection & Response (EDR) Fleet',
+    incident_id: 'incident-crowdstrike-2024-bsod-kernel-driver',
+    alert_title: 'CRITICAL ALERT: 8.5M Enterprise Windows Hosts in BSOD Crash Loop (BugCheck 0x50)',
+    alert_metrics: [
+      'Affected Endpoints: ~8.5 million enterprise Windows machines worldwide',
+      'Kernel BugCheck Code: 0x00000050 (PAGE_FAULT_IN_NONPAGED_AREA)',
+      'Failing Module: C-00000291*.sys / CSAgent.sys at Ring 0',
+      'Fleet Reachability: 0% ICMP / RDP / WinRM reachable (Hosts crash before network stack)'
+    ],
+    situation: 'At 04:09 UTC, an automated Channel File 291 content update deployed to the CSAgent.sys endpoint driver. Due to an out-of-bounds memory pointer read in the kernel driver, millions of Windows workstations, hospital monitors, airline booking systems, and banking terminals worldwide are crashing into a blue screen (BSOD) reboot loop. Remote management tools cannot reach hosts because the crash occurs before network initialization.',
+    options: [
+      {
+        id: 'opt-crowdstrike-ota-push',
+        action: 'Push an urgent over-the-air (OTA) revert channel update to replace Channel File 291 with valid content.',
+        is_correct: false,
+        outcome: 'Trap! Blue-screened machines crash during early kernel driver initialization before the Windows network stack or EDR agent service can start. Over-the-air updates cannot reach hosts that cannot boot to network.',
+        lesson: 'Kernel-space software failure domains cannot be repaired via in-band OTA network channels if the host crashes before network stack initialization.',
+        related_resource_id: 'book-ostep'
+      },
+      {
+        id: 'opt-crowdstrike-disable-defender',
+        action: 'Disable Windows Defender and endpoint security services globally across Active Directory Group Policy.',
+        is_correct: false,
+        outcome: 'Ineffective and dangerous. The crash is triggered by the third-party CSAgent.sys kernel driver, not Windows Defender. Furthermore, domain controllers and clients cannot process Group Policy updates while locked in reboot loops.',
+        lesson: 'Never disable core OS platform defenses when the root cause resides in a third-party kernel driver module.',
+        related_resource_id: 'book-ostep'
+      },
+      {
+        id: 'opt-crowdstrike-safemode-recovery',
+        action: 'Boot into Safe Mode with BitLocker recovery keys, delete CSAgent.sys, and mandate boot watchdogs for future updates.',
+        is_correct: true,
+        outcome: 'Recovery achieved! Booting into Safe Mode prevents CSAgent.sys from initializing, allowing administrators and automated WinRE recovery scripts to delete the corrupt Channel 291 file. Mandating staged ring-based canaries and boot-cycle watchdogs ensures future driver updates roll back automatically if a machine fails to boot.',
+        lesson: 'Ring 0 kernel extensions must use rigorous canary rollout gates, input fuzzing on config files, and automatic safe-mode rollback watchdogs.',
+        related_resource_id: 'book-ostep'
+      }
+    ]
+  },
+  {
+    id: 'sim-gitlab-db-loss',
+    title: 'Incident in Progress: Secondary Replication Lag & Database Directory Deletion',
+    company_context: 'Developer Platform & Source Code Management (GitLab)',
+    incident_id: 'incident-gitlab-2017-database-loss',
+    alert_title: 'CRITICAL ALERT: PostgreSQL Secondary Replication Lag at 40GB, pg_basebackup Hanging',
+    alert_metrics: [
+      'PostgreSQL WAL Lag: 40 GB and rising rapidly under write load',
+      'pg_basebackup Status: Hanging / blocked on transaction lock for >45 min',
+      'Replica Storage: /var/lib/postgresql/data at 91% capacity',
+      'Primary Database CPU: 96% with query queue saturation'
+    ],
+    situation: 'It is 22:00 UTC. The secondary PostgreSQL database has fallen severely behind primary replication. An automated pg_basebackup was triggered to resync the replica, but it hung and locked up. A fatigued on-call engineer wants to wipe /var/lib/postgresql/data on what appears to be the secondary terminal to start a clean sync from scratch.',
+    options: [
+      {
+        id: 'opt-gitlab-force-failover',
+        action: 'Terminate the PostgreSQL primary instance immediately to force an automated failover to the secondary replica.',
+        is_correct: false,
+        outcome: 'Catastrophic data loss. The replica is lagging by 40GB of un-replayed WAL logs. Promoting an out-of-sync replica permanently drops 40GB of customer commits, issues, and production merge requests.',
+        lesson: 'Never initiate an uncontrolled failover to a replica that suffers from extreme replication lag without reconciling the WAL gap.',
+        related_resource_id: 'book-google-sre'
+      },
+      {
+        id: 'opt-gitlab-rm-rf',
+        action: 'Run rm -rf /var/lib/postgresql/data on what seems like the secondary without verifying hostname.',
+        is_correct: false,
+        outcome: 'Total catastrophic disaster! The engineer was logged into db1.cluster (the live primary!), not db2.cluster. Approximately 300GB of live production customer data is deleted in seconds, and backup scripts are discovered to have failed silently for weeks.',
+        lesson: 'Destructive CLI operations require hostname banners, automated safety wrappers, and read-only credentials on production primary clusters.',
+        related_resource_id: 'book-continuous-delivery-humble'
+      },
+      {
+        id: 'opt-gitlab-pause-and-verify',
+        action: 'Pause traffic at HAProxy, verify server hostname and IP, kill stalled pg_basebackup lock, and verify automated WAL backup restore pipeline.',
+        is_correct: true,
+        outcome: 'Crisis averted! Pausing traffic relieves database saturation without dropping data. Hostname verification prevents the primary deletion disaster, killing the dead lock allows replication to catch up cleanly, and backup pipelines are verified.',
+        lesson: 'Backups do not exist unless automated daily restoration drills verify them; production state changes must verify terminal execution context.',
+        related_resource_id: 'book-continuous-delivery-humble'
+      }
+    ]
+  },
+  {
+    id: 'sim-aws-s3-typo',
+    title: 'Incident in Progress: Maintenance Script Typo & Regional S3 Subsystem Cold Reboot',
+    company_context: 'Global Cloud Infrastructure Provider (AWS US-EAST-1)',
+    incident_id: 'incident-aws-s3-2017-typo-command',
+    alert_title: 'P0 SYSTEM OUTAGE: S3 Index and Placement Subsystems Offline in US-EAST-1',
+    alert_metrics: [
+      'S3 GET/PUT Availability: Dropped to 0.0% in us-east-1',
+      'Dependent Service Cascades: EC2, Lambda, EBS, and console failing health checks',
+      'Subsystem Capacity: Index servers deprovisioned exceeds intended quota by 10x',
+      'Retry Request Volume: Exponential retry storm peaking at 4.8M req/sec'
+    ],
+    situation: 'An authorized operational maintenance script executed to deprovision a small number of servers in the S3 billing system was entered with erroneous parameters, accidentally terminating critical servers in the S3 Index Subsystem. S3 is completely down in US-EAST-1. Millions of cloud applications worldwide are failing.',
+    options: [
+      {
+        id: 'opt-s3-restart-region',
+        action: 'Restart the entire Northern Virginia region simultaneously to force immediate global reconciliation.',
+        is_correct: false,
+        outcome: 'Total deadlock. Hundreds of thousands of cold microservices and dependent subsystems boot simultaneously, colliding on authorization endpoints and network backplanes, prolonging the outage for days.',
+        lesson: 'Massive-scale cloud distributed systems cannot withstand simultaneous global cold boots without strict dependency ordering.',
+        related_resource_id: 'paper-dynamo-amazon'
+      },
+      {
+        id: 'opt-s3-dns-blackhole',
+        action: 'Manually edit public DNS records to blackhole traffic for 6 hours.',
+        is_correct: false,
+        outcome: 'Prolongs downtime and pollutes external DNS caches worldwide with long TTLs, preventing seamless client recovery once backend subsystems return.',
+        lesson: 'DNS blackholing is an uncoordinated blunt instrument that creates unpredictable propagation delays across the internet.',
+        related_resource_id: 'paper-dynamo-amazon'
+      },
+      {
+        id: 'opt-s3-cellular-partition',
+        action: 'Partition fleet into isolated failure domains (cells) and restart index subsystems in rate-limited batches with circuit breakers.',
+        is_correct: true,
+        outcome: 'Controlled recovery succeeds! Rate-limiting the restart of index placement nodes allows metadata caches and partition maps to reconstruct without thrashing, while admission control rejects pounding client retries until health stabilizes.',
+        lesson: 'Cellular architecture and rigorous rate-limited cold-start procedures are critical to prevent thundering herd recovery failures in core storage systems.',
+        related_resource_id: 'paper-dynamo-amazon'
+      }
+    ]
+  },
+  {
+    id: 'sim-stripe-ratelimit',
+    title: 'Incident in Progress: Distributed Rate Limiter Memory Avalanche',
+    company_context: 'Global Payments Gateway (Stripe)',
+    incident_id: 'incident-stripe-2020-rate-limiter-cascade',
+    alert_title: 'CRITICAL ALERT: Redis Rate Limiter Cluster at 100% Memory, API Gateway Queuing',
+    alert_metrics: [
+      'Redis Memory Utilization: 100% maxmemory reached (OOM command rejection)',
+      'API Gateway P99 Latency: Spiked from 18ms to 4,200ms',
+      'Web Worker Concurrency: 100% saturated with blocked HTTP threads',
+      'Card Processing Error Rate: 38% 500/504 errors on /v1/charges'
+    ],
+    situation: 'A sudden surge in bot traffic combined with an analytics feature has filled the Redis rate limiting cluster to its memory ceiling. Redis nodes are failing health checks and evicting keys frantically. API web workers are synchronously blocked waiting for rate limiter Redis responses, causing payment requests to queue and time out.',
+    options: [
+      {
+        id: 'opt-stripe-double-workers',
+        action: 'Double web worker thread count across all API servers to process queued HTTP requests faster.',
+        is_correct: false,
+        outcome: 'Worsens collapse. Adding more worker threads increases concurrent connections to the already struggling Redis cluster, blowing through socket limits and inducing full kernel thrashing on database backends.',
+        lesson: 'Increasing concurrency on saturated dependencies accelerates downstream resource exhaustion.',
+        related_resource_id: 'book-release-it-nygard'
+      },
+      {
+        id: 'opt-stripe-bypass-all',
+        action: 'Temporarily bypass all rate limiting and let backend services take unmetered traffic.',
+        is_correct: false,
+        outcome: 'Immediate backend financial core failure! Without rate limiting, the malicious bot swarm and card testers overwhelm backend acquiring banking networks, causing card networks to throttle Stripe\'s entire acquiring BIN.',
+        lesson: 'Completely disabling protective security mechanisms under load transfers the failure to fragile upstream external partners.',
+        related_resource_id: 'book-release-it-nygard'
+      },
+      {
+        id: 'opt-stripe-local-token-bucket',
+        action: 'Degrade rate limiter to local in-memory token bucket fallback with adaptive concurrency limits and exponential backoff.',
+        is_correct: true,
+        outcome: 'Flawless fail-open/fail-local! When Redis is degraded, API gateways fail over to autonomous local in-memory token buckets. Requests proceed with minimal latency, Redis gets time to evict and recover, and payment success rate returns to 99.999%.',
+        lesson: 'Critical path services (like rate limiters) must fail-safe to localized degraded state (e.g., local token buckets) and employ circuit breakers (Release It!).',
+        related_resource_id: 'book-release-it-nygard'
+      }
+    ]
+  },
+  {
+    id: 'sim-zoom-jwt-drift',
+    title: 'Incident in Progress: Clock Drift & Mass Meeting Disconnection',
+    company_context: 'Global Real-Time Video Collaboration (Zoom)',
+    incident_id: 'incident-zoom-2020-leap-second-jwt-clock-skew',
+    alert_title: 'CRITICAL ALERT: Auth Gateway 401 Unauthorized Spike on Valid User Tokens',
+    alert_metrics: [
+      'Auth Gateway 401 Error Rate: 62% of all session handshake attempts',
+      'Active Video Meetings Dropped: 1.2M concurrent participants',
+      'NTP Clock Drift on Edge Fleet: -4.200 seconds relative to UTC',
+      'Token Validation Error: \'nbf\' (not before) claim timestamp is in the future'
+    ],
+    situation: 'At midnight, hundreds of thousands of users are randomly disconnected from active meetings. Client reconnect attempts fail with HTTP 401 Unauthorized. Telemetry shows authentication tokens issued by identity servers are being rejected by edge verification proxies with the error "token not valid yet" due to an unsynchronized NTP server pool causing 4.2s of clock drift.',
+    options: [
+      {
+        id: 'opt-zoom-reissue-keys',
+        action: 'Regenerate and deploy new RS256 private keys fleet-wide to force token reissue.',
+        is_correct: false,
+        outcome: 'Escalates crisis. Regenerating keys invalidates every single active token across all 300 million users worldwide, producing an unprecedented global re-login thundering herd that knocks the identity service offline for hours.',
+        lesson: 'Key rotations do not fix timestamp validation logic and induce massive credential re-fetch stampedes.',
+        related_resource_id: 'book-tcp-ip-illustrated'
+      },
+      {
+        id: 'opt-zoom-disable-exp',
+        action: 'Disable JWT expiration validation entirely in the production edge gateway.',
+        is_correct: false,
+        outcome: 'Massive security vulnerability. Disabling expiration allows replayed, stolen, and revoked tokens to remain valid indefinitely, exposing user meetings to unauthorized eavesdropping.',
+        lesson: 'Never disable cryptographic integrity or expiration invariants as an incident shortcut.',
+        related_resource_id: 'book-tcp-ip-illustrated'
+      },
+      {
+        id: 'opt-zoom-clock-skew-leeway',
+        action: 'Introduce a 60-second clock skew leeway (tolerance window) to JWT nbf and exp claims and synchronize host NTP daemons.',
+        is_correct: true,
+        outcome: 'Instant resolution! Adding a 60-second clock drift leeway accommodates standard distributed time divergence without compromising cryptographic security. Resynchronizing NTP daemons restores fleet time consistency, dropping 401 errors back to zero.',
+        lesson: 'Distributed systems must never assume synchronized wall clocks without tolerance windows (clock skew leeway) across independently running nodes.',
+        related_resource_id: 'book-tcp-ip-illustrated'
+      }
+    ]
   }
 ];

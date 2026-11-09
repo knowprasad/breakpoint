@@ -9,6 +9,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Ticker } from '@/components/layout/Ticker';
 import { Footer } from '@/components/layout/Footer';
 import { WatchClientActions } from '@/components/hackertube/WatchClientActions';
+import { VideoNotesScratchpad } from '@/components/hackertube/VideoNotesScratchpad';
 import { SeverityBadge } from '@/components/common/Badge';
 import {
   ArrowLeft,
@@ -179,6 +180,9 @@ export default async function WatchPage({
                 {video.summary}
               </p>
             </div>
+
+            {/* Engineering Notes & Takeaways Scratchpad */}
+            <VideoNotesScratchpad video={video} />
 
             {/* Categories & Tags */}
             <div className="space-y-3">

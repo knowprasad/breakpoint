@@ -598,7 +598,49 @@ export const SEEDED_INCIDENTS: DisasterIncident[] = [
     ],
     original_postmortem_url: 'https://discord.com/blog/how-discord-stores-trillions-of-messages',
     hn_discussion_url: 'https://news.ycombinator.com/item?id=35064567',
-    related_resource_ids: ['talk-discord-scylladb-migration', 'book-ddia', 'paper-dynamo-amazon']
+    related_resource_ids: ['talk-discord-scylladb-migration', 'book-ddia', 'paper-dynamo-amazon', 'book-database-internals']
+  },
+  {
+    id: 'incident-discord-2022-cassandra-tombstones',
+    title: 'Discord 2022: Cassandra Tombstone Meltdown & Trillion-Message Migration',
+    company: 'Discord',
+    company_logo: '🎮',
+    year: 2022,
+    duration: 'Recurring multi-hour latency spikes',
+    impact: 'Millions of users experienced dropped chat messages, failed guild history queries, and voice disconnects',
+    service_affected: 'Message Storage Cluster (Apache Cassandra storing trillions of messages)',
+    category: 'databases-storage',
+    root_cause_tag: 'gc-pause-tombstones',
+    severity: 'Major P1',
+    trigger: 'Unindexed partition queries across large Discord guild channels triggered massive heap churn.',
+    mechanism_explanation: 'As Discord scaled to trillions of messages across hundreds of Cassandra nodes, large channel queries caused JVM heap memory pressure, triggering 15-to-30-second Stop-The-World (STW) garbage collection pauses. While a node was paused in GC, peer nodes considered it dead and stopped routing writes to it, queuing hinted handoffs. When the node woke back up, tombstone read overload triggered another GC pause, creating an unrecoverable flapping spiral.',
+    mechanism_diagram: [
+      '[Heavy Unindexed Query] ──► [Massive JVM Heap Allocation Churn]',
+      '                                          │',
+      '                                          ▼ 20-second Stop-The-World GC Pause',
+      '                          [Peers mark node dead; queue hinted handoffs]',
+      '                                          │',
+      '                                          ▼ Node wakes up, overwhelmed by backlog & tombstones',
+      '                          [Enters immediate secondary GC pause; flutters in loop]',
+      '                                          │',
+      '                          [Discord migrates trillions of messages to ScyllaDB (C++)]'
+    ],
+    timeline: [
+      { time: 'Phase 1', description: 'Discord experiences recurring Cassandra GC pauses and high p99 read latencies.' },
+      { time: 'Phase 2', description: 'Engineers tune JVM GC flags, heap sizes, and tombstone compaction; gains plateau.' },
+      { time: 'Phase 3', description: 'Discord decides to migrate trillions of messages to ScyllaDB (C++ rewrite with no GC).' },
+      { time: 'Final', description: 'Migration completes with p99 read latency dropping from 1,000ms down to 15ms.' }
+    ],
+    mitigation_rule: 'For mission-critical, high-throughput datastores at scale, favor native, GC-free architectures (such as C++ or Rust) using thread-per-core models to eliminate unpredictable stop-the-world latency cliffs.',
+    checklist_rules: [
+      'Monitor and alarm on JVM Garbage Collection pause duration (alert on pauses >500ms).',
+      'Avoid unbounded range scans and high-tombstone density in wide-column datastores.',
+      'Adopt thread-per-core asynchronous frameworks (such as Seastar / ScyllaDB) for predictable low p99 latencies.',
+      'Implement read repair throttling and hinted handoff rate limits to prevent cascading node overload.'
+    ],
+    original_postmortem_url: 'https://discord.com/blog/how-discord-stores-trillions-of-messages',
+    hn_discussion_url: 'https://news.ycombinator.com/item?id=35064567',
+    related_resource_ids: ['talk-discord-scylladb-migration', 'book-ddia', 'paper-dynamo-amazon', 'book-database-internals']
   },
   {
     id: 'incident-zoom-2020-leap-second-jwt-clock-skew',

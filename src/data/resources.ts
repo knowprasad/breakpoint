@@ -37,6 +37,37 @@ export const SEEDED_RESOURCES: LibraryResource[] = [
     ]
   },
   {
+    id: 'book-database-internals',
+    type: 'book',
+    title: 'Database Internals: A Deep Dive into How Distributed Data Systems Work',
+    creator: 'Alex Petrov',
+    url: 'https://www.databass.dev/',
+    thumbnail_url: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=600&q=80',
+    primary_topic: 'databases-storage',
+    tags: ['storage-engines', 'b-trees', 'lsm-trees', 'wal', 'replication', 'distributed-consensus', 'paxos'],
+    summary: 'A comprehensive, code-level guide to modern storage engine architectures (B-Trees, LSM-Trees, Write-Ahead Logs) and distributed consensus algorithms.',
+    mental_model_3min: 'Storage systems balance read, write, and space amplification. In-place update engines (B-Trees) optimize read paths but suffer write amplification; append-only engines (LSM-Trees) maximize write throughput by buffering in memory and flushing immutable SSTables to disk, paying compaction debts asynchronously. High-throughput reliability demands understanding how buffer pools, write-ahead logs, and tombstone accumulation behave under physical I/O saturation.',
+    why_recommended: 'Petrov provides the rare, concrete bridge between theoretical database literature and real-world C++ / Java storage engine source code.',
+    pull_quote: {
+      text: 'Database Internals bridges the gap between academic paper abstractions and production storage engine codebases.',
+      source: 'Martin Kleppmann (Author of DDIA)',
+      year: '2019'
+    },
+    level: 'Advanced',
+    shelf_life: 'Evergreen',
+    key_takeaways: [
+      'Write amplification (bytes physically written to media vs logical bytes requested) burns NVMe drive endurance and exhausts disk bandwidth.',
+      'LSM tombstones remain as active data until full compaction passes; querying non-compacted tombstone ranges destroys read p99 latency.',
+      'Write-Ahead Logging (WAL) ensures durability; without fsync flushing, power loss corrupts uncommitted memtable state.',
+      'Distributed storage combines single-node storage engines with consensus protocols (Raft, Paxos, Multi-Paxos) to maintain linearizability.'
+    ],
+    lindy_score: 94.0,
+    related_incident_ids: [
+      'incident-gitlab-2017-database-loss',
+      'incident-discord-2022-cassandra-gc-pause-split-brain'
+    ]
+  },
+  {
     id: 'book-ostep',
     type: 'book',
     title: 'Operating Systems: Three Easy Pieces (OSTEP)',

@@ -38,14 +38,49 @@ export function IncidentDetailModal({
   onSelectVideo
 }: IncidentDetailModalProps) {
   const [activeTab, setActiveTab] = useState<'mechanism' | 'timeline' | 'mitigation'>('mechanism');
+  const [copiedPChecklist, setCopiedPChecklist] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      const target = e.target as HTMLElement | null;
+      const isInput =
+        target &&
+        (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) ||
+          target.isContentEditable);
+
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (!isInput && (e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && incident) {
+        e.preventDefault();
+        const markdownChecklist = [
+          `### 🛡️ PR Review Checklist: Guarding against ${incident.title}`,
+          `> **Domain**: ${incident.category} | **Trigger**: ${incident.trigger}`,
+          `> **Mechanism**: ${incident.mechanism_explanation}`,
+          '',
+          '#### Verification Items for Code Review:',
+          ...(incident.checklist_rules || []).map((rule) => `- [ ] ${rule}`),
+          '',
+          '#### Hard Production Invariant:',
+          `> ${incident.mitigation_rule}`,
+          '',
+          '---',
+          `*Curated from breakpoint forensic autopsy (${incident.company}, ${incident.year})*`
+        ].join('\n');
+
+        navigator.clipboard.writeText(markdownChecklist).then(() => {
+          setCopiedPChecklist(true);
+          setTimeout(() => setCopiedPChecklist(false), 2200);
+        }).catch((err) => {
+          console.error('Failed to copy PR checklist via keyboard shortcut', err);
+        });
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [incident, onClose]);
 
   if (!incident) return null;
 
@@ -95,6 +130,11 @@ export function IncidentDetailModal({
           </div>
 
           <div className="flex items-center gap-2">
+            {copiedPChecklist && (
+              <span className="hidden sm:inline-flex text-[11px] font-mono text-emerald-300 bg-emerald-950/80 px-2 py-1 rounded border border-emerald-500/50 animate-pulse">
+                Checklist Copied (P)
+              </span>
+            )}
             <CopyPrChecklistButton incident={incident} variant="compact" />
             <button
               onClick={onClose}

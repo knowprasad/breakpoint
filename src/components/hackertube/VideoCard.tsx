@@ -10,7 +10,7 @@ import {
   Star,
   Heart,
   Bookmark,
-  FolderPlus
+  X
 } from 'lucide-react';
 import {
   isVideoLiked,
@@ -18,14 +18,21 @@ import {
   isVideoInWatchLater,
   toggleWatchLater
 } from '@/lib/userStore';
+import { AddToPlaylistPopover } from './AddToPlaylistPopover';
 
 interface VideoCardProps {
   video: HackerTubeVideo;
   onSelect?: (video: HackerTubeVideo) => void;
   onOpenPlaylistModal?: (video: HackerTubeVideo) => void;
+  onRemove?: () => void;
 }
 
-export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardProps) {
+export function VideoCard({
+  video,
+  onSelect,
+  onOpenPlaylistModal,
+  onRemove
+}: VideoCardProps) {
   const [imgSrc, setImgSrc] = useState(video.thumbnail_url);
   const [liked, setLiked] = useState(() => isVideoLiked(video.vid));
   const [savedLater, setSavedLater] = useState(() => isVideoInWatchLater(video.vid));
@@ -54,20 +61,11 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
     setSavedLater(newStatus);
   };
 
-  const handleOpenPlaylist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onOpenPlaylistModal) {
-      onOpenPlaylistModal(video);
-    }
-  };
-
   return (
     <Link
       href={`/watch/${video.vid}`}
       onClick={(e) => {
         if (onSelect) {
-          // If custom handler is provided, we can allow it
           onSelect(video);
         }
       }}
@@ -100,13 +98,32 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
             </div>
           </div>
 
+          {/* Remove from Playlist Button (if in playlist view) */}
+          {onRemove && (
+            <div className="absolute top-2 left-2 z-10">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRemove();
+                }}
+                title="Remove talk from this playlist"
+                className="px-2 py-1 rounded-md backdrop-blur-md bg-black/80 hover:bg-red-950/90 border border-white/10 hover:border-red-500/60 text-zinc-300 hover:text-red-300 text-[10px] font-mono flex items-center gap-1 transition-all shadow-md cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+                <span>Remove</span>
+              </button>
+            </div>
+          )}
+
           {/* Quick Action Floating Controls (Top Right) */}
           <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity z-10">
             {/* Like Button */}
             <button
               onClick={handleToggleLike}
               title={liked ? 'Unlike' : 'Like Talk'}
-              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all ${
+              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all cursor-pointer ${
                 liked
                   ? 'bg-red-950/80 border-red-500/60 text-red-400 hover:bg-red-900/90'
                   : 'bg-black/60 border-white/10 text-zinc-300 hover:text-red-400 hover:border-red-500/40'
@@ -119,7 +136,7 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
             <button
               onClick={handleToggleWatchLater}
               title={savedLater ? 'Remove from Watch Later' : 'Watch Later'}
-              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all ${
+              className={`p-1.5 rounded-lg backdrop-blur-md border transition-all cursor-pointer ${
                 savedLater
                   ? 'bg-amber-950/80 border-amber-500/60 text-amber-400 hover:bg-amber-900/90'
                   : 'bg-black/60 border-white/10 text-zinc-300 hover:text-amber-400 hover:border-amber-500/40'
@@ -128,16 +145,8 @@ export function VideoCard({ video, onSelect, onOpenPlaylistModal }: VideoCardPro
               <Bookmark className={`w-3.5 h-3.5 ${savedLater ? 'fill-current' : ''}`} />
             </button>
 
-            {/* Add to Playlist Button */}
-            {onOpenPlaylistModal && (
-              <button
-                onClick={handleOpenPlaylist}
-                title="Add to Playlist"
-                className="p-1.5 rounded-lg backdrop-blur-md bg-black/60 border border-white/10 text-zinc-300 hover:text-white hover:border-zinc-500 transition-all"
-              >
-                <FolderPlus className="w-3.5 h-3.5" />
-              </button>
-            )}
+            {/* Add to Playlist Popover */}
+            <AddToPlaylistPopover video={video} variant="icon" />
           </div>
 
           {/* Channel Badge Overlay (Bottom) */}

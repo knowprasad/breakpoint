@@ -8,15 +8,17 @@ import { IncidentCard } from '@/components/disasters/IncidentCard';
 import { IncidentDetailModal } from '@/components/disasters/IncidentDetailModal';
 import { ResourceCard } from '@/components/library/ResourceCard';
 import { ResourceDetailModal } from '@/components/library/ResourceDetailModal';
+import { LibraryExplorer } from '@/components/library/LibraryExplorer';
 import { HackerTubeExplorer } from '@/components/hackertube/HackerTubeExplorer';
 import { CommandPalette } from '@/components/common/CommandPalette';
 import { DigestSignup } from '@/components/digest/DigestSignup';
 import { FailureMatrix } from '@/components/matrix/FailureMatrix';
 import { FailureSimulator } from '@/components/simulator/FailureSimulator';
+import { EngineeringTracks } from '@/components/curriculum/EngineeringTracks';
 import { DisasterIncident } from '@/types/incident';
 import { LibraryResource } from '@/types/resource';
 import { getAllIncidents, getAllResources } from '@/lib/db';
-import { Flame, BookOpen, Video, Grid, Terminal, Search, X } from 'lucide-react';
+import { Flame, BookOpen, Video, Grid, Terminal, Search, X, Award } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const DISASTER_STACKS = [
@@ -31,7 +33,7 @@ const DISASTER_STACKS = [
 
 export default function HomePage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator'>('hackertube');
+  const [activeTab, setActiveTab] = useState<'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator' | 'curriculum'>('hackertube');
 
   const [activeIncident, setActiveIncident] = useState<DisasterIncident | null>(null);
   const [activeResource, setActiveResource] = useState<LibraryResource | null>(null);
@@ -71,6 +73,7 @@ export default function HomePage() {
       else if (hash === 'library' || hash === 'books') setActiveTab('books');
       else if (hash === 'matrix') setActiveTab('matrix');
       else if (hash === 'simulator') setActiveTab('simulator');
+      else if (hash === 'curriculum' || hash === 'tracks') setActiveTab('curriculum');
       else if (hash === 'hackertube' || hash === 'talks') setActiveTab('hackertube');
     };
 
@@ -79,7 +82,7 @@ export default function HomePage() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  const switchTab = (tab: 'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator') => {
+  const switchTab = (tab: 'hackertube' | 'disasters' | 'books' | 'matrix' | 'simulator' | 'curriculum') => {
     setActiveTab(tab);
     const hash = tab === 'books' ? 'library' : tab;
     if (typeof window !== 'undefined') {
@@ -157,6 +160,18 @@ export default function HomePage() {
             >
               <Terminal className="w-3.5 h-3.5 text-red-400" />
               <span>Simulator</span>
+            </button>
+
+            <button
+              onClick={() => switchTab('curriculum')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all whitespace-nowrap font-bold ${
+                activeTab === 'curriculum'
+                  ? 'bg-emerald-950 text-emerald-200 border border-emerald-500/50 shadow-sm shadow-emerald-950/40'
+                  : 'bg-[#0f1218] border border-[#1e2430] text-zinc-400 hover:text-white hover:bg-[#151922]'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Canon Tracks (4)</span>
             </button>
 
             <div className="ml-auto hidden md:flex items-center gap-3 text-[11px] text-zinc-500">
@@ -288,15 +303,7 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {resources.map((resource) => (
-                <ResourceCard
-                  key={resource.id}
-                  resource={resource}
-                  onSelect={setActiveResource}
-                />
-              ))}
-            </div>
+            <LibraryExplorer onSelectResource={setActiveResource} />
           </div>
         )}
 
@@ -335,6 +342,11 @@ export default function HomePage() {
 
             <FailureSimulator onSelectResource={setActiveResource} />
           </div>
+        )}
+
+        {/* Tab 6: Guided Engineering Canon Tracks */}
+        {activeTab === 'curriculum' && (
+          <EngineeringTracks />
         )}
 
         {/* Bi-Weekly Email Digest Box */}
